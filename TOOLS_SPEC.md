@@ -5,17 +5,7 @@
 
 ---
 
-## Expert Panel
 
-| # | Expert | Domain | Focus |
-|---|--------|--------|-------|
-| 1 | **Dr. Maria Chen** | LCA Data Engineering | LCA tool interop (SimaPro, openLCA, GaBi), ILCD/EcoSpold formats, PCF data pipelines |
-| 2 | **James Okonkwo** | Supply Chain Data Architecture | PACT v3 / Pathfinder API, B2B data exchange, enterprise integration patterns |
-| 3 | **Dr. Katrin Weber** | Regulatory Compliance Systems | EU CBAM, CSRD, IRA 45V, GHG Protocol, regulatory submission formats |
-| 4 | **Tomás Alvarez** | Carbon Markets & Registries | CAD Trust, Gold Standard, Verra, Article 6, EAC lifecycle |
-| 5 | **Priya Sharma** | Developer Experience Architecture | SDKs, CLIs, validation frameworks, developer onboarding, web tools |
-
----
 
 ## Problem Statement
 
@@ -105,7 +95,6 @@ Today, zero tools exist for any of these operations. Every user must read the on
 
 #### A3. CLI Entry Point (`comet_cli.py`)
 **Goal**: Single command-line interface for all COMET operations.
-**Expert**: Priya Sharma
 **Function**: Unified CLI that dispatches to converters and validators.
 
 **Commands**:
@@ -132,7 +121,6 @@ comet template <type>                            Generate blank template
 
 #### B1. CSV → COMET (`csv_to_comet.py`)
 **Goal**: Convert a filled-in CSV template into COMET JSON-LD.
-**Expert**: Dr. Maria Chen
 **Function**: Read a CSV file where columns map to COMET fields, validate each row, and output one COMET JSON-LD document per row.
 
 **Input**: CSV file with COMET-aligned column headers (from template)
@@ -159,7 +147,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### B2. PACT v3 → COMET (`pact_to_comet.py`)
 **Goal**: Enrich a PACT v3 JSON payload with COMET @context and type annotations.
-**Expert**: James Okonkwo
 **Function**: Read a PACT v3 ProductFootprint JSON, inject COMET @context, map fields to COMET properties, and output COMET JSON-LD.
 
 **Input**: PACT v3 JSON (as per WBCSD spec)
@@ -208,7 +195,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### B3. CBAM XML → COMET (`cbam_to_comet.py`)
 **Goal**: Parse a CBAM embedded emissions declaration XML and convert to COMET JSON-LD.
-**Expert**: Dr. Katrin Weber
 **Function**: Read CBAM XML (per DG TAXUD schema), extract declarations, map to COMET classes, output JSON-LD.
 
 **Input**: CBAM XML declaration file
@@ -236,7 +222,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### B4. CAD Trust → COMET (`cad_trust_to_comet.py`)
 **Goal**: Convert CAD Trust v2.0.2 registry data into COMET JSON-LD.
-**Expert**: Tomás Alvarez
 **Function**: Read CAD Trust data exports (CSV or JSON from registry APIs), map the 13 tables to COMET EAC and verification classes.
 
 **Input**: CAD Trust export (CSV per table, or combined JSON)
@@ -272,7 +257,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### C1. COMET → PACT v3 (`comet_to_pact.py`)
 **Goal**: Export a COMET PCF as a PACT v3-compliant JSON payload.
-**Expert**: James Okonkwo
 **Function**: Read COMET JSON-LD, strip COMET-specific fields, reshape to PACT v3 schema, validate against PACT spec.
 
 **Output**: PACT v3 JSON (as accepted by any Pathfinder API)
@@ -289,7 +273,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### C2. COMET → CBAM XML (`comet_to_cbam.py`)
 **Goal**: Generate a CBAM-compliant XML declaration from COMET data.
-**Expert**: Dr. Katrin Weber
 **Function**: Read COMET PCF JSON-LD, generate CBAM XML per DG TAXUD schema.
 
 **Output**: XML file conforming to CBAM declaration schema
@@ -307,7 +290,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### C3. COMET → CSV (`comet_to_csv.py`)
 **Goal**: Flatten COMET JSON-LD back to spreadsheet-friendly CSV.
-**Expert**: Dr. Maria Chen
 **Function**: Read one or more COMET JSON-LD files, flatten nested structures, output as CSV with COMET-aligned column headers.
 
 **Output**: CSV file matching the COMET template format
@@ -326,7 +308,6 @@ has_assurance, assurance_level, verifier_name, verification_date
 
 #### D1. CSV Templates
 **Goal**: Downloadable, fill-in-the-blank CSV templates for each data type.
-**Expert**: Dr. Maria Chen
 
 **`pcf-template.csv`**: One header row with all PCF fields, one example row (steel PCF), one blank row for user.
 Columns: org_name, org_id, product_name, product_id, cpc_code, declared_unit, amount, fossil_gwp, total_gwp, biogenic_carbon, land_use_change, biogenic_uptake, aircraft_emissions, packaging_emissions, exempted_percent, boundary_description, period_start, period_end, country, region, primary_data_share, dqi_coverage, dqi_technology, dqi_temporality, dqi_geography, dqi_reliability, standard_ref, pcr_name, allocation_description, has_assurance, assurance_level, verifier_name, verification_date
@@ -339,7 +320,6 @@ Columns: eac_type, sub_type, registry_name, registry_id, project_name, project_i
 
 #### D2. Example JSON-LD Files
 **Goal**: Copy-paste-ready example files for each common use case.
-**Expert**: James Okonkwo & Tomás Alvarez
 
 **`steel-pcf.comet.json`**: Complete PCF for hot-rolled steel coil (BOF route). Real-world plausible values: 1.85 kgCO2e/kg, German site, Bureau Veritas verified, ISO 14067 + GHG Protocol standards.
 
@@ -359,7 +339,6 @@ Columns: eac_type, sub_type, registry_name, registry_id, project_name, project_i
 
 #### E1. COMET Playground (`playground.html`)
 **Goal**: Browser-based tool where users paste data and get COMET output instantly.
-**Expert**: Priya Sharma
 **Function**: Static HTML/JS page (hosted on GitHub Pages) that provides in-browser conversion and validation. No server required.
 
 **Layout**:
