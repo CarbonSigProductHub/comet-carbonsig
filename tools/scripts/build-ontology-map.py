@@ -118,6 +118,8 @@ EXTERNAL_BASES: dict[str, str] = {
     "pact": "https://wbcsd.org/spec/pact/pathfinder/v3/",
     "sdg": "https://metadata.un.org/sdg/",
     "qudt-unit": "http://qudt.org/vocab/UNIT/",
+    # CarbonSig Verifier Hub export contract (v4) — crosswalk target.
+    "csig": "https://api.carbonsig.com/schemas/verifier-export/v4#",
 }
 
 # Friendly display names + colours for external standards (alignment targets).
@@ -131,6 +133,7 @@ EXTERNAL_META: dict[str, dict[str, str]] = {
     "pact": {"name": "WBCSD PACT", "color": "#9a7c2f"},
     "sdg": {"name": "UN SDG", "color": "#2a8ab0"},
     "qudt-unit": {"name": "QUDT Unit", "color": "#888"},
+    "csig": {"name": "CarbonSig Verifier Export v4", "color": "#0a7c5a"},
 }
 
 
