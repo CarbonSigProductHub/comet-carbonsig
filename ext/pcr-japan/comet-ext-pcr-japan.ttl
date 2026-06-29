@@ -1,0 +1,314 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix schema: <http://schema.org/> .
+@prefix comet:     <https://comet.carbon/v1/core#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-eac: <https://comet.carbon/v1/eac#> .
+@prefix comet-ver: <https://comet.carbon/v1/ver#> .
+@prefix comet-pj:  <https://comet.carbon/ext/pcr-japan#> .
+
+# =============================================================================
+# COMET Extension Module: PCR Japan (SuMPO EcoLeaf)
+# =============================================================================
+# Module:      comet-ext:pcr-japan
+# Version:     0.1.0
+# Status:      RFC Open
+# Layer scope: L4 (PCF) · L5 (EAC) · L6 (Verification)
+# Standards:   ISO 21930:2007, ISO 21930:2017, EN 15804+A1:2013, EN 15804+A2:2019
+#              JIS Q 14025 (ISO 14025 Japanese Industrial Standard)
+# Program:     SuMPO EPD Japan (EcoLeaf Label) — ecoleaf-label.jp
+#              Operated by SuMPO (Sustainable Management Promotion Organization,
+#              一般社団法人サステナブル経営推進機構), Tokyo, Japan
+# Data source: PCRbase — nickgogerty.github.io/pcrbase (76 PCRs, 85 requirements)
+# License:     CC BY 4.0 + Apache 2.0
+# Maintainer:  PCRbase WG (nickgogerty@gmail.com)
+# =============================================================================
+
+<https://comet.carbon/ext/pcr-japan>
+    a owl:Ontology ;
+    owl:versionIRI <https://comet.carbon/ext/pcr-japan/0.1.0> ;
+    owl:imports <https://comet.carbon/v1/core> ,
+                <https://comet.carbon/v1/pcf> ,
+                <https://comet.carbon/v1/eac> ;
+    owl:versionInfo "0.1.0" ;
+    dcterms:title "COMET PCR Japan Extension"@en ,
+                  "COMET 製品カテゴリルール日本拡張"@ja ;
+    dcterms:description
+        "COMET extension for the SuMPO EPD Japan (EcoLeaf) program. Models Japanese Product Category Rules (PCRs) under ISO 21930 and EN 15804 as structured COMET documents, with Japanese-language labels and SKOS product field taxonomy. Evidence base: 76 PCRs harvested from ecoleaf-label.jp via PCRbase."@en ,
+        "SuMPO環境ラベルプログラム（エコリーフ）のPCR（製品カテゴリルール）をCOMET本体にマッピングする拡張モジュール。ISO 21930およびEN 15804に準拠した76件のPCRをPCRbaseから収集し、日本語ラベルおよびSKOS製品分野分類を付与する。"@ja ;
+    dcterms:created "2026-06-29"^^xsd:date ;
+    dcterms:source <https://ecoleaf-label.jp/en/pcr/search> ,
+                   <https://nickgogerty.github.io/pcrbase> ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> .
+
+
+# =============================================================================
+# L4 PCF — Japan PCR Document Classes
+# =============================================================================
+
+comet-pj:SuMPOPCRDocument
+    a owl:Class ;
+    rdfs:subClassOf comet-pcf:PCRDocument ;
+    rdfs:label "SuMPO PCR Document"@en ,
+               "SuMPO PCR文書"@ja ;
+    rdfs:comment
+        "A Product Category Rule document issued by SuMPO EPD Japan (EcoLeaf program). Governs how EPDs are calculated for a specific Japanese product category."@en ,
+        "SuMPO環境ラベルプログラムが発行するPCR文書。特定の製品カテゴリに関するEPD算定ルールを規定する。"@ja ;
+    skos:example
+        "PA-SuMPO-PCR-01003-1-0-0 (Cement / セメント, valid 2026-05-26 to 2031-05-25)"@en ,
+        "PA-SuMPO-PCR-01002-2-0-0 (Wood Materials for Construction / 建設用木質材料)"@en ;
+    owl:equivalentClass
+        [ a owl:Class ;
+          owl:intersectionOf (
+            comet-pcf:PCRDocument
+            [ a owl:Restriction ;
+              owl:onProperty comet-pcf:programOperator ;
+              owl:hasValue comet-pj:SuMPOOperator ] ) ] .
+
+
+comet-pj:EcoLeafDeclaration
+    a owl:Class ;
+    rdfs:subClassOf comet-eac:Certification ;
+    rdfs:label "EcoLeaf EPD Declaration"@en ,
+               "エコリーフ環境ラベル宣言"@ja ;
+    rdfs:comment
+        "An Environmental Product Declaration issued under the SuMPO EcoLeaf label program. Governed by a SuMPOPCRDocument."@en ,
+        "SuMPOエコリーフラベルプログラムの下で発行されるEPD。SuMPOPCRDocumentによって管理される。"@ja ;
+    skos:example "EcoLeaf declaration for steel products under PA-180000-AJ-08"@en .
+
+
+comet-pj:ISO21930PCR
+    a owl:Class ;
+    rdfs:subClassOf comet-pj:SuMPOPCRDocument ;
+    rdfs:label "ISO 21930 PCR"@en ,
+               "ISO 21930 PCR"@ja ;
+    rdfs:comment
+        "A SuMPO PCR that formally complies with ISO 21930 (Sustainability in buildings and civil engineering works — Core rules for Type III environmental declarations of products and services)."@en ,
+        "ISO 21930（建築物及び土木工作物のサステナビリティ）に準拠したSuMPO PCR。"@ja .
+
+
+comet-pj:LegacyEcoLeafPCR
+    a owl:Class ;
+    rdfs:subClassOf comet-pj:SuMPOPCRDocument ;
+    rdfs:label "Legacy EcoLeaf PCR (PA-NNNNNN format)"@en ,
+               "旧エコリーフPCR（PA-NNNNNN形式）"@ja ;
+    rdfs:comment
+        "An older SuMPO PCR using the legacy PA-NNNNNN-XX-NN registration number format (pre-2024). These predate the PA-SuMPO-PCR-NNNNN format."@en ,
+        "2024年以前の旧登録番号形式（PA-NNNNNN-XX-NN）を使用するSuMPO PCR。"@ja ;
+    skos:example "PA-180000-AJ-08 (Steel products for construction / 建設用鋼製品)"@en .
+
+
+# =============================================================================
+# L4 PCF — Properties specific to Japan PCR program
+# =============================================================================
+
+comet-pj:pcrOverviewJa
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pj:SuMPOPCRDocument ;
+    rdfs:range  rdf:langString ;
+    rdfs:label  "PCR scope overview (Japanese)"@en ,
+                "PCR適用範囲概要（日本語）"@ja ;
+    rdfs:comment
+        "The scope description paragraph from the PCR document in Japanese, as published by SuMPO. Preserved verbatim as evidence."@en ,
+        "SuMPOが発行したPCR文書の日本語による適用範囲説明。証拠として原文のまま保存する。"@ja .
+
+
+comet-pj:validityPeriodJa
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pj:SuMPOPCRDocument ;
+    rdfs:range  rdf:langString ;
+    rdfs:label  "Validity period (Japanese)"@en ,
+                "有効期間（日本語）"@ja ;
+    rdfs:comment
+        "The validity period as stated in the Japanese-language PCR document."@en ,
+        "日本語PCR文書に記載された有効期間。"@ja .
+
+
+comet-pj:workingGroupMember
+    a owl:ObjectProperty ;
+    rdfs:domain comet-pj:SuMPOPCRDocument ;
+    rdfs:range  schema:Organization ;
+    rdfs:label  "PCR working group member"@en ,
+                "PCRワーキンググループメンバー"@ja ;
+    rdfs:comment
+        "An organisation that participated in the PCR working group that developed this PCR document."@en ,
+        "このPCRを策定したワーキンググループに参加した組織。"@ja ;
+    skos:example "Japan Cement Association (一般社団法人セメント協会)"@en .
+
+
+comet-pj:pcrRegistrationNumber
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pj:SuMPOPCRDocument ;
+    rdfs:range  xsd:string ;
+    rdfs:label  "SuMPO PCR registration number"@en ,
+                "SuMPO PCR登録番号"@ja ;
+    rdfs:comment
+        "The official SuMPO PCR registration number. Two formats exist: legacy PA-NNNNNN-XX-NN and new PA-SuMPO-PCR-NNNNN-N-N-N."@en ,
+        "SuMPO PCRの公式登録番号。旧形式（PA-NNNNNN-XX-NN）と新形式（PA-SuMPO-PCR-NNNNN-N-N-N）がある。"@ja .
+
+
+comet-pj:japanesePCRField
+    a owl:ObjectProperty ;
+    rdfs:domain comet-pj:SuMPOPCRDocument ;
+    rdfs:range  comet-pj:JapanesePCRField ;
+    rdfs:label  "Japanese PCR product field"@en ,
+                "PCR製品分野（日本）"@ja ;
+    rdfs:comment
+        "Links a SuMPO PCR to its product field classification in the JapanesePCRField SKOS scheme."@en ,
+        "SuMPO PCRをJapanesePCRField SKOSスキームの製品分野分類に紐付ける。"@ja .
+
+
+# =============================================================================
+# Named individual — SuMPO as program operator
+# =============================================================================
+
+comet-pj:SuMPOOperator
+    a comet-pcf:PCRProgramOperator , schema:Organization ;
+    rdfs:label     "SuMPO EPD Japan"@en ,
+                   "一般社団法人サステナブル経営推進機構（SuMPO）"@ja ;
+    schema:name    "Sustainable Management Promotion Organization"@en ,
+                   "サステナブル経営推進機構"@ja ;
+    schema:url     <https://ecoleaf-label.jp> ;
+    schema:address "KANDA SQUARE GATE 4F, 14-8 Uchikanda 1-chome, Chiyoda-ku, Tokyo 101-0047, Japan"@en ;
+    schema:email   "ecoleaf@sumpo.or.jp" ;
+    dcterms:description
+        "Program operator for SuMPO EPD Japan (formerly JEMAI EcoLeaf and CFP Program). Maintains 76+ PCRs under ISO 21930, ISO 14067, and EN 15804."@en ,
+        "SuMPO環境ラベルプログラム（旧JEMAIエコリーフ・CFPプログラム）のプログラムオペレーター。ISO 21930、ISO 14067、EN 15804に基づく76件以上のPCRを管理。"@ja .
+
+
+# =============================================================================
+# SKOS Concept Scheme — Japanese PCR Product Fields (13 fields)
+# =============================================================================
+
+comet-pj:JapanesePCRField
+    a skos:ConceptScheme ;
+    rdfs:label "SuMPO EPD Japan Product Fields"@en ,
+               "SuMPO EPD日本製品分野分類"@ja ;
+    dcterms:description
+        "The 13 product field classifications used by SuMPO EPD Japan to organise PCRs. Defined at ecoleaf-label.jp/en/pcr/search."@en ,
+        "SuMPO EPD日本がPCRを整理するために使用する13の製品分野分類。"@ja ;
+    skos:hasTopConcept
+        comet-pj:ConstructionProducts ,
+        comet-pj:MachineryEquipment ,
+        comet-pj:FoodBeverages ,
+        comet-pj:ChemicalProducts ,
+        comet-pj:MetalMineralPlasticGlass ,
+        comet-pj:PaperPlasticProducts ,
+        comet-pj:TextilesFootwearApparel ,
+        comet-pj:FurnitureOtherGoods ,
+        comet-pj:VehiclesTransportEquipment ,
+        comet-pj:ElectricitySteamFuels ,
+        comet-pj:InfrastructureBuildings ,
+        comet-pj:Services ,
+        comet-pj:Others .
+
+comet-pj:ConstructionProducts
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Construction products"@en , "建設製品"@ja ;
+    skos:prefLabel "Construction products"@en , "建設製品"@ja ;
+    skos:altLabel  "Construction materials"@en , "建材"@ja ;
+    skos:definition "PCRs governing construction-related products: cement, glass, steel, wood, concrete, insulation, etc."@en ,
+                    "セメント、ガラス、鋼材、木材、コンクリート、断熱材等、建設関連製品のPCR。"@ja ;
+    skos:example   "PA-SuMPO-PCR-01003-1-0-0 (Cement), PA-171100-BS-03 (Flat glass), PA-178200-AC-06 (Gypsum boards)"@en .
+
+comet-pj:MachineryEquipment
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Machinery & equipment"@en , "機械・設備"@ja ;
+    skos:prefLabel "Machinery & equipment"@en , "機械・設備"@ja ;
+    skos:definition "PCRs governing machinery, electrical equipment, electronics, and instruments."@en ,
+                    "機械、電気設備、電子機器、計測器等のPCR。"@ja ;
+    skos:example   "PA-355110-AK-05 (Elevator), PA-303800-CE-01 (Circuit breaker), PA-520000-BF-04 (IT equipment)"@en .
+
+comet-pj:FoodBeverages
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Food & beverages"@en , "食品・飲料"@ja ;
+    skos:prefLabel "Food & beverages"@en , "食品・飲料"@ja ;
+    skos:definition "PCRs governing food, beverages, and agricultural products."@en ,
+                    "食品、飲料および農産物のPCR。"@ja ;
+    skos:example   "PA-691000-BQ-03 (Non-glutinous rice / 米), PA-761200-AH-05 (Soft drinks)"@en .
+
+comet-pj:ChemicalProducts
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Chemical products"@en , "化学製品"@ja ;
+    skos:prefLabel "Chemical products"@en , "化学製品"@ja ;
+    skos:definition "PCRs governing chemical products including paints, inks, and fluorocarbons."@en ,
+                    "塗料、インク、フロン類等の化学製品のPCR。"@ja .
+
+comet-pj:MetalMineralPlasticGlass
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Metal, mineral, plastic & glass products"@en , "金属・鉱物・プラスチック・ガラス製品"@ja ;
+    skos:prefLabel "Metal, mineral, plastic & glass products"@en , "金属・鉱物・プラスチック・ガラス製品"@ja ;
+    skos:example   "PA-180000-AJ-08 (Steel for construction), PA-201590-BZ-03 (Titanium products)"@en .
+
+comet-pj:PaperPlasticProducts
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Paper and plastic products"@en , "紙・プラスチック製品"@ja ;
+    skos:prefLabel "Paper and plastic products"@en , "紙・プラスチック製品"@ja .
+
+comet-pj:TextilesFootwearApparel
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Textiles, footwear & apparel"@en , "繊維・履物・衣料品"@ja ;
+    skos:prefLabel "Textiles, footwear & apparel"@en , "繊維・履物・衣料品"@ja .
+
+comet-pj:FurnitureOtherGoods
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Furniture & other goods"@en , "家具・その他製品"@ja ;
+    skos:prefLabel "Furniture & other goods"@en , "家具・その他製品"@ja .
+
+comet-pj:VehiclesTransportEquipment
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Vehicles & transport equipment"@en , "車両・輸送機器"@ja ;
+    skos:prefLabel "Vehicles & transport equipment"@en , "車両・輸送機器"@ja ;
+    skos:example   "PA-111000-AL-05 (Tires / タイヤ)"@en .
+
+comet-pj:ElectricitySteamFuels
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Electricity, steam & fuels"@en , "電力・蒸気・燃料"@ja ;
+    skos:prefLabel "Electricity, steam & fuels"@en , "電力・蒸気・燃料"@ja .
+
+comet-pj:InfrastructureBuildings
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Infrastructure & buildings"@en , "インフラ・建物"@ja ;
+    skos:prefLabel "Infrastructure & buildings"@en , "インフラ・建物"@ja .
+
+comet-pj:Services
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Services"@en , "サービス"@ja ;
+    skos:prefLabel "Services"@en , "サービス"@ja ;
+    skos:example   "PA-959900-AQ-05 (Trade-in service / トレードインサービス)"@en .
+
+comet-pj:Others
+    a skos:Concept ;
+    skos:inScheme comet-pj:JapanesePCRField ;
+    skos:topConceptOf comet-pj:JapanesePCRField ;
+    rdfs:label    "Others"@en , "その他"@ja ;
+    skos:prefLabel "Others"@en , "その他"@ja .

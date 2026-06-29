@@ -1,0 +1,70 @@
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix schema:   <http://schema.org/> .
+@prefix comet:    <https://comet.carbon/v1/core#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-pj:  <https://comet.carbon/ext/pcr-japan#> .
+@prefix pcrbase:  <https://pcrbase.org/v1/> .
+
+# =============================================================================
+# Example: Cement PCR (PA-SuMPO-PCR-01003-1-0-0)
+# Real PCR from SuMPO EPD Japan, published 2026-05-26, valid until 2031-05-25
+# =============================================================================
+
+pcrbase:sumpo-2b5654445242-1_0_0
+    a comet-pj:SuMPOPCRDocument , comet-pj:ISO21930PCR ;
+    dcterms:title
+        "Cement"@en ,
+        "セメント"@ja ;
+    comet-pj:pcrRegistrationNumber "PA-SuMPO-PCR-01003-1-0-0" ;
+    comet-pcf:version "1.0.0" ;
+    comet-pcf:programOperator comet-pj:SuMPOOperator ;
+    comet-pj:japanesePCRField comet-pj:ConstructionProducts ;
+    dcterms:issued "2026-05-26"^^xsd:date ;
+    <https://comet.carbon/v1/pcf#validUntil> "2031-05-25"^^xsd:date ;
+    comet-pj:pcrOverviewJa
+        "ポルトランドセメント、混合セメント、エコセメントを対象とする。また、セメント製造における中間物質であるクリンカについても、本Sub-PCRの対象とする。なお、いずれも中間財としての製品を対象とする。"@ja ;
+    comet-pj:workingGroupMember
+        [ a schema:Organization ; schema:name "一般社団法人セメント協会"@ja ; schema:name "Japan Cement Association"@en ] ,
+        [ a schema:Organization ; schema:name "太平洋セメント株式会社"@ja ; schema:name "TAIHEIYO CEMENT CORPORATION"@en ] ,
+        [ a schema:Organization ; schema:name "株式会社トクヤマ"@ja ; schema:name "Tokuyama Corporation"@en ] ;
+    dcterms:source <https://ecoleaf-label.jp/en/pcr/78> ;
+    <http://www.w3.org/ns/prov#wasDerivedFrom> <https://ecoleaf-label.jp/en/pcr/78> .
+
+# A dummy ProductCarbonFootprint governed by this PCR
+pcrbase:example-cement-pcf-001
+    a comet:ProductCarbonFootprint ;
+    rdfs:label "Example cement PCF governed by SuMPO cement PCR"@en ;
+    comet-pcf:governedByPCR pcrbase:sumpo-2b5654445242-1_0_0 .
+
+# =============================================================================
+# Example: Steel products for construction (PA-180000-AJ-08) — legacy format
+# =============================================================================
+
+pcrbase:sumpo-0ed5d74edfc0-rev08
+    a comet-pj:LegacyEcoLeafPCR ;
+    dcterms:title
+        "Steel products for construction"@en ,
+        "建設用鋼製品"@ja ;
+    comet-pj:pcrRegistrationNumber "PA-180000-AJ-08" ;
+    comet-pcf:version "rev08" ;
+    comet-pcf:programOperator comet-pj:SuMPOOperator ;
+    comet-pj:japanesePCRField comet-pj:ConstructionProducts ;
+    dcterms:source <https://ecoleaf-label.jp/en/pcr/9> .
+
+# =============================================================================
+# Example: Non-glutinous Rice (PA-691000-BQ-03)
+# =============================================================================
+
+pcrbase:sumpo-64e1ed4113f6-rev01
+    a comet-pj:SuMPOPCRDocument ;
+    dcterms:title
+        "Non-glutinous Rice"@en ,
+        "うるち米"@ja ;
+    comet-pj:pcrRegistrationNumber "PA-691000-BQ-03" ;
+    comet-pcf:version "rev03" ;
+    comet-pcf:programOperator comet-pj:SuMPOOperator ;
+    comet-pj:japanesePCRField comet-pj:FoodBeverages ;
+    dcterms:source <https://ecoleaf-label.jp/en/pcr/45> .

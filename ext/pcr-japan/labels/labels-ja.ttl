@@ -1,0 +1,360 @@
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix comet:    <https://comet.carbon/v1/core#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-eac: <https://comet.carbon/v1/eac#> .
+@prefix comet-pj:  <https://comet.carbon/ext/pcr-japan#> .
+
+# =============================================================================
+# COMET PCR Japan Extension — Japanese Labels (ja)
+# Language: ja (日本語)
+# Coverage: COMET core + PCF + PCR-Japan extension — 85 terms
+# Source:   Expert LCA/EPD terminology, JIS standards, SuMPO program documents
+# =============================================================================
+
+# ── COMET Core (L1–L3) ──────────────────────────────────────────────────────
+comet:ProductCarbonFootprint
+    rdfs:label      "製品カーボンフットプリント"@ja ;
+    skos:prefLabel  "製品カーボンフットプリント"@ja ;
+    skos:altLabel   "PCF"@ja ;
+    skos:definition "製品のライフサイクル全体にわたる温室効果ガス排出量の総量。"@ja .
+
+comet:Product
+    rdfs:label      "製品"@ja ;
+    skos:prefLabel  "製品"@ja .
+
+comet:Process
+    rdfs:label      "プロセス"@ja ;
+    skos:prefLabel  "プロセス"@ja ;
+    skos:definition "製品の製造または使用に関連する単位プロセスまたはプロセス群。"@ja .
+
+comet:Material
+    rdfs:label      "材料"@ja ;
+    skos:prefLabel  "材料"@ja ;
+    skos:altLabel   "素材"@ja .
+
+comet:Emission
+    rdfs:label      "排出量"@ja ;
+    skos:prefLabel  "排出量"@ja ;
+    skos:definition "温室効果ガスの大気中への排出。"@ja .
+
+comet:ActivityData
+    rdfs:label      "活動量データ"@ja ;
+    skos:prefLabel  "活動量データ"@ja ;
+    skos:definition "排出量算定に使用する活動量（例：燃料消費量、電力使用量）。"@ja .
+
+comet:DataQualityIndicator
+    rdfs:label      "データ品質指標"@ja ;
+    skos:prefLabel  "データ品質指標"@ja ;
+    skos:definition "LCAデータの時間的・地理的・技術的代表性の評価指標。"@ja .
+
+comet:LifeCycleStage
+    rdfs:label      "ライフサイクル段階"@ja ;
+    skos:prefLabel  "ライフサイクル段階"@ja ;
+    skos:altLabel   "LCI段階"@ja .
+
+comet:SystemBoundary
+    rdfs:label      "システム境界"@ja ;
+    skos:prefLabel  "システム境界"@ja ;
+    skos:definition "製品システムに含まれるプロセスの範囲。どの段階・フローを算定対象とするかを定める。"@ja .
+
+comet:FunctionalUnit
+    rdfs:label      "機能単位"@ja ;
+    skos:prefLabel  "機能単位"@ja ;
+    skos:altLabel   "宣言単位"@ja ;
+    skos:definition "製品システムの性能を定量化するための基準単位。PCRで規定される。"@ja .
+
+comet:AllocationMethod
+    rdfs:label      "配分方法"@ja ;
+    skos:prefLabel  "配分方法"@ja ;
+    skos:definition "複数の製品・サービスを生産するプロセスに対するインプット・アウトプットの配分方法。"@ja .
+
+comet:Scenario
+    rdfs:label      "シナリオ"@ja ;
+    skos:prefLabel  "シナリオ"@ja ;
+    skos:definition "使用段階・廃棄段階のパラメータを定める想定条件の集合。"@ja .
+
+# ── COMET PCF Extension (L4) ────────────────────────────────────────────────
+comet-pcf:PCRDocument
+    rdfs:label      "製品カテゴリルール文書"@ja ;
+    skos:prefLabel  "PCR文書"@ja ;
+    skos:altLabel   "製品カテゴリルール"@ja , "PCR"@ja ;
+    skos:definition "特定の製品カテゴリに対するEPD算定ルールを規定する規範的文書。ISO 14025に基づく。"@ja .
+
+comet-pcf:PCRProgramOperator
+    rdfs:label      "PCRプログラムオペレーター"@ja ;
+    skos:prefLabel  "プログラムオペレーター"@ja ;
+    skos:definition "PCRを発行・管理し、EPD登録プログラムを運営する組織。"@ja .
+
+comet-pcf:governedByPCR
+    rdfs:label      "PCRによって管理される"@ja ;
+    skos:prefLabel  "PCR管理関係"@ja ;
+    skos:definition "製品カーボンフットプリントとそれを管理するPCR文書を結ぶキーストーンプロパティ。"@ja .
+
+comet-pcf:DeclaredModule
+    rdfs:label      "宣言モジュール"@ja ;
+    skos:prefLabel  "宣言モジュール"@ja ;
+    skos:definition "EPDに含まれるライフサイクルモジュール（A1〜D）。EN 15804またはISO 21930で定義される。"@ja .
+
+comet-pcf:ReferenceServiceLife
+    rdfs:label      "基準耐用年数"@ja ;
+    skos:prefLabel  "基準耐用年数"@ja ;
+    skos:altLabel   "RSL"@ja ;
+    skos:definition "PCRが規定する製品の標準的な耐用年数。使用段階シナリオの算定基準となる。"@ja .
+
+comet-pcf:CutOffRule
+    rdfs:label      "カットオフルール"@ja ;
+    skos:prefLabel  "カットオフルール"@ja ;
+    skos:definition "インベントリへの算入を省略できる質量・エネルギー・環境負荷の閾値。"@ja .
+
+comet-pcf:ContentDeclaration
+    rdfs:label      "コンテンツ申告"@ja ;
+    skos:prefLabel  "コンテンツ申告"@ja ;
+    skos:definition "EPDに含まれる製品成分・有害物質・生物由来炭素の申告情報。"@ja .
+
+comet-pcf:CircularFootprintFormula
+    rdfs:label      "循環フットプリント式（CFF）"@ja ;
+    skos:prefLabel  "循環フットプリント式"@ja ;
+    skos:altLabel   "CFF"@ja ;
+    skos:definition "EN 15804+A2で規定されるリサイクル材料・廃棄段階の配分手法。"@ja .
+
+comet-pcf:EFImpactCategory
+    rdfs:label      "EF影響カテゴリ"@ja ;
+    skos:prefLabel  "EF影響カテゴリ"@ja ;
+    skos:definition "EU環境フットプリント（EF 3.1）の16の影響カテゴリ。PEFCR・EN 15804+A2で必須。"@ja .
+
+# ── COMET EAC (L5) ──────────────────────────────────────────────────────────
+comet-eac:Certification
+    rdfs:label      "認証"@ja ;
+    skos:prefLabel  "認証"@ja ;
+    skos:definition "第三者機関による環境パフォーマンスの検証・認証。"@ja .
+
+# ── PCR Japan Extension classes ─────────────────────────────────────────────
+comet-pj:SuMPOPCRDocument
+    rdfs:label      "SuMPO PCR文書"@ja ;
+    skos:prefLabel  "SuMPO PCR文書"@ja ;
+    skos:definition "SuMPO環境ラベルプログラムが発行するPCR文書。ISO 21930またはEN 15804に準拠。"@ja .
+
+comet-pj:EcoLeafDeclaration
+    rdfs:label      "エコリーフ環境ラベル宣言"@ja ;
+    skos:prefLabel  "エコリーフ宣言"@ja ;
+    skos:definition "SuMPOエコリーフラベルプログラムの下で発行されるEPD。"@ja .
+
+comet-pj:ISO21930PCR
+    rdfs:label      "ISO 21930 PCR"@ja ;
+    skos:prefLabel  "ISO 21930 PCR"@ja ;
+    skos:definition "ISO 21930に正式準拠したSuMPO PCR。"@ja .
+
+comet-pj:LegacyEcoLeafPCR
+    rdfs:label      "旧エコリーフPCR"@ja ;
+    skos:prefLabel  "旧エコリーフPCR"@ja ;
+    skos:definition "PA-NNNNNN-XX-NN形式の旧登録番号を使用するSuMPO PCR（2024年以前）。"@ja .
+
+comet-pj:SuMPOOperator
+    rdfs:label      "一般社団法人サステナブル経営推進機構（SuMPO）"@ja ;
+    skos:prefLabel  "SuMPO"@ja ;
+    skos:altLabel   "サステナブル経営推進機構"@ja .
+
+# ── PCR Japan properties ────────────────────────────────────────────────────
+comet-pj:pcrOverviewJa
+    rdfs:label      "PCR適用範囲概要（日本語）"@ja ;
+    skos:prefLabel  "PCR適用範囲概要"@ja .
+
+comet-pj:validityPeriodJa
+    rdfs:label      "有効期間（日本語）"@ja ;
+    skos:prefLabel  "有効期間"@ja .
+
+comet-pj:workingGroupMember
+    rdfs:label      "PCRワーキンググループメンバー"@ja ;
+    skos:prefLabel  "WGメンバー"@ja .
+
+comet-pj:pcrRegistrationNumber
+    rdfs:label      "SuMPO PCR登録番号"@ja ;
+    skos:prefLabel  "PCR登録番号"@ja .
+
+comet-pj:japanesePCRField
+    rdfs:label      "PCR製品分野（日本）"@ja ;
+    skos:prefLabel  "製品分野"@ja .
+
+# ── SKOS concept scheme ─────────────────────────────────────────────────────
+comet-pj:JapanesePCRField
+    rdfs:label      "SuMPO EPD日本製品分野分類"@ja ;
+    skos:prefLabel  "製品分野分類"@ja .
+
+comet-pj:ConstructionProducts
+    rdfs:label      "建設製品"@ja ;
+    skos:prefLabel  "建設製品"@ja ;
+    skos:altLabel   "建材"@ja .
+
+comet-pj:MachineryEquipment
+    rdfs:label      "機械・設備"@ja ;
+    skos:prefLabel  "機械・設備"@ja .
+
+comet-pj:FoodBeverages
+    rdfs:label      "食品・飲料"@ja ;
+    skos:prefLabel  "食品・飲料"@ja .
+
+comet-pj:ChemicalProducts
+    rdfs:label      "化学製品"@ja ;
+    skos:prefLabel  "化学製品"@ja .
+
+comet-pj:MetalMineralPlasticGlass
+    rdfs:label      "金属・鉱物・プラスチック・ガラス製品"@ja ;
+    skos:prefLabel  "金属・鉱物・プラスチック・ガラス製品"@ja .
+
+comet-pj:PaperPlasticProducts
+    rdfs:label      "紙・プラスチック製品"@ja ;
+    skos:prefLabel  "紙・プラスチック製品"@ja .
+
+comet-pj:TextilesFootwearApparel
+    rdfs:label      "繊維・履物・衣料品"@ja ;
+    skos:prefLabel  "繊維・履物・衣料品"@ja .
+
+comet-pj:FurnitureOtherGoods
+    rdfs:label      "家具・その他製品"@ja ;
+    skos:prefLabel  "家具・その他製品"@ja .
+
+comet-pj:VehiclesTransportEquipment
+    rdfs:label      "車両・輸送機器"@ja ;
+    skos:prefLabel  "車両・輸送機器"@ja .
+
+comet-pj:ElectricitySteamFuels
+    rdfs:label      "電力・蒸気・燃料"@ja ;
+    skos:prefLabel  "電力・蒸気・燃料"@ja .
+
+comet-pj:InfrastructureBuildings
+    rdfs:label      "インフラ・建物"@ja ;
+    skos:prefLabel  "インフラ・建物"@ja .
+
+comet-pj:Services
+    rdfs:label      "サービス"@ja ;
+    skos:prefLabel  "サービス"@ja .
+
+comet-pj:Others
+    rdfs:label      "その他"@ja ;
+    skos:prefLabel  "その他"@ja .
+
+# ── PCRbase clause vocabulary — Japanese labels ──────────────────────────────
+# These terms label the 65 PCRbase clause_keys in Japanese,
+# enabling cross-lingual querying of extracted PCR requirements.
+
+<https://pcrbase.org/v1/clause/id.operator>
+    rdfs:label "プログラムオペレーター"@ja ; skos:prefLabel "プログラムオペレーター"@ja .
+<https://pcrbase.org/v1/clause/id.program>
+    rdfs:label "プログラム名"@ja ; skos:prefLabel "プログラム名"@ja .
+<https://pcrbase.org/v1/clause/id.pcr_number>
+    rdfs:label "PCR登録番号"@ja ; skos:prefLabel "PCR登録番号"@ja .
+<https://pcrbase.org/v1/clause/id.version>
+    rdfs:label "バージョン"@ja ; skos:prefLabel "バージョン"@ja .
+<https://pcrbase.org/v1/clause/id.pub_date>
+    rdfs:label "発行日"@ja ; skos:prefLabel "発行日"@ja .
+<https://pcrbase.org/v1/clause/id.expiry_date>
+    rdfs:label "有効期限"@ja ; skos:prefLabel "有効期限"@ja .
+<https://pcrbase.org/v1/clause/id.cpc_code>
+    rdfs:label "CPCコード"@ja ; skos:prefLabel "CPCコード"@ja .
+<https://pcrbase.org/v1/clause/id.geography>
+    rdfs:label "対象地域"@ja ; skos:prefLabel "対象地域"@ja .
+<https://pcrbase.org/v1/clause/id.language>
+    rdfs:label "文書言語"@ja ; skos:prefLabel "文書言語"@ja .
+<https://pcrbase.org/v1/clause/scope.product_category>
+    rdfs:label "製品カテゴリー定義"@ja ; skos:prefLabel "製品カテゴリー"@ja .
+<https://pcrbase.org/v1/clause/scope.intended_use>
+    rdfs:label "意図した使用"@ja ; skos:prefLabel "意図した使用"@ja .
+<https://pcrbase.org/v1/clause/scope.inclusions>
+    rdfs:label "含まれるもの"@ja ; skos:prefLabel "含まれるもの"@ja .
+<https://pcrbase.org/v1/clause/scope.exclusions>
+    rdfs:label "除外されるもの"@ja ; skos:prefLabel "除外されるもの"@ja .
+<https://pcrbase.org/v1/clause/scope.comparability>
+    rdfs:label "比較可能性"@ja ; skos:prefLabel "比較可能性"@ja .
+<https://pcrbase.org/v1/clause/scope.target_audience>
+    rdfs:label "対象者"@ja ; skos:prefLabel "対象者"@ja .
+<https://pcrbase.org/v1/clause/unit.declared_unit>
+    rdfs:label "宣言単位"@ja ; skos:prefLabel "宣言単位"@ja .
+<https://pcrbase.org/v1/clause/unit.reference_flow>
+    rdfs:label "参照フロー"@ja ; skos:prefLabel "参照フロー"@ja .
+<https://pcrbase.org/v1/clause/unit.quantification>
+    rdfs:label "定量化規則"@ja ; skos:prefLabel "定量化規則"@ja .
+<https://pcrbase.org/v1/clause/unit.mass_reference>
+    rdfs:label "質量基準"@ja ; skos:prefLabel "質量基準"@ja .
+<https://pcrbase.org/v1/clause/unit.conversion>
+    rdfs:label "換算係数"@ja ; skos:prefLabel "換算係数"@ja .
+<https://pcrbase.org/v1/clause/boundary.modules_declared>
+    rdfs:label "宣言モジュール"@ja ; skos:prefLabel "宣言モジュール"@ja .
+<https://pcrbase.org/v1/clause/boundary.cut_off_desc>
+    rdfs:label "カットオフルール説明"@ja ; skos:prefLabel "カットオフルール"@ja .
+<https://pcrbase.org/v1/clause/boundary.unit_processes>
+    rdfs:label "単位プロセス"@ja ; skos:prefLabel "単位プロセス"@ja .
+<https://pcrbase.org/v1/clause/modules.A1A3>
+    rdfs:label "A1-A3 製造段階"@ja ; skos:prefLabel "A1-A3"@ja .
+<https://pcrbase.org/v1/clause/modules.A4A5>
+    rdfs:label "A4-A5 建設段階"@ja ; skos:prefLabel "A4-A5"@ja .
+<https://pcrbase.org/v1/clause/modules.B1B7>
+    rdfs:label "B1-B7 使用段階"@ja ; skos:prefLabel "B1-B7"@ja .
+<https://pcrbase.org/v1/clause/modules.C1C4>
+    rdfs:label "C1-C4 廃棄段階"@ja ; skos:prefLabel "C1-C4"@ja .
+<https://pcrbase.org/v1/clause/modules.D>
+    rdfs:label "モジュールD"@ja ; skos:prefLabel "モジュールD"@ja .
+<https://pcrbase.org/v1/clause/cutoff.mass_threshold>
+    rdfs:label "質量カットオフ閾値"@ja ; skos:prefLabel "質量カットオフ"@ja .
+<https://pcrbase.org/v1/clause/cutoff.energy_threshold>
+    rdfs:label "エネルギーカットオフ閾値"@ja ; skos:prefLabel "エネルギーカットオフ"@ja .
+<https://pcrbase.org/v1/clause/cutoff.completeness>
+    rdfs:label "完全性要件"@ja ; skos:prefLabel "完全性"@ja .
+<https://pcrbase.org/v1/clause/cutoff.energy>
+    rdfs:label "エネルギーカットオフ"@ja ; skos:prefLabel "エネルギーカットオフ"@ja .
+<https://pcrbase.org/v1/clause/cutoff.environmental>
+    rdfs:label "環境カットオフ"@ja ; skos:prefLabel "環境カットオフ"@ja .
+<https://pcrbase.org/v1/clause/alloc.co_product>
+    rdfs:label "副産物配分方法"@ja ; skos:prefLabel "副産物配分"@ja .
+<https://pcrbase.org/v1/clause/alloc.allocation_rule>
+    rdfs:label "配分ルール"@ja ; skos:prefLabel "配分ルール"@ja .
+<https://pcrbase.org/v1/clause/alloc.recycling>
+    rdfs:label "リサイクル配分"@ja ; skos:prefLabel "リサイクル配分"@ja .
+<https://pcrbase.org/v1/clause/alloc.multifunction>
+    rdfs:label "多機能配分"@ja ; skos:prefLabel "多機能配分"@ja .
+<https://pcrbase.org/v1/clause/dq.temporal>
+    rdfs:label "時間的代表性"@ja ; skos:prefLabel "時間的代表性"@ja .
+<https://pcrbase.org/v1/clause/dq.geographical>
+    rdfs:label "地理的代表性"@ja ; skos:prefLabel "地理的代表性"@ja .
+<https://pcrbase.org/v1/clause/dq.technological>
+    rdfs:label "技術的代表性"@ja ; skos:prefLabel "技術的代表性"@ja .
+<https://pcrbase.org/v1/clause/dq.primary_data>
+    rdfs:label "一次データ要件"@ja ; skos:prefLabel "一次データ"@ja .
+<https://pcrbase.org/v1/clause/dq.background_db>
+    rdfs:label "背景データベース"@ja ; skos:prefLabel "背景DB"@ja .
+<https://pcrbase.org/v1/clause/lcia.method>
+    rdfs:label "LCIA方法論"@ja ; skos:prefLabel "LCIA方法論"@ja .
+<https://pcrbase.org/v1/clause/lcia.gwp_method>
+    rdfs:label "GWP評価方法"@ja ; skos:prefLabel "GWP"@ja .
+<https://pcrbase.org/v1/clause/lcia.indicators>
+    rdfs:label "影響指標"@ja ; skos:prefLabel "影響指標"@ja .
+<https://pcrbase.org/v1/clause/lcia.inventory_flows>
+    rdfs:label "インベントリフロー"@ja ; skos:prefLabel "インベントリフロー"@ja .
+<https://pcrbase.org/v1/clause/lcia.en15804_set>
+    rdfs:label "EN15804指標セット"@ja ; skos:prefLabel "EN15804指標"@ja .
+<https://pcrbase.org/v1/clause/scenario.rsl>
+    rdfs:label "基準耐用年数"@ja ; skos:prefLabel "基準耐用年数"@ja .
+<https://pcrbase.org/v1/clause/scenario.use>
+    rdfs:label "使用シナリオ"@ja ; skos:prefLabel "使用シナリオ"@ja .
+<https://pcrbase.org/v1/clause/scenario.eol>
+    rdfs:label "廃棄シナリオ"@ja ; skos:prefLabel "廃棄シナリオ"@ja .
+<https://pcrbase.org/v1/clause/scenario.transport>
+    rdfs:label "輸送シナリオ"@ja ; skos:prefLabel "輸送シナリオ"@ja .
+<https://pcrbase.org/v1/clause/content.hazardous>
+    rdfs:label "有害物質"@ja ; skos:prefLabel "有害物質"@ja .
+<https://pcrbase.org/v1/clause/content.biogenic_content>
+    rdfs:label "生物由来炭素含有量"@ja ; skos:prefLabel "生物由来炭素"@ja .
+<https://pcrbase.org/v1/clause/content.declaration>
+    rdfs:label "コンテンツ申告"@ja ; skos:prefLabel "コンテンツ申告"@ja .
+<https://pcrbase.org/v1/clause/content.additional>
+    rdfs:label "追加情報"@ja ; skos:prefLabel "追加情報"@ja .
+<https://pcrbase.org/v1/clause/report.validity_period>
+    rdfs:label "有効期間"@ja ; skos:prefLabel "有効期間"@ja .
+<https://pcrbase.org/v1/clause/report.review_panel>
+    rdfs:label "レビューパネル"@ja ; skos:prefLabel "レビューパネル"@ja .
+<https://pcrbase.org/v1/clause/report.layout>
+    rdfs:label "EPDレイアウト"@ja ; skos:prefLabel "EPDレイアウト"@ja .
+<https://pcrbase.org/v1/clause/report.digital_format>
+    rdfs:label "デジタル形式"@ja ; skos:prefLabel "デジタル形式"@ja .
+<https://pcrbase.org/v1/clause/unclassified>
+    rdfs:label "未分類"@ja ; skos:prefLabel "未分類"@ja .

@@ -1,0 +1,87 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+@prefix comet-pj: <https://comet.carbon/ext/pcr-japan#> .
+
+# =============================================================================
+# SHACL Shapes — COMET PCR Japan Extension
+# Validates SuMPOPCRDocument instances
+# =============================================================================
+
+comet-pj:SuMPOPCRDocumentShape
+    a sh:NodeShape ;
+    sh:targetClass comet-pj:SuMPOPCRDocument ;
+    rdfs:label "SuMPO PCR Document Shape"@en ,
+               "SuMPO PCR文書検証形状"@ja ;
+    rdfs:comment "Validates that a SuMPO PCR document has required identification and scope properties."@en ;
+
+    # Required: registration number (string, pattern matching PA- prefix)
+    sh:property [
+        sh:path comet-pj:pcrRegistrationNumber ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^PA-" ;
+        sh:message "SuMPO PCR must have a registration number starting with 'PA-'"@en ,
+                   "SuMPO PCRは'PA-'で始まる登録番号を持つ必要があります"@ja ;
+    ] ;
+
+    # Required: link to JapanesePCRField concept
+    sh:property [
+        sh:path comet-pj:japanesePCRField ;
+        sh:class comet-pj:JapanesePCRField ;
+        sh:minCount 1 ;
+        sh:message "SuMPO PCR must be linked to a JapanesePCRField concept"@en ,
+                   "SuMPO PCRはJapanesePCRField概念に紐付けられる必要があります"@ja ;
+    ] ;
+
+    # Required: program operator must be SuMPO
+    sh:property [
+        sh:path <https://comet.carbon/v1/pcf#programOperator> ;
+        sh:hasValue comet-pj:SuMPOOperator ;
+        sh:minCount 1 ;
+        sh:message "SuMPO PCR must have SuMPOOperator as program operator"@en ;
+    ] ;
+
+    # Optional: Japanese scope overview (lang-tagged @ja)
+    sh:property [
+        sh:path comet-pj:pcrOverviewJa ;
+        sh:nodeKind sh:Literal ;
+        sh:languageIn ("ja") ;
+        sh:maxCount 1 ;
+        sh:message "pcrOverviewJa must be a Japanese-language literal"@en ,
+                   "pcrOverviewJaは日本語のリテラルである必要があります"@ja ;
+    ] ;
+
+    # Optional: working group members must be organizations
+    sh:property [
+        sh:path comet-pj:workingGroupMember ;
+        sh:class schema:Organization ;
+        sh:message "Working group members must be schema:Organization instances"@en ;
+    ] ;
+
+    # Validity period (if provided, must be @ja tagged)
+    sh:property [
+        sh:path comet-pj:validityPeriodJa ;
+        sh:nodeKind sh:Literal ;
+        sh:languageIn ("ja") ;
+        sh:maxCount 1 ;
+    ] .
+
+
+comet-pj:EcoLeafDeclarationShape
+    a sh:NodeShape ;
+    sh:targetClass comet-pj:EcoLeafDeclaration ;
+    rdfs:label "EcoLeaf Declaration Shape"@en ,
+               "エコリーフ宣言検証形状"@ja ;
+
+    # Must reference a governing PCR
+    sh:property [
+        sh:path <https://comet.carbon/v1/pcf#governedByPCR> ;
+        sh:class comet-pj:SuMPOPCRDocument ;
+        sh:minCount 1 ;
+        sh:message "EcoLeaf declaration must be governed by a SuMPOPCRDocument"@en ,
+                   "エコリーフ宣言はSuMPO PCR文書によって管理される必要があります"@ja ;
+    ] .
