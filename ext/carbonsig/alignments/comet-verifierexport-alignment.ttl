@@ -1,0 +1,380 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<https://api.carbonsig.com/alignments/comet-verifier-export-v4>
+    a owl:Ontology ;
+    dcterms:title "COMET ↔ CarbonSig Verifier Export v4 Alignment"@en ;
+    dcterms:description "Crosswalk from the CarbonSig Verifier Hub export contract (v4) to the COMET ontology. Generated from crosswalk.ts; certainty is recorded as a High/Medium/Low note on each csig: target term."@en ;
+    owl:versionInfo "4.0.0" .
+
+# System.(class)  (certainty: Medium)
+<https://comet.carbon/v1/pcf#SystemBoundary> skos:broadMatch <https://api.carbonsig.com/schemas/verifier-export/v4#System> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#System> rdfs:label "System.(class)"@en ;
+    skos:note "[certainty: Medium] A System is the boundary within which processes and flows produce one or more product PCFs. COMET splits this into SystemBoundary + the resulting ProductCarbonFootprint(s)."@en .
+
+# System.systemId  (certainty: Low)
+<https://comet.carbon/v1/pcf#ProductCarbonFootprint.pcfId> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#System.systemId> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#System.systemId> rdfs:label "System.systemId"@en ;
+    skos:note "[certainty: Low] System identifier; loosely the study/PCF id. Primarily graph-wiring."@en .
+
+# System.role  (certainty: Low)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#System.role> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#System.role> rdfs:label "System.role"@en ;
+    skos:note "[certainty: Low] primary | upstream — encodes the supply-chain position of the system relative to the one under review."@en .
+
+# System.depth  (certainty: Low)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#System.depth> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#System.depth> rdfs:label "System.depth"@en ;
+    skos:note "[certainty: Low] Tier distance from the primary system; supply-chain link depth."@en .
+
+# SystemMetadata.title  (certainty: Low)
+<https://comet.carbon/v1/pcf#ProductCarbonFootprint> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.title> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.title> rdfs:label "SystemMetadata.title"@en ;
+    skos:note "[certainty: Low] Study title. Serialise as rdfs:label/skos:prefLabel on the PCF study."@en .
+
+# SystemMetadata.declaration  (certainty: Medium)
+<https://comet.carbon/v1/pcf#StandardRef> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.declaration> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.declaration> rdfs:label "SystemMetadata.declaration"@en ;
+    skos:note "[certainty: Medium] Free-text declaration of the standard/scope (e.g. 'ISO 14067, cradle-to-gate')."@en .
+
+# SystemMetadata.allocationRules  (certainty: High)
+<https://comet.carbon/v1/pcf#AllocationMethod> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.allocationRules> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.allocationRules> rdfs:label "SystemMetadata.allocationRules"@en ;
+    skos:note "[certainty: High] How shared burdens are allocated across co-products."@en .
+
+# SystemMetadata.cutOffRules  (certainty: Medium)
+<https://comet.carbon/v1/pcf#SystemBoundary> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.cutOffRules> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.cutOffRules> rdfs:label "SystemMetadata.cutOffRules"@en ;
+    skos:note "[certainty: Medium] Cut-off criteria are a component of the boundary definition."@en .
+
+# SystemMetadata.calculationMethodology  (certainty: High)
+<https://comet.carbon/v1/pcf#StandardRef> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.calculationMethodology> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.calculationMethodology> rdfs:label "SystemMetadata.calculationMethodology"@en ;
+    skos:note "[certainty: High] Calculation standard/methodology (GHG Protocol, PEF, …). Alt: comet-pcf:PCRReference."@en .
+
+# SystemMetadata.systemBoundary  (certainty: High)
+<https://comet.carbon/v1/pcf#SystemBoundary> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.systemBoundary> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.systemBoundary> rdfs:label "SystemMetadata.systemBoundary"@en ;
+    skos:note "[certainty: High] e.g. 'Cradle to Gate'. Direct correspondence."@en .
+
+# SystemMetadata.startDate  (certainty: High)
+<https://comet.carbon/v1/core#TimePeriod.startDate> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.startDate> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.startDate> rdfs:label "SystemMetadata.startDate"@en ;
+    skos:note "[certainty: High] Data collection period start."@en .
+
+# SystemMetadata.endDate  (certainty: High)
+<https://comet.carbon/v1/core#TimePeriod.endDate> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.endDate> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.endDate> rdfs:label "SystemMetadata.endDate"@en ;
+    skos:note "[certainty: High] Data collection period end."@en .
+
+# SystemMetadata.siteId  (certainty: High)
+<https://comet.carbon/v1/core#Site.siteId> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.siteId> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemMetadata.siteId> rdfs:label "SystemMetadata.siteId"@en ;
+    skos:note "[certainty: High] Production site identifier."@en .
+
+# Process.(class)  (certainty: High)
+<https://comet.carbon/v1/core#Process> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Process> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Process> rdfs:label "Process.(class)"@en ;
+    skos:note "[certainty: High] A unit process node."@en .
+
+# Process.processId  (certainty: Medium)
+<https://comet.carbon/v1/core#Process> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Process.processId> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Process.processId> rdfs:label "Process.processId"@en ;
+    skos:note "[certainty: Medium] Node identifier. COMET identifies a Process by IRI rather than a dedicated id property."@en .
+
+# Process.title  (certainty: Medium)
+<https://comet.carbon/v1/core#Process> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Process.title> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Process.title> rdfs:label "Process.title"@en ;
+    skos:note "[certainty: Medium] Process label; serialise as rdfs:label."@en .
+
+# Process.totals.embodiedEmissions  (certainty: High)
+<https://comet.carbon/v1/pcf#EmbeddedEmissions> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Process.totals.embodiedEmissions> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Process.totals.embodiedEmissions> rdfs:label "Process.totals.embodiedEmissions"@en ;
+    skos:note "[certainty: High] Pre-computed total kg CO2e across scopes for the process."@en .
+
+# Flow.(class)  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#ActivityDataRecord> skos:broadMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow> rdfs:label "Flow.(class)"@en ;
+    skos:note "[certainty: Medium] A directed exchange in the process graph. Subtype (type/category) selects a more specific COMET class."@en .
+
+# Flow.type=PurchasedInput  (certainty: High)
+<https://comet.carbon/v1/supplychain#ActivityDataRecord> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.PurchasedInput> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.PurchasedInput> rdfs:label "Flow.type=PurchasedInput"@en ;
+    skos:note "[certainty: High] Purchased input from the external market; a quantified activity-data record with an emission factor."@en .
+
+# Flow.type=ProcessWaste  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#Scope1Emissions> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.ProcessWaste> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.ProcessWaste> rdfs:label "Flow.type=ProcessWaste"@en ;
+    skos:note "[certainty: Medium] Release to environment. DirectEmission → Scope 1; ByproductWaste → Scope 3 (cat 5). See category rows."@en .
+
+# Flow.type=WIPFlow  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.WIPFlow> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.WIPFlow> rdfs:label "Flow.type=WIPFlow"@en ;
+    skos:note "[certainty: Medium] Work-in-process exchange between two processes inside the same system."@en .
+
+# Flow.type=IntermediateInput  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.IntermediateInput> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.IntermediateInput> rdfs:label "Flow.type=IntermediateInput"@en ;
+    skos:note "[certainty: Medium] Exchange entering this system from a linked upstream system."@en .
+
+# Flow.type=IntermediateOutput  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.IntermediateOutput> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.type.IntermediateOutput> rdfs:label "Flow.type=IntermediateOutput"@en ;
+    skos:note "[certainty: Medium] Exchange leaving this system to a downstream system or declared product sink."@en .
+
+# Flow.category=Material  (certainty: High)
+<https://comet.carbon/v1/core#Material> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Material> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Material> rdfs:label "Flow.category=Material"@en ;
+    skos:note "[certainty: High] Raw or processed material."@en .
+
+# Flow.category=Energy  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#Scope2Emissions> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Energy> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Energy> rdfs:label "Flow.category=Energy"@en ;
+    skos:note "[certainty: Medium] Purchased electricity/steam/heat/cooling → Scope 2 when purchased."@en .
+
+# Flow.category=Transport  (certainty: High)
+<https://comet.carbon/v1/supplychain#TransportEvent> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Transport> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Transport> rdfs:label "Flow.category=Transport"@en ;
+    skos:note "[certainty: High] Freight/logistics activity."@en .
+
+# Flow.category=Service  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#ActivityDataRecord> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Service> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.Service> rdfs:label "Flow.category=Service"@en ;
+    skos:note "[certainty: Medium] Purchased service (incl. contracted waste disposal)."@en .
+
+# Flow.category=DirectEmission  (certainty: High)
+<https://comet.carbon/v1/supplychain#Scope1Emissions> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.DirectEmission> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.DirectEmission> rdfs:label "Flow.category=DirectEmission"@en ;
+    skos:note "[certainty: High] Gaseous GHG released directly to atmosphere; GWP-weighted."@en .
+
+# Flow.category=ByproductWaste  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#Scope3Emissions> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.ByproductWaste> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.category.ByproductWaste> rdfs:label "Flow.category=ByproductWaste"@en ;
+    skos:note "[certainty: Medium] Physical waste to external disposal → Scope 3 category 5."@en .
+
+# Flow.from  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.from> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.from> rdfs:label "Flow.from"@en ;
+    skos:note "[certainty: Medium] Source node of the edge (process / linked system / boundary)."@en .
+
+# Flow.to  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.to> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.to> rdfs:label "Flow.to"@en ;
+    skos:note "[certainty: Medium] Destination node of the edge."@en .
+
+# Flow.destinations  (certainty: Low)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.destinations> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.destinations> rdfs:label "Flow.destinations"@en ;
+    skos:note "[certainty: Low] Split-edge legs when one flow serves multiple receivers."@en .
+
+# Flow.verificationStatus  (certainty: Medium)
+<https://comet.carbon/v1/ver#AssuranceLevel> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Flow.verificationStatus> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Flow.verificationStatus> rdfs:label "Flow.verificationStatus"@en ;
+    skos:note "[certainty: Medium] 'Self Attested' / 'Third Party Verified' on intermediate flows → assurance level. Alt: comet-ver:VerificationClaim."@en .
+
+# ActivityData.(class)  (certainty: High)
+<https://comet.carbon/v1/supplychain#ActivityDataRecord> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData> rdfs:label "ActivityData.(class)"@en ;
+    skos:note "[certainty: High] The physical activity quantity with provenance and quality."@en .
+
+# ActivityData.quantity  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#ActivityDataRecord> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.quantity> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.quantity> rdfs:label "ActivityData.quantity"@en ;
+    skos:note "[certainty: Medium] Recorded physical quantity (paired with unit)."@en .
+
+# ActivityData.unit  (certainty: High)
+<https://comet.carbon/v1/core#UnitOfMeasure> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.unit> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.unit> rdfs:label "ActivityData.unit"@en ;
+    skos:note "[certainty: High] Activity-data unit; align to QUDT units via comet:UnitOfMeasure."@en .
+
+# ActivityData.sourceId  (certainty: Medium)
+<https://comet.carbon/v1/emfactor#DataProvenance> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.sourceId> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.sourceId> rdfs:label "ActivityData.sourceId"@en ;
+    skos:note "[certainty: Medium] Reference to the originating record/metering system."@en .
+
+# ActivityData.dataQuality  (certainty: High)
+<https://comet.carbon/v1/supplychain#DataQualityIndicator> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.dataQuality> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.dataQuality> rdfs:label "ActivityData.dataQuality"@en ;
+    skos:note "[certainty: High] Measured/Calculated/Estimated/Default → pedigree. COMET carries 5 DQI dimensions."@en .
+
+# ActivityData.uncertainty  (certainty: Medium)
+<https://comet.carbon/v1/pcf#UncertaintyAssessment> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.uncertainty> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#ActivityData.uncertainty> rdfs:label "ActivityData.uncertainty"@en ;
+    skos:note "[certainty: Medium] ±% uncertainty (reserved)."@en .
+
+# GHGDetails.(class)  (certainty: Medium)
+<https://comet.carbon/v1/pcf#EmbeddedEmissions> skos:broadMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails> rdfs:label "GHGDetails.(class)"@en ;
+    skos:note "[certainty: Medium] All GHG attributes of a flow. The extension point for environmental impact."@en .
+
+# GHGDetails.embodiedEmissions  (certainty: High)
+<https://comet.carbon/v1/pcf#EmbeddedEmissions> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.embodiedEmissions> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.embodiedEmissions> rdfs:label "GHGDetails.embodiedEmissions"@en ;
+    skos:note "[certainty: High] Total kg CO2e attributed to the flow, all gases and scopes."@en .
+
+# GHGDetails.scopeBreakdown.scope1  (certainty: High)
+<https://comet.carbon/v1/supplychain#Scope1Emissions> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.scopeBreakdown.scope1> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.scopeBreakdown.scope1> rdfs:label "GHGDetails.scopeBreakdown.scope1"@en ;
+    skos:note "[certainty: High] Direct emissions, kg CO2e."@en .
+
+# GHGDetails.scopeBreakdown.scope2  (certainty: High)
+<https://comet.carbon/v1/supplychain#Scope2Emissions> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.scopeBreakdown.scope2> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.scopeBreakdown.scope2> rdfs:label "GHGDetails.scopeBreakdown.scope2"@en ;
+    skos:note "[certainty: High] Indirect emissions from purchased energy, kg CO2e."@en .
+
+# GHGDetails.scopeBreakdown.scope3  (certainty: High)
+<https://comet.carbon/v1/supplychain#Scope3Emissions> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.scopeBreakdown.scope3> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.scopeBreakdown.scope3> rdfs:label "GHGDetails.scopeBreakdown.scope3"@en ;
+    skos:note "[certainty: High] All other indirect emissions, kg CO2e."@en .
+
+# GHGDetails.intensity  (certainty: High)
+<https://comet.carbon/v1/supplychain#EmissionIntensity> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.intensity> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.intensity> rdfs:label "GHGDetails.intensity"@en ;
+    skos:note "[certainty: High] kg CO2e per unit of activity quantity."@en .
+
+# GHGDetails.allocationFactor  (certainty: Medium)
+<https://comet.carbon/v1/pcf#AllocationMethod> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.allocationFactor> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.allocationFactor> rdfs:label "GHGDetails.allocationFactor"@en ;
+    skos:note "[certainty: Medium] Fraction of a process's emissions allocated to an output. The factor produced by an AllocationMethod."@en .
+
+# GHGDetails.conversionRatio  (certainty: Low)
+<https://comet.carbon/v1/core#UnitOfMeasure> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.conversionRatio> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.conversionRatio> rdfs:label "GHGDetails.conversionRatio"@en ;
+    skos:note "[certainty: Low] Unit-conversion multiplier (activity unit → EF reference unit). No dedicated COMET term."@en .
+
+# GHGDetails.emissionSource  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#Scope1Emissions> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.emissionSource> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.emissionSource> rdfs:label "GHGDetails.emissionSource"@en ;
+    skos:note "[certainty: Medium] Source category for waste flows (Stationary/Mobile Combustion, Fugitive, Waste Treatment)."@en .
+
+# GHGDetails.calculationSource  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#DataQualityIndicator> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.calculationSource> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.calculationSource> rdfs:label "GHGDetails.calculationSource"@en ;
+    skos:note "[certainty: Medium] Measured vs Calculated for waste quantities; overlaps activityData.dataQuality."@en .
+
+# GHGDetails.emissionFactor  (certainty: High)
+<https://comet.carbon/v1/emfactor#EmissionFactor> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.emissionFactor> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#GHGDetails.emissionFactor> rdfs:label "GHGDetails.emissionFactor"@en ;
+    skos:note "[certainty: High] Inlined emission factor."@en .
+
+# EmissionFactor.(class)  (certainty: High)
+<https://comet.carbon/v1/emfactor#EmissionFactor> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor> rdfs:label "EmissionFactor.(class)"@en ;
+    skos:note "[certainty: High] Emission factor from the reference library."@en .
+
+# EmissionFactor.title  (certainty: Medium)
+<https://comet.carbon/v1/emfactor#EmissionFactor> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.title> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.title> rdfs:label "EmissionFactor.title"@en ;
+    skos:note "[certainty: Medium] EF name; serialise as rdfs:label."@en .
+
+# EmissionFactor.publisher  (certainty: High)
+<https://comet.carbon/v1/emfactor#EmissionFactor.efSource> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.publisher> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.publisher> rdfs:label "EmissionFactor.publisher"@en ;
+    skos:note "[certainty: High] Publisher/source (IEA, ecoinvent, EPA …)."@en .
+
+# EmissionFactor.geography  (certainty: High)
+<https://comet.carbon/v1/emfactor#EmissionFactor.efGeography> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.geography> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.geography> rdfs:label "EmissionFactor.geography"@en ;
+    skos:note "[certainty: High] Geographic scope of the factor."@en .
+
+# EmissionFactor.valuePerUnit  (certainty: High)
+<https://comet.carbon/v1/emfactor#EmissionFactor.efValue> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.valuePerUnit> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.valuePerUnit> rdfs:label "EmissionFactor.valuePerUnit"@en ;
+    skos:note "[certainty: High] kg CO2e per reference unit. For DirectEmission flows this is the GWP100 factor → comet-ef:GWP100Value.gwpValue."@en .
+
+# EmissionFactor.referenceUnit  (certainty: High)
+<https://comet.carbon/v1/emfactor#EmissionFactor.efUnit> skos:exactMatch <https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.referenceUnit> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#EmissionFactor.referenceUnit> rdfs:label "EmissionFactor.referenceUnit"@en ;
+    skos:note "[certainty: High] Unit the factor is expressed per."@en .
+
+# Declaration.(class)  (certainty: Medium)
+<https://comet.carbon/v1/pcf#EPDDeclaration> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Declaration> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Declaration> rdfs:label "Declaration.(class)"@en ;
+    skos:note "[certainty: Medium] Declared results view over the graph; an EPD/PCF-style declaration."@en .
+
+# Declaration.products  (certainty: Medium)
+<https://comet.carbon/v1/pcf#ProductCarbonFootprint> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Declaration.products> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Declaration.products> rdfs:label "Declaration.products"@en ;
+    skos:note "[certainty: Medium] Each declared product yields one PCF column."@en .
+
+# Declaration.systemHotspot  (certainty: Medium)
+<https://comet.carbon/v1/pcf#LCIAResult> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#Declaration.systemHotspot> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#Declaration.systemHotspot> rdfs:label "Declaration.systemHotspot"@en ;
+    skos:note "[certainty: Medium] System-level contributor breakdown (hotspots)."@en .
+
+# DeclaredProduct.(class)  (certainty: High)
+<https://comet.carbon/v1/pcf#ProductCarbonFootprint> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct> rdfs:label "DeclaredProduct.(class)"@en ;
+    skos:note "[certainty: High] One declared output product = one product carbon footprint."@en .
+
+# DeclaredProduct.title  (certainty: Medium)
+<https://comet.carbon/v1/core#Material> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.title> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.title> rdfs:label "DeclaredProduct.title"@en ;
+    skos:note "[certainty: Medium] The product itself ≈ a Material; title serialises as rdfs:label."@en .
+
+# DeclaredProduct.ghgIntensity  (certainty: High)
+<https://comet.carbon/v1/pcf#CarbonIntensity> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.ghgIntensity> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.ghgIntensity> rdfs:label "DeclaredProduct.ghgIntensity"@en ;
+    skos:note "[certainty: High] kg CO2e per declared unit."@en .
+
+# DeclaredProduct.embodiedEmissions  (certainty: High)
+<https://comet.carbon/v1/pcf#ProductCarbonFootprint.totalGWP> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.embodiedEmissions> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.embodiedEmissions> rdfs:label "DeclaredProduct.embodiedEmissions"@en ;
+    skos:note "[certainty: High] Absolute kg CO2e for the product. Alt: comet-pcf:EmbeddedEmissions."@en .
+
+# DeclaredProduct.sources  (certainty: Medium)
+<https://comet.carbon/v1/pcf#EmbeddedEmissions> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.sources> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.sources> rdfs:label "DeclaredProduct.sources"@en ;
+    skos:note "[certainty: Medium] Gross emission sources total for the product."@en .
+
+# DeclaredProduct.sinks  (certainty: Medium)
+<https://comet.carbon/v1/pcf#BiogenicCarbon> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.sinks> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.sinks> rdfs:label "DeclaredProduct.sinks"@en ;
+    skos:note "[certainty: Medium] Carbon sinks/uptake. Alt: comet-cn:GHGRemovalEnhancement (ISO 14068 removals)."@en .
+
+# DeclaredProduct.credits  (certainty: Medium)
+<https://comet.carbon/ext/iso14068#OffsettingEvent> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.credits> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.credits> rdfs:label "DeclaredProduct.credits"@en ;
+    skos:note "[certainty: Medium] Offset credits applied. Alt: comet-eac (the underlying certificate)."@en .
+
+# DeclaredProduct.quantity  (certainty: Medium)
+<https://comet.carbon/v1/pcf#FunctionalUnit> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.quantity> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.quantity> rdfs:label "DeclaredProduct.quantity"@en ;
+    skos:note "[certainty: Medium] Declared quantity; the basis of the functional unit."@en .
+
+# DeclaredProduct.unit  (certainty: High)
+<https://comet.carbon/v1/pcf#FunctionalUnit> skos:closeMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.unit> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.unit> rdfs:label "DeclaredProduct.unit"@en ;
+    skos:note "[certainty: High] Declared unit = functional unit basis."@en .
+
+# DeclaredProduct.hotspotContributions  (certainty: Medium)
+<https://comet.carbon/v1/pcf#LCIAResult> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.hotspotContributions> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#DeclaredProduct.hotspotContributions> rdfs:label "DeclaredProduct.hotspotContributions"@en ;
+    skos:note "[certainty: Medium] Per-product contributor values (sparse)."@en .
+
+# HotspotEntry.(class)  (certainty: Medium)
+<https://comet.carbon/v1/pcf#LCIAResult> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry> rdfs:label "HotspotEntry.(class)"@en ;
+    skos:note "[certainty: Medium] One contributor row in the hotspot analysis."@en .
+
+# HotspotEntry.contributor  (certainty: Low)
+<https://comet.carbon/v1/core#Material> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry.contributor> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry.contributor> rdfs:label "HotspotEntry.contributor"@en ;
+    skos:note "[certainty: Low] The contributing input/material/emission."@en .
+
+# HotspotEntry.process  (certainty: Medium)
+<https://comet.carbon/v1/core#Process> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry.process> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry.process> rdfs:label "HotspotEntry.process"@en ;
+    skos:note "[certainty: Medium] The process the contribution arises in."@en .
+
+# HotspotEntry.value  (certainty: Medium)
+<https://comet.carbon/v1/pcf#LCIAResult> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry.value> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#HotspotEntry.value> rdfs:label "HotspotEntry.value"@en ;
+    skos:note "[certainty: Medium] kg CO2e contribution."@en .
+
+# SystemRef.systemId  (certainty: Medium)
+<https://comet.carbon/v1/supplychain#SupplyChainLink> skos:relatedMatch <https://api.carbonsig.com/schemas/verifier-export/v4#SystemRef.systemId> .
+<https://api.carbonsig.com/schemas/verifier-export/v4#SystemRef.systemId> rdfs:label "SystemRef.systemId"@en ;
+    skos:note "[certainty: Medium] Cross-system linkage (the linked system)."@en .
