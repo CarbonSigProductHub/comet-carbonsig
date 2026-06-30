@@ -1,56 +1,93 @@
 #!/usr/bin/env python3
-"""Regenerate registry/comet-curies.json — the canonical set of CURIEs that
-CarbonSig repos are allowed to reference.
+"""Regenerate registry/comet-curies.json — the canonical allow-list of CURIEs
+that CarbonSig repos may reference. This repo is the GOLD MASTER for COMET data;
+the registry must be fully reproducible from the files committed here.
 
 Sources:
-  1. COMET's published terms (docs/ontology-data.json from Carbonsig/comet-ontology)
-  2. The comet-pcr extension TTL in this repo (pending-upstream terms)
-
-The result is a flat, sorted, language-neutral allow-list. Both verifier-export
-(TS) and pcrbase (Python) validate every COMET CURIE they reference against it.
+  1. Published COMET terms — docs/ontology-data.json in THIS repo (the gold-master
+     COMET snapshot). Only the upstreamed COMET layers count as "published".
+  2. Pending CarbonSig extensions — every extension TTL whose namespace is NOT yet
+     an upstreamed COMET layer (currently comet-pcr, comet-pj). Each is harvested
+     from its own TTL into a `<prefix>_pending` list, so adding a new extension
+     TTL automatically adds a new pending list — no code change needed.
 
 Usage:
-  python tools/build_registry.py --comet-data /path/to/comet-ontology/docs/ontology-data.json
-  python tools/build_registry.py            # auto-discovers a sibling comet-ontology checkout
+  python tools/build_registry.py                 # uses this repo's docs/ontology-data.json
+  python tools/build_registry.py --comet-data PATH
 """
 from __future__ import annotations
 
 import argparse
 import json
-import re
 from pathlib import Path
+
+from rdflib import Graph, RDF, OWL, RDFS  # type: ignore
+from rdflib.namespace import SKOS  # type: ignore
 
 ROOT = Path(__file__).resolve().parent.parent
 NS_FILE = ROOT / "registry" / "namespaces.json"
-PCR_TTL = ROOT / "extensions" / "comet-pcr.ttl"
 OUT = ROOT / "registry" / "comet-curies.json"
+EXT_GLOBS = ["extensions/*.ttl", "ext/*/comet-ext-*.ttl"]
 
-# Term-defining predicates in the extension TTL (subject is a defined term).
-_DEF_RE = re.compile(
-    r"^(comet-pcr:[A-Za-z0-9_]+)\s+a\s+(owl:Class|owl:ObjectProperty|owl:DatatypeProperty|skos:Concept|skos:ConceptScheme)",
-    re.MULTILINE,
-)
+# The upstreamed COMET layers. Terms with these prefixes count as "published";
+# every other comet-* extension found in a TTL is treated as pending.
+PUBLISHED_LAYER_PREFIXES = {
+    "comet", "comet-ef", "comet-sc", "comet-pcf",
+    "comet-eac", "comet-ver", "comet-mkt", "comet-rs", "comet-cn",
+}
+
+TERM_TYPES = {OWL.Class, OWL.ObjectProperty, OWL.DatatypeProperty,
+              OWL.AnnotationProperty, SKOS.Concept, SKOS.ConceptScheme, RDF.Property,
+              RDFS.Class}
 
 
-def load_namespaces() -> dict:
-    return json.loads(NS_FILE.read_text())
+def load_namespaces() -> dict[str, str]:
+    ns = json.loads(NS_FILE.read_text())
+    out: dict[str, str] = {}
+    for group in ("comet_core", "comet_extensions", "carbonsig"):
+        out.update(ns.get(group, {}))
+    return out
 
 
-def comet_curies(comet_data: Path) -> list[str]:
+def iri_to_curie(iri: str, ns: dict[str, str]) -> str | None:
+    # longest base first, so comet-pcr (…/ext/pcr#) wins over comet (…/core#) etc.
+    for prefix, base in sorted(ns.items(), key=lambda kv: -len(kv[1])):
+        if iri.startswith(base):
+            return f"{prefix}:{iri[len(base):]}"
+    return None
+
+
+def comet_published(comet_data: Path) -> list[str]:
     data = json.loads(comet_data.read_text())
-    # Only COMET-owned terms (skip incorporated CAD Trust dictionary rows).
-    comet_prefixes = {"comet", "comet-ef", "comet-sc", "comet-pcf", "comet-eac",
-                      "comet-ver", "comet-mkt", "comet-rs", "comet-cn"}
-    return sorted({t["curie"] for t in data["terms"] if t.get("prefix") in comet_prefixes})
+    return sorted({t["curie"] for t in data["terms"]
+                   if t.get("prefix") in PUBLISHED_LAYER_PREFIXES})
 
 
-def pcr_curies() -> list[str]:
-    text = PCR_TTL.read_text()
-    return sorted({m.group(1) for m in _DEF_RE.finditer(text)})
+def harvest_extensions(ns: dict[str, str]) -> dict[str, list[str]]:
+    """Return {prefix: [CURIEs]} for every pending extension TTL."""
+    pending: dict[str, set[str]] = {}
+    for pattern in EXT_GLOBS:
+        for ttl in sorted(ROOT.glob(pattern)):
+            if ttl.name.endswith("-shapes.ttl"):
+                continue  # SHACL shapes are not vocabulary terms
+            g = Graph().parse(ttl, format="turtle")
+            for subj in set(g.subjects()):
+                types = set(g.objects(subj, RDF.type))
+                if not (types & TERM_TYPES):
+                    continue
+                curie = iri_to_curie(str(subj), ns)
+                if not curie:
+                    continue
+                prefix = curie.split(":", 1)[0]
+                if prefix in PUBLISHED_LAYER_PREFIXES:
+                    continue  # already an upstreamed COMET layer
+                pending.setdefault(prefix, set()).add(curie)
+    return {p: sorted(v) for p, v in pending.items()}
 
 
 def discover_comet_data() -> Path | None:
     for cand in [
+        ROOT / "docs" / "ontology-data.json",                       # this repo (gold master)
         ROOT.parent / "comet-ontology" / "docs" / "ontology-data.json",
         ROOT / "vendor" / "comet-ontology" / "docs" / "ontology-data.json",
     ]:
@@ -62,31 +99,38 @@ def discover_comet_data() -> Path | None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--comet-data", type=Path, default=None,
-                    help="Path to comet-ontology docs/ontology-data.json")
+                    help="Path to a COMET ontology-data.json (default: this repo's docs/)")
     args = ap.parse_args()
 
     comet_data = args.comet_data or discover_comet_data()
     if not comet_data or not comet_data.exists():
-        print("ERROR: could not find comet-ontology ontology-data.json; pass --comet-data PATH")
+        print("ERROR: could not find ontology-data.json; pass --comet-data PATH")
         return 1
 
     ns = load_namespaces()
-    core = comet_curies(comet_data)
-    pending = pcr_curies()
+    core = comet_published(comet_data)
+    pending = harvest_extensions(ns)  # e.g. {"comet-pcr": [...], "comet-pj": [...]}
 
-    registry = {
-        "description": "Allow-list of COMET CURIEs that CarbonSig repos may reference. "
-                       "Generated by tools/build_registry.py — do not hand-edit.",
-        "comet_source": str(comet_data.name),
-        "namespaces": {**ns["comet_core"], **ns["comet_extensions"], **ns["carbonsig"]},
-        "counts": {"comet_published": len(core), "comet_pcr_pending": len(pending),
-                   "total": len(core) + len(pending)},
+    counts = {"comet_published": len(core)}
+    registry: dict[str, object] = {
+        "description": "Allow-list of CURIEs CarbonSig repos may reference. GOLD MASTER: "
+                       "generated by tools/build_registry.py from this repo. Do not hand-edit.",
+        "comet_source": comet_data.name,
+        "namespaces": ns,
+        "counts": counts,
         "comet_published": core,
-        "comet_pcr_pending": pending,
     }
+    total = len(core)
+    for prefix in sorted(pending):
+        key = prefix.replace("-", "_") + "_pending"
+        registry[key] = pending[prefix]
+        counts[key] = len(pending[prefix])
+        total += len(pending[prefix])
+    counts["total"] = total
+
     OUT.write_text(json.dumps(registry, indent=2) + "\n")
-    print(f"wrote {OUT.relative_to(ROOT)}: "
-          f"{len(core)} published + {len(pending)} pending comet-pcr = {len(core)+len(pending)}")
+    parts = " + ".join(f"{counts[k]} {k}" for k in counts if k != "total")
+    print(f"wrote {OUT.relative_to(ROOT)}: {parts} = {total}")
     return 0
 
 
