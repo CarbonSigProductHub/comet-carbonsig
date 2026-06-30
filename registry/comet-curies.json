@@ -13,13 +13,15 @@
     "comet-cn": "https://comet.carbon/ext/iso14068#",
     "comet-pcr": "https://comet.carbon/ext/pcr#",
     "comet-pj": "https://comet.carbon/ext/pcr-japan#",
+    "comet-asi": "https://comet.carbon/ext/aluminium-asi#",
     "csig": "https://api.carbonsig.com/schemas/verifier-export/v4#"
   },
   "counts": {
     "comet_published": 288,
+    "comet_asi_pending": 32,
     "comet_pcr_pending": 20,
     "comet_pj_pending": 23,
-    "total": 331
+    "total": 363
   },
   "comet_published": [
     "comet-cn:Additional",
@@ -310,6 +312,40 @@
     "comet:TimePeriod.endDate",
     "comet:TimePeriod.startDate",
     "comet:UnitOfMeasure"
+  ],
+  "comet_asi_pending": [
+    "comet-asi:ASICertification",
+    "comet-asi:ASICertifiedEntity",
+    "comet-asi:ASICertifiedSite",
+    "comet-asi:AluminiumProductionRoute",
+    "comet-asi:CoCClaim",
+    "comet-asi:CoCModel",
+    "comet-asi:CoCTransferEvent",
+    "comet-asi:GHGPathway",
+    "comet-asi:MassBalanceAccount",
+    "comet-asi:PFCAnodeEffect",
+    "comet-asi:SectoralSlope",
+    "comet-asi:SmelterThreshold",
+    "comet-asi:anodeEffectMinutesPerCellDay",
+    "comet-asi:asiCertificateNumber",
+    "comet-asi:asiCertificationLevel",
+    "comet-asi:asiStandard",
+    "comet-asi:auditingFirm",
+    "comet-asi:c2f6Emissions",
+    "comet-asi:certValidFrom",
+    "comet-asi:certValidUntil",
+    "comet-asi:certifiedInputShare",
+    "comet-asi:certifiedSite",
+    "comet-asi:cf4Emissions",
+    "comet-asi:claimedQuantity",
+    "comet-asi:cocModel",
+    "comet-asi:pathwayBaselineYear",
+    "comet-asi:pathwaySlope",
+    "comet-asi:pathwayTargetYear",
+    "comet-asi:thresholdConformant",
+    "comet-asi:thresholdValue",
+    "comet-asi:transferDate",
+    "comet-asi:transferQuantity"
   ],
   "comet_pcr_pending": [
     "comet-pcr:A1A3",
