@@ -1,0 +1,75 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix comet:     <https://comet.carbon/v1/core#> .
+@prefix comet-ver: <https://comet.carbon/v1/ver#> .
+@prefix comet-asi: <https://comet.carbon/ext/aluminium-asi#> .
+@prefix ex:        <https://example.org/data/> .
+
+# Worked example — the real issued ASI Chain of Custody certificate
+# (South32 Worsley Alumina, Cert 409). Validates against
+# comet-ext-aluminium-asi-shapes.ttl.
+
+ex:site-worsley
+    rdf:type comet-asi:ASICertifiedSite ;
+    rdfs:label "Worsley Alumina Refinery" ;
+    comet:siteName "Worsley Alumina Refinery, Collie, Western Australia" ;
+    comet:siteCountry "AU" ;
+    comet-asi:asiCertificateNumber "409" .
+
+ex:org-south32
+    rdf:type comet-asi:ASICertifiedEntity ;
+    comet:orgName "South32 Worsley Alumina Pty Ltd" .
+
+ex:auditor-kpmg
+    rdf:type comet-ver:QualifiedVerifier ;
+    comet-ver:verifierName "KPMG Australia" .
+
+ex:cert-409
+    rdf:type comet-asi:ASICertification ;
+    rdfs:label "ASI CoC Certificate 409 — South32 Worsley Alumina" ;
+    comet-asi:asiCertificateNumber "409" ;
+    comet-asi:asiStandard "Chain of Custody V2 (2022)" ;
+    comet-asi:asiCertificationLevel "FULL" ;
+    comet-asi:certValidFrom "2024-11-11"^^xsd:date ;
+    comet-asi:certValidUntil "2027-11-10"^^xsd:date ;
+    comet-asi:auditingFirm ex:auditor-kpmg ;
+    comet-asi:certifiedSite ex:site-worsley .
+
+# Mass-balance CoC account + claim
+ex:mb-account-2025
+    rdf:type comet-asi:MassBalanceAccount ;
+    rdfs:label "Worsley mass-balance account FY2025" ;
+    comet-asi:certifiedInputShare 82.5 .
+
+ex:claim-1
+    rdf:type comet-asi:CoCClaim ;
+    rdfs:label "ASI Aluminium claim — alumina shipment" ;
+    comet-asi:claimedQuantity 1200.0 ;
+    comet-asi:cocModel comet-asi:MassBalanceModel .
+
+ex:transfer-1
+    rdf:type comet-asi:CoCTransferEvent ;
+    rdfs:label "Worsley → smelter alumina transfer" ;
+    comet-asi:transferQuantity 1200.0 ;
+    comet-asi:transferDate "2025-03-12"^^xsd:date .
+
+# PFC anode-effect emissions (downstream smelter using this alumina)
+ex:pfc-2025
+    rdf:type comet-asi:PFCAnodeEffect ;
+    rdfs:label "Smelter PFC anode-effect emissions FY2025" ;
+    comet-asi:cf4Emissions 3.2 ;
+    comet-asi:c2f6Emissions 0.32 ;
+    comet-asi:anodeEffectMinutesPerCellDay 0.85 .
+
+# GHG pathway + smelter threshold conformance (Cr 5.2)
+ex:pathway-2025
+    rdf:type comet-asi:GHGPathway ;
+    comet-asi:pathwayBaselineYear "2021"^^xsd:gYear ;
+    comet-asi:pathwayTargetYear "2030"^^xsd:gYear ;
+    comet-asi:pathwaySlope 0.45 .
+
+ex:threshold-2025
+    rdf:type comet-asi:SmelterThreshold ;
+    comet-asi:thresholdValue 8.0 ;
+    comet-asi:thresholdConformant true .

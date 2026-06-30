@@ -1,0 +1,59 @@
+@prefix comet-asi: <https://comet.carbon/ext/aluminium-asi#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-sc:  <https://comet.carbon/v1/supplychain#> .
+@prefix cbam: <https://ontology.materialintelligence.ai/cbam/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# =============================================================================
+# COMET ASI Aluminium → EU CBAM Alignment
+# =============================================================================
+# Operationalises the ASI → COMET → CBAM pipeline: an ASI-certified producer's
+# GHG data, published once as a COMET record, satisfies CBAM embedded-emissions
+# reporting for aluminium (CN Chapter 76). Key transforms documented:
+#   kgCO2e/kg → tCO2e/t  (÷1000)   ·   85/15 direct/indirect default split.
+# =============================================================================
+
+<https://comet.carbon/ext/aluminium-asi/alignments/comet-cbam>
+    a owl:Ontology ;
+    dcterms:title "COMET ASI Aluminium to EU CBAM Alignment"@en ;
+    dcterms:description "Semantic alignment between the COMET ASI Aluminium extension and the EU Carbon Border Adjustment Mechanism for embedded-emissions reporting of aluminium (CN 76)."@en ;
+    dcterms:issued "2026-06-30"^^xsd:date ;
+    owl:versionInfo "0.1.0" ;
+    dcat:keyword "COMET", "ASI", "CBAM", "aluminium", "embedded emissions", "PFC" ;
+    dcterms:source "ASI Performance Standard V3 Cr 5.1–5.4",
+                   "EU CBAM Regulation (EU) 2023/956",
+                   "CBAM Implementing Regulation (EU) 2023/1773" .
+
+# Embedded-emissions intensity (the core CBAM number)
+comet-pcf:EmbeddedEmissions
+    skos:closeMatch cbam:SpecificEmbeddedEmissions ;
+    rdfs:comment "ASI entity-level GHG intensity (Cr 5.1) maps to CBAM specific embedded emissions for the aluminium installation."@en .
+
+# PFC anode-effect emissions are part of the Scope 1 direct emissions CBAM counts
+comet-asi:PFCAnodeEffect
+    skos:broadMatch cbam:DirectEmissions ;
+    rdfs:comment "Perfluorocarbon (CF4, C2F6) anode-effect emissions are aluminium-specific Scope 1 process emissions that must be included in CBAM direct embedded emissions. CBAM has no PFC-specific field — they are aggregated into direct emissions after GWP100 conversion (CF4≈7380, C2F6≈12400, AR6)."@en ;
+    skos:note "No native CBAM term — this alignment makes the aggregation explicit so PFCs are not dropped."@en .
+
+# Production route → CN code (HS Chapter 76 aluminium)
+comet-asi:PrimaryElectrolytic
+    skos:related cbam:CN7601 ;
+    rdfs:comment "Primary (electrolytic) aluminium maps to CN 7601 (unwrought aluminium). e.g. 76011000 unalloyed."@en .
+
+comet-asi:RecycledSecondary
+    skos:related cbam:CN7602 ;
+    rdfs:comment "Recycled / secondary aluminium aligns with CN 7602 (aluminium waste and scrap) feedstock, output reported under 7601."@en .
+
+# Scope split
+comet-asi:GHGPathway
+    skos:note "ASI Cr 5.2 pathway underpins CBAM default-value penalty avoidance: actual verified intensity replaces the rising default."@en .
+
+# Primary data share — CBAM rewards verified primary data over defaults
+comet-sc:PrimaryDataShare
+    skos:closeMatch cbam:ActualEmbeddedEmissionsFlag ;
+    rdfs:comment "A high ASI primary-data share lets the importer use actual (not default) embedded emissions in the CBAM declaration."@en .

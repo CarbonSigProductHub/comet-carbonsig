@@ -1,0 +1,157 @@
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix comet:     <https://comet.carbon/v1/core#> .
+@prefix comet-ver: <https://comet.carbon/v1/ver#> .
+@prefix comet-asi: <https://comet.carbon/ext/aluminium-asi#> .
+
+# =============================================================================
+# COMET ASI Aluminium Extension — SHACL Validation Shapes
+# =============================================================================
+# Companion to comet-ext-aluminium-asi.ttl
+# Validates instance data against the ASI extension class constraints.
+# Run with: pyshacl -s this-file.ttl -d your-data.ttl
+# =============================================================================
+
+
+# ─── L1 CORE ────────────────────────────────────────────────────────────
+
+comet-asi:ASICertifiedSiteShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:ASICertifiedSite ;
+    sh:property [
+        sh:path comet-asi:asiCertificateNumber ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "asiCertificateNumber is required (e.g. \"409\")."
+    ] .
+
+
+# ─── L4 PFC ANODE-EFFECT EMISSIONS ────────────────────────────────────────
+
+comet-asi:PFCAnodeEffectShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:PFCAnodeEffect ;
+    sh:property [
+        sh:path comet-asi:cf4Emissions ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:minInclusive 0 ;
+        sh:message "cf4Emissions (t CF4) is required and must be non-negative."
+    ] ;
+    sh:property [
+        sh:path comet-asi:c2f6Emissions ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "c2f6Emissions (t C2F6), if present, must be non-negative."
+    ] ;
+    sh:property [
+        sh:path comet-asi:anodeEffectMinutesPerCellDay ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "anodeEffectMinutesPerCellDay must be non-negative."
+    ] .
+
+
+# ─── L4 PATHWAYS & THRESHOLDS ─────────────────────────────────────────────
+
+comet-asi:GHGPathwayShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:GHGPathway ;
+    sh:property [
+        sh:path comet-asi:pathwayBaselineYear ;
+        sh:datatype xsd:gYear ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "pathwayBaselineYear is required."
+    ] ;
+    sh:property [
+        sh:path comet-asi:pathwaySlope ;
+        sh:datatype xsd:decimal ;
+        sh:message "pathwaySlope, if present, must be a decimal (tCO2e/t per year)."
+    ] .
+
+comet-asi:SmelterThresholdShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:SmelterThreshold ;
+    sh:property [
+        sh:path comet-asi:thresholdValue ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:minExclusive 0 ;
+        sh:message "thresholdValue must be a positive decimal (tCO2e/t Al)."
+    ] ;
+    sh:property [
+        sh:path comet-asi:thresholdConformant ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "thresholdConformant must be a boolean."
+    ] .
+
+
+# ─── L3 CHAIN OF CUSTODY ──────────────────────────────────────────────────
+
+comet-asi:CoCClaimShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:CoCClaim ;
+    sh:property [
+        sh:path comet-asi:claimedQuantity ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:minExclusive 0 ;
+        sh:message "claimedQuantity (t) must be a positive decimal."
+    ] ;
+    sh:property [
+        sh:path comet-asi:cocModel ;
+        sh:class comet-asi:CoCModel ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "cocModel must reference exactly one ASI CoC model."
+    ] .
+
+comet-asi:MassBalanceAccountShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:MassBalanceAccount ;
+    sh:property [
+        sh:path comet-asi:certifiedInputShare ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "certifiedInputShare must be a percentage between 0 and 100."
+    ] .
+
+
+# ─── L6 CERTIFICATION ─────────────────────────────────────────────────────
+
+comet-asi:ASICertificationShape
+    a sh:NodeShape ;
+    sh:targetClass comet-asi:ASICertification ;
+    sh:property [
+        sh:path comet-asi:asiCertificateNumber ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "asiCertificateNumber is required."
+    ] ;
+    sh:property [
+        sh:path comet-asi:asiStandard ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "asiStandard is required (e.g. \"Chain of Custody V2 (2022)\")."
+    ] ;
+    sh:property [
+        sh:path comet-asi:certValidUntil ;
+        sh:datatype xsd:date ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "certValidUntil (expiry date) is required."
+    ] ;
+    sh:property [
+        sh:path comet-asi:certifiedSite ;
+        sh:class comet-asi:ASICertifiedSite ;
+        sh:message "certifiedSite must reference an ASICertifiedSite."
+    ] .

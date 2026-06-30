@@ -13,7 +13,8 @@
     "comet-rs": "https://comet.carbon/ext/responsiblesteel#",
     "comet-cn": "https://comet.carbon/ext/iso14068#",
     "comet-pcr": "https://comet.carbon/ext/pcr#",
-    "comet-pj": "https://comet.carbon/ext/pcr-japan#"
+    "comet-pj": "https://comet.carbon/ext/pcr-japan#",
+    "comet-asi": "https://comet.carbon/ext/aluminium-asi#"
   },
   "carbonsig": {
     "csig": "https://api.carbonsig.com/schemas/verifier-export/v4#"

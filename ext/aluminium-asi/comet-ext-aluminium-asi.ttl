@@ -1,0 +1,386 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+
+@prefix comet:     <https://comet.carbon/v1/core#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-eac: <https://comet.carbon/v1/eac#> .
+@prefix comet-ver: <https://comet.carbon/v1/ver#> .
+@prefix comet-mkt: <https://comet.carbon/v1/market#> .
+@prefix comet-sc:  <https://comet.carbon/v1/supplychain#> .
+@prefix comet-ef:  <https://comet.carbon/v1/emfactor#> .
+@prefix comet-asi: <https://comet.carbon/ext/aluminium-asi#> .
+
+# External terminology stubs (placeholders for the canonical IRIs published by
+# ASI; mappings remain semantically meaningful and are substituted if/when ASI
+# publishes resolvable IRIs).
+@prefix asi-ps:  <https://aluminium-stewardship.org/performance-standard/v3#> .
+@prefix asi-coc: <https://aluminium-stewardship.org/chain-of-custody/v2#> .
+
+# =============================================================================
+# COMET Extension Module: ASI Aluminium (Aluminium Stewardship Initiative)
+# =============================================================================
+# Module:      comet-ext:aluminium-asi
+# Version:     0.1.0
+# Status:      RFC Open (pending)
+# Layer scope: L1 (Core) · L3 (Supply Chain) · L4 (PCF) · L6 (Verification)
+# Standard:    ASI Performance Standard V3 — Principle 5 (GHG Emissions),
+#              Criteria 5.1–5.4
+#              ASI Chain of Custody Standard V2 (2022)
+#              ASI Entity GHG Pathways Calculation Tool
+# Purpose:     Types the aluminium-specific working variables that have no
+#              existing COMET class — PFC anode-effect emissions, smelter GHG
+#              thresholds, decarbonisation pathways, and the ASI Chain of
+#              Custody (mass-balance) concepts — so ASI-certified producers can
+#              publish one COMET record and satisfy CBAM, EPD, and Scope-3 asks.
+#              GHG fields that DO have a COMET home (Scope 1/2/3, embedded
+#              emissions, verifier identity, site) are reused from the core
+#              layers, not duplicated here.
+# License:     CC BY 4.0 + Apache 2.0
+# Maintainer:  Aluminium-WG (Domain Working Group)
+# =============================================================================
+
+<https://comet.carbon/ext/aluminium-asi>
+    a owl:Ontology ;
+    owl:versionIRI <https://comet.carbon/ext/aluminium-asi/0.1.0> ;
+    owl:imports <https://comet.carbon/v1/core> ,
+                <https://comet.carbon/v1/pcf> ,
+                <https://comet.carbon/v1/ver> ,
+                <https://comet.carbon/v1/supplychain> ,
+                <https://comet.carbon/v1/emfactor> ;
+    dcterms:title "COMET ASI Aluminium Extension Module"@en ;
+    dcterms:description "Maps the aluminium-specific GHG and chain-of-custody variables of the ASI Performance Standard V3 (Principle 5) and ASI Chain of Custody Standard V2 onto the COMET seven-layer stack. Adds typed classes for perfluorocarbon (PFC) anode-effect emissions, smelter GHG thresholds, decarbonisation pathways and sectoral slopes, and the ASI mass-balance chain of custody. Reuses comet-sc Scope 1/2/3, comet-pcf embedded emissions, comet-ver verification and comet:Site identity rather than redefining them."@en ;
+    dcterms:creator "Aluminium-WG / ASI Domain Working Group" ;
+    dcterms:issued "2026-06-30"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:language "en" ;
+    rdfs:seeAlso <https://aluminium-stewardship.org/> .
+
+
+# =============================================================================
+# L1 — CORE IDENTITY EXTENSIONS
+# =============================================================================
+# Aluminium production sites, owners, and production routes.
+
+comet-asi:ASICertifiedSite
+    a owl:Class ;
+    rdfs:subClassOf comet:Site ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty comet-asi:asiCertificateNumber ;
+        owl:cardinality 1
+    ] ;
+    rdfs:label "ASI Certified Site"@en ;
+    rdfs:comment "A bauxite mine, alumina refinery, aluminium smelter, casthouse, or downstream facility that holds or is seeking ASI certification (Performance Standard and/or Chain of Custody). Inherits all comet:Site identity properties."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    skos:example "Worsley Alumina Refinery, Collie, Western Australia (ASI Cert 409)" ;
+    dcterms:source "ASI Performance Standard V3, Scope of Application; ASI Chain of Custody V2 §2" .
+
+comet-asi:ASICertifiedEntity
+    a owl:Class ;
+    rdfs:subClassOf comet:Organization ;
+    rdfs:label "ASI Certified Entity"@en ;
+    rdfs:comment "The legal entity holding an ASI certificate, responsible for entity-level GHG disclosure (Cr 5.1) and chain-of-custody claims (CoC V2)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Performance Standard V3, Principle 1; ASI Chain of Custody V2" .
+
+comet-asi:AluminiumProductionRoute
+    a owl:Class ;
+    rdfs:subClassOf comet:Process ;
+    rdfs:label "Aluminium Production Route"@en ;
+    rdfs:comment "The primary production pathway at an ASI site. Determines applicable emission factors, default GHG values, and which Criterion 5.2 smelter threshold applies."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Entity GHG Pathways Calculation Tool, System Boundaries" .
+
+comet-asi:PrimaryElectrolytic
+    a comet-asi:AluminiumProductionRoute, owl:NamedIndividual ;
+    rdfs:label "Primary aluminium (electrolytic, Hall-Héroult)"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:RecycledSecondary
+    a comet-asi:AluminiumProductionRoute, owl:NamedIndividual ;
+    rdfs:label "Recycled / secondary aluminium"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:CasthouseRemelt
+    a comet-asi:AluminiumProductionRoute, owl:NamedIndividual ;
+    rdfs:label "Casthouse remelt / semi-fabrication"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+[] a owl:AllDifferent ;
+    owl:members ( comet-asi:PrimaryElectrolytic comet-asi:RecycledSecondary comet-asi:CasthouseRemelt ) .
+
+
+# =============================================================================
+# L4 — GHG EMISSIONS (PS Criterion 5.1) — PFC ANODE-EFFECT EMISSIONS
+# =============================================================================
+# The one GHG flow with no COMET home: perfluorocarbons (CF4, C2F6) released
+# during anode effects in primary smelting. Aluminium-specific and high-GWP.
+
+comet-asi:PFCAnodeEffect
+    a owl:Class ;
+    rdfs:subClassOf comet-sc:Scope1Emissions ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty comet-asi:cf4Emissions ;
+        owl:minCardinality 1
+    ] ;
+    rdfs:label "PFC Anode-Effect Emissions"@en ;
+    rdfs:comment "Perfluorocarbon (CF4 and C2F6) emissions released during anode effects in the Hall-Héroult electrolysis process. Aluminium-specific Scope 1 process emissions with very high GWP100 (CF4 ≈ 7 380; C2F6 ≈ 12 400, IPCC AR6). Quantified via the slope/overvoltage method per IAI / ASI guidance."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    skos:example "Anode-effect PFCs = 0.04 tCO2e/t Al via overvoltage method" ;
+    dcterms:source "ASI Performance Standard V3, Criterion 5.1; ASI GHG Pathways Tool, IAI 1.5 sheet" .
+
+comet-asi:cf4Emissions
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:PFCAnodeEffect ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "CF4 emissions (t CF4)"@en ;
+    rdfs:comment "Tetrafluoromethane (CF4) mass emitted from anode effects, in tonnes. Convert to CO2e with GWP100 ≈ 7 380 (IPCC AR6)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:c2f6Emissions
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:PFCAnodeEffect ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "C2F6 emissions (t C2F6)"@en ;
+    rdfs:comment "Hexafluoroethane (C2F6) mass emitted from anode effects, in tonnes. Convert to CO2e with GWP100 ≈ 12 400 (IPCC AR6)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:anodeEffectMinutesPerCellDay
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:PFCAnodeEffect ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "anode-effect minutes per cell-day"@en ;
+    rdfs:comment "Anode-effect frequency × duration, the activity driver for the PFC slope method (minutes per cell-day)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+
+# =============================================================================
+# L4 — GHG PATHWAYS & THRESHOLDS (PS Criterion 5.2)
+# =============================================================================
+
+comet-asi:GHGPathway
+    a owl:Class ;
+    rdfs:label "GHG Decarbonisation Pathway"@en ;
+    rdfs:comment "An entity- or site-level greenhouse-gas decarbonisation trajectory declared under ASI Criterion 5.2, expressed as a baseline-year intensity and a forward emissions slope toward a target year."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Entity GHG Pathways Calculation Tool, Scopes 1+2 Slopes; ASI PS V3 Cr 5.2" .
+
+comet-asi:pathwayBaselineYear
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:GHGPathway ;
+    rdfs:range xsd:gYear ;
+    rdfs:label "pathway baseline year"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:pathwayTargetYear
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:GHGPathway ;
+    rdfs:range xsd:gYear ;
+    rdfs:label "pathway target year"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:pathwaySlope
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:GHGPathway ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "pathway slope (tCO2e/t per year)"@en ;
+    rdfs:comment "Annual decarbonisation rate of the declared pathway, in tCO2e per tonne of product per year."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:SmelterThreshold
+    a owl:Class ;
+    rdfs:label "Smelter GHG Threshold"@en ;
+    rdfs:comment "An ASI Criterion 5.2 smelter emissions threshold against which a primary aluminium site's GHG intensity is assessed for conformance. Encodes the threshold value and the conformance outcome."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Performance Standard V3, Criterion 5.2; ASI GHG Pathways Tool, '5.2 smelter thresholds' sheet" .
+
+comet-asi:thresholdValue
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:SmelterThreshold ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "threshold value (tCO2e/t Al)"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:thresholdConformant
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:SmelterThreshold ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "threshold conformant"@en ;
+    rdfs:comment "True if the site's assessed GHG intensity is at or below the applicable Cr 5.2 smelter threshold."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:SectoralSlope
+    a owl:Class ;
+    rdfs:subClassOf comet-asi:GHGPathway ;
+    rdfs:label "Sectoral Decarbonisation Slope"@en ;
+    rdfs:comment "A sector-wide 1.5°C-aligned decarbonisation slope (e.g. the IAI / IEA aluminium pathway) used as the benchmark against which an entity's GHGPathway is compared."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI GHG Pathways Calculation Tool, 'IAI 1.5' and 'Sectoral Slopes' sheets" .
+
+
+# =============================================================================
+# L3 — CHAIN OF CUSTODY (ASI CoC Standard V2, 2022)
+# =============================================================================
+
+comet-asi:CoCModel
+    a owl:Class ;
+    rdfs:label "ASI Chain-of-Custody Model"@en ;
+    rdfs:comment "The accounting model an ASI site uses to pass certified material through the supply chain. ASI CoC V2 permits mass balance, physical segregation, and controlled blending."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Chain of Custody Standard V2 (2022), §6 Models" .
+
+comet-asi:MassBalanceModel
+    a comet-asi:CoCModel, owl:NamedIndividual ;
+    rdfs:label "Mass balance"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:SegregationModel
+    a comet-asi:CoCModel, owl:NamedIndividual ;
+    rdfs:label "Physical segregation"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:ControlledBlendingModel
+    a comet-asi:CoCModel, owl:NamedIndividual ;
+    rdfs:label "Controlled blending"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+[] a owl:AllDifferent ;
+    owl:members ( comet-asi:MassBalanceModel comet-asi:SegregationModel comet-asi:ControlledBlendingModel ) .
+
+comet-asi:CoCClaim
+    a owl:Class ;
+    rdfs:label "ASI CoC Material Claim"@en ;
+    rdfs:comment "A claim that a quantity of product is ASI Aluminium / ASI CoC Material, carried on sales and delivery documents. Analogous to comet-rs:CoCClaim for steel."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Chain of Custody Standard V2 (2022), §8 Claims" .
+
+comet-asi:claimedQuantity
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:CoCClaim ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "claimed quantity (t)"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:cocModel
+    a owl:ObjectProperty ;
+    rdfs:domain comet-asi:CoCClaim ;
+    rdfs:range comet-asi:CoCModel ;
+    rdfs:label "CoC model"@en ;
+    rdfs:comment "The chain-of-custody model under which this claim is made."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:MassBalanceAccount
+    a owl:Class ;
+    rdfs:label "Mass-Balance Account"@en ;
+    rdfs:comment "The input/output ledger that reconciles certified material entering and leaving a site over an accounting period under the mass-balance CoC model. Tracks the certified input share that backs outgoing CoC claims."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Chain of Custody Standard V2 (2022), §6.3 Mass Balance" .
+
+comet-asi:certifiedInputShare
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:MassBalanceAccount ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "certified input share (%)"@en ;
+    rdfs:comment "Proportion (0–100) of input material in the accounting period that is ASI-certified, bounding the volume of outgoing CoC claims."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:CoCTransferEvent
+    a owl:Class ;
+    rdfs:label "CoC Transfer Event"@en ;
+    rdfs:comment "A provenance event recording the transfer of ASI CoC material between certified entities, retaining the upstream claim and quantity. Analogous to comet-rs:CoCTransferEvent."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    dcterms:source "ASI Chain of Custody Standard V2 (2022), §7 Transfers" .
+
+comet-asi:transferQuantity
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:CoCTransferEvent ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "transfer quantity (t)"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:transferDate
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:CoCTransferEvent ;
+    rdfs:range xsd:date ;
+    rdfs:label "transfer date"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+
+# =============================================================================
+# L6 — VERIFICATION / CERTIFICATION IDENTITY
+# =============================================================================
+# Reuses comet-ver:QualifiedVerifier and comet-ver:AssuranceLevel; adds the ASI
+# certificate object that ties site, standard, level, and validity together.
+
+comet-asi:ASICertification
+    a owl:Class ;
+    rdfs:subClassOf comet-ver:ValidationRecord ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty comet-asi:asiCertificateNumber ;
+        owl:cardinality 1
+    ] ;
+    rdfs:label "ASI Certification"@en ;
+    rdfs:comment "An issued ASI certificate (Performance Standard or Chain of Custody) for a site or entity, recording its number, standard, certification level, accredited auditing firm, and validity window."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> ;
+    skos:example "ASI CoC Certificate 409 — South32 Worsley Alumina — Level FULL — KPMG Australia — valid 2024-11-11/2027-11-10" ;
+    dcterms:source "ASI Chain of Custody Standard V2; ASI Assurance Manual" .
+
+comet-asi:asiCertificateNumber
+    a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "ASI certificate number"@en ;
+    rdfs:comment "The certificate identifier issued by ASI (e.g. \"409\")."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:asiStandard
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:ASICertification ;
+    rdfs:range xsd:string ;
+    rdfs:label "ASI standard"@en ;
+    rdfs:comment "The ASI standard audited against, e.g. \"Performance Standard V3\" or \"Chain of Custody V2 (2022)\"."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:asiCertificationLevel
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:ASICertification ;
+    rdfs:range xsd:string ;
+    rdfs:label "ASI certification level"@en ;
+    rdfs:comment "ASI certification level, e.g. \"FULL\" or \"PROVISIONAL\"."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:certValidFrom
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:ASICertification ;
+    rdfs:range xsd:date ;
+    rdfs:label "certificate valid from"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:certValidUntil
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-asi:ASICertification ;
+    rdfs:range xsd:date ;
+    rdfs:label "certificate valid until"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:auditingFirm
+    a owl:ObjectProperty ;
+    rdfs:domain comet-asi:ASICertification ;
+    rdfs:range comet-ver:QualifiedVerifier ;
+    rdfs:label "auditing firm"@en ;
+    rdfs:comment "The ASI-accredited auditing firm that issued the certification (reuses comet-ver:QualifiedVerifier)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
+
+comet-asi:certifiedSite
+    a owl:ObjectProperty ;
+    rdfs:domain comet-asi:ASICertification ;
+    rdfs:range comet-asi:ASICertifiedSite ;
+    rdfs:label "certified site"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/aluminium-asi> .
