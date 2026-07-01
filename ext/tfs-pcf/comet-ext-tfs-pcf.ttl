@@ -1,0 +1,923 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix qudt:    <http://qudt.org/schema/qudt/> .
+
+@prefix comet:     <https://comet.carbon/v1/core#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-eac: <https://comet.carbon/v1/eac#> .
+@prefix comet-ver: <https://comet.carbon/v1/ver#> .
+@prefix comet-mkt: <https://comet.carbon/v1/market#> .
+@prefix comet-sc:  <https://comet.carbon/v1/supplychain#> .
+@prefix comet-ef:  <https://comet.carbon/v1/emfactor#> .
+@prefix comet-tfs: <https://comet.carbon/ext/tfs-pcf#> .
+
+# External terminology stubs (placeholders for the canonical IRIs of the TfS PCF
+# Data Exchange Platform and the WBCSD PACT Pathfinder framework, on which the
+# TfS data model is technically based. Mappings remain semantically meaningful
+# and are substituted if/when TfS/WBCSD publish resolvable IRIs).
+@prefix tfs:  <https://tfs-initiative.com/datamodel/3.1#> .
+@prefix pact: <https://wbcsd.org/spec/pact/pathfinder/v3/> .
+
+# =============================================================================
+# COMET Extension Module: TfS PCF Data Model (Together for Sustainability)
+# =============================================================================
+# Module:      comet-ext:tfs-pcf
+# Version:     0.1.0
+# Status:      RFC Open (pending)
+# Layer scope: L1 (Core) · L4 (PCF) · L5 (EAC) · L6 (Verification)
+# Standard:    TfS PCF Data Model v3.1 (September 2025) — "How to report PCF
+#              data", the data aspect model of the Together for Sustainability
+#              Product Carbon Footprint Guideline for the Chemical Industry.
+#              Supersedes TfS PCF Data Model v3.0. Technically aligned with
+#              WBCSD PACT Pathfinder Framework v3.0 / PACT v3 emission taxonomy.
+# Purpose:     Types the 131 fields of the TfS PCF Data Model so a chemical
+#              supplier can publish one COMET record and satisfy a TfS PCF Data
+#              Exchange, a PACT exchange, an EPD, and a downstream Scope-3 ask.
+#              Fields that already have a COMET home (company + product identity,
+#              declared unit, PCF identity/version, geography, reference period,
+#              cross-sectoral standards, GWP totals, Scope emissions, removals,
+#              verification identity) are reused from core layers via
+#              owl:equivalentClass / skos:closeMatch — not duplicated. The
+#              TfS-specific machinery (partial/full boundary flag, the A–H GWP
+#              position decomposition per life-cycle stage, mass balancing,
+#              CCU/CCS credit accounting, recycled-content allocation, the TfS
+#              positive lists, primary-data share + 3-axis DQR, verification
+#              shares, and the Attestation of Conformance object) is added here.
+# License:     CC BY 4.0 + Apache 2.0
+# Maintainer:  Chemicals-WG / TfS Domain Working Group
+# =============================================================================
+
+<https://comet.carbon/ext/tfs-pcf>
+    a owl:Ontology ;
+    owl:versionIRI <https://comet.carbon/ext/tfs-pcf/0.1.0> ;
+    owl:imports <https://comet.carbon/v1/core> ,
+                <https://comet.carbon/v1/pcf> ,
+                <https://comet.carbon/v1/eac> ,
+                <https://comet.carbon/v1/ver> ,
+                <https://comet.carbon/v1/supplychain> ;
+    dcterms:title "COMET TfS PCF Data Model Extension"@en ;
+    dcterms:description "Maps the 131-field TfS PCF Data Model v3.1 (Together for Sustainability, September 2025) onto the COMET seven-layer stack. Adds typed classes for the TfS-conformant product carbon footprint, the partial/full boundary declaration, the per-life-cycle-stage A–H GWP position decomposition (aligned to WBCSD PACT v3.0), carbon-content decomposition, mass-balancing information, CCU/CCS and recycled-content allocation approaches, the TfS PCR/system-expansion positive lists, primary-data share and three-axis data-quality rating, verification shares (PCS/1PVS/2PVS/3PVS), and the Attestation of Conformance object array. Reuses comet company/product identity, comet-pcf declared unit + PCF identity + geography + reference period + GWP + removals, and comet-ver verification identity rather than redefining them."@en ;
+    dcterms:creator "Chemicals-WG / TfS Domain Working Group" ;
+    dcterms:issued "2026-07-01"^^xsd:date ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:language "en" ;
+    rdfs:seeAlso <https://www.tfs-initiative.com/scope-3-ghg-emissions> ,
+                 <https://wbcsd.org/pact/> .
+
+# =============================================================================
+# SECTION A — EQUIVALENCE / ALIGNMENT (MERGE)
+# =============================================================================
+# TfS data fields whose concept already exists in COMET. We assert
+# owl:equivalentClass / owl:equivalentProperty / skos:closeMatch so reasoners
+# can move freely between the TfS data model and COMET. No new class is created;
+# we only certify the mapping. The TfS "Technical field name" is recorded in
+# skos:notation for machine round-tripping with the TfS Data Exchange Platform.
+# =============================================================================
+
+# A.1 — The PCF itself (TfS "Id / version / status") ↔ COMET PCF result
+comet-pcf:PCFResult
+    skos:closeMatch tfs:ProductFootprint ;
+    skos:closeMatch pact:ProductFootprint ;
+    rdfs:comment "The TfS PCF Data Model describes a single Product Carbon Footprint record (technical fields Id, precedingPfIds, version, status). It is the same quantity as comet-pcf:PCFResult and the WBCSD PACT ProductFootprint. The TfS-conformant profile is typed as comet-tfs:TfSProductFootprint (Section B), a sub-class of comet-pcf:PCFResult."@en .
+
+# A.2 — Company (TfS companyName / companyIds) ↔ comet:Organization
+comet:Organization
+    skos:closeMatch tfs:Company ;
+    rdfs:comment "TfS 'companyName' + 'companyIds' (the Product Footprint Data Owner) map onto comet:Organization and its identifier properties. TfS company IDs follow the URN:FPI sharing scheme defined by TfS and WBCSD (org-id, DUNS, VAT, LEI)."@en .
+
+# A.3 — Product (TfS productNameCompany / productIds / productClassifications) ↔ comet:Product
+comet:Product
+    skos:closeMatch tfs:Product ;
+    rdfs:comment "TfS 'productNameCompany', 'productIds', 'productClassifications' and 'productDescription' map onto comet:Product and its identifier + classification properties. TfS product IDs and classifications use URN:FPI (GTIN, CAS number, UN CPC, CN code) exactly as COMET already supports."@en .
+
+# A.4 — Declared unit (TfS declaredUnitOfMeasurement / declaredUnitAmount) ↔ comet-pcf declared unit
+comet-pcf:DeclaredUnit
+    skos:closeMatch tfs:DeclaredUnit ;
+    skos:closeMatch pact:DeclaredUnit ;
+    rdfs:comment "TfS 'declaredUnitOfMeasurement' (dropdown: piece; kilogram; liter; cubic meter; kilowatt hour; megajoule; ton kilometer; square meter; hour; megabit second) and 'declaredUnitAmount' correspond to the COMET / PACT declared unit. See comet-tfs:DeclaredUnitOfMeasurement for the constrained value list."@en .
+
+# A.5 — Geography (TfS geographyCountry / geographyCountrySubdivision) ↔ COMET geography
+comet:GeographicScope
+    skos:closeMatch tfs:Geography ;
+    rdfs:comment "TfS 'geographyCountry' (ISO 3166-1 alpha-2), 'geographyCountrySubdivision' (ISO 3166-2) and 'geographyRegionOrSubregion' map onto the COMET geographic scope. See comet-tfs:GeographyRegionOrSubregion for the constrained ISO 3166 region value list."@en .
+
+# A.6 — Reference period (TfS referencePeriodStart / referencePeriodEnd / validityPeriod) ↔ comet-pcf reference period
+comet-pcf:ReferencePeriod
+    skos:closeMatch tfs:ReferencePeriod ;
+    skos:closeMatch pact:ReferencePeriod ;
+    rdfs:comment "TfS 'referencePeriodStart', 'referencePeriodEnd', 'created', 'validityPeriodStart', 'validityPeriodEnd' map onto the COMET / PACT reference and validity periods (ISO 8601 UTC). TfS constrains validity to a maximum of three years after the reference-period end."@en .
+
+# A.7 — GWP totals (TfS pcfIncludingBiogenicUptake / pcfExcludingBiogenicUptake) ↔ comet-pcf GWP
+comet-pcf:GlobalWarmingPotential
+    skos:closeMatch tfs:GWPTotal ;
+    rdfs:comment "TfS 'pcfIncludingBiogenicUptake' (Position T1) and 'pcfExcludingBiogenicUptake' (Position T2), reported per life-cycle stage, are COMET global-warming-potential results in kg CO2e per declared unit. The stage-level A–H decomposition is added as comet-tfs:GWPPositionBreakdown (Section B)."@en .
+
+# A.8 — Fossil / biogenic emissions (TfS fossilGhgEmissions / biogenic*) ↔ comet-pcf emissions
+comet-pcf:FossilGHGEmission
+    skos:closeMatch tfs:FossilGhgEmissions ;
+    rdfs:comment "TfS Position A 'fossilGhgEmissions' matches the COMET fossil GHG emission component. TfS biogenic and land-use positions (C, D, E, F, G) are enumerated in comet-tfs:GWPPositionBreakdown because they carry PACT v3.0 sign and boundary semantics beyond the COMET core."@en .
+
+# A.9 — GHG removals (TfS TechnologicalCO2Removals / biogenicCO2Uptake) ↔ comet-pcf removal
+comet-pcf:GHGRemoval
+    skos:closeMatch tfs:TechnologicalCO2Removals ;
+    rdfs:comment "TfS Position B 'TechnologicalCO2Removals' (BECCS / technological CO2 capture-and-storage counted as removal) and Position D 'biogenicCO2Uptake' map onto comet-pcf:GHGRemoval. Both are negative-contribution positions (<= 0 kg CO2e)."@en .
+
+# A.10 — Cross-sectoral standards (TfS crossSectoralStandards) ↔ comet-pcf standards
+comet-pcf:MethodologyStandard
+    skos:closeMatch tfs:CrossSectoralStandards ;
+    rdfs:comment "TfS 'crossSectoralStandards' (multi-select: ISO 14067; Pathfinder v1/v2/v3; GHG Protocol Product; PAS 2050; ISO 14040-44; PEF; Other) maps onto the COMET methodology-standard concept. See comet-tfs:CrossSectoralStandard for the value list."@en .
+
+# A.11 — Verifier identity (TfS providerName / providerID) ↔ comet-ver verifier
+comet-ver:VerificationBody
+    skos:closeMatch tfs:AttestationProvider ;
+    rdfs:comment "The TfS Attestation of Conformance issuer ('providerName', 'providerID' — the certifier's or verifier's legal entity and Business Partner Number) maps onto the COMET verification body. The attestation object itself is typed as comet-tfs:AttestationOfConformance (Section B)."@en .
+
+# A.12 — Verification / assurance statement ↔ comet-ver audit claim
+comet-ver:AuditClaim
+    skos:closeMatch tfs:AttestationOfConformance ;
+    rdfs:comment "A TfS Attestation of Conformance is an assurance statement about a PCF. It is a close match to comet-ver:AuditClaim; comet-tfs:AttestationOfConformance sub-classes comet-ver:DisclosureRecord to carry the eight TfS attestation fields."@en .
+
+
+# =============================================================================
+# SECTION B — NEW CLASSES (EXPAND)
+# =============================================================================
+# Concepts the TfS PCF Data Model introduces that have no current COMET
+# representation. All live in the comet-tfs: namespace.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# B.1 — The TfS-conformant PCF profile (L4 anchor)
+# -----------------------------------------------------------------------------
+
+comet-tfs:TfSProductFootprint
+    a owl:Class ;
+    rdfs:subClassOf comet-pcf:PCFResult ;
+    rdfs:label "TfS Product Carbon Footprint"@en ;
+    rdfs:comment "A Product Carbon Footprint reported in conformance with the TfS PCF Data Model v3.1. Sub-class of comet-pcf:PCFResult that binds the TfS-specific data fields: partial/full boundary flag, data-model version, cut-off rule, characterization factors, allocation approaches, mass balancing, data-quality rating, verification shares, life-cycle-stage GWP breakdowns, carbon-content breakdown, and attestations of conformance."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, §PCF assessment & methodology" ;
+    skos:notation "ProductFootprint" .
+
+comet-tfs:DataModelVersion
+    a owl:Class ;
+    rdfs:label "Data Model Version Declaration"@en ;
+    rdfs:comment "TfS 'specVersion' (field 2). The specification format and version an exchanged PCF conforms to, e.g. urn:tfs-initiative.com:datamodel-version:3.1.0. Multiple entries are possible; the value can be selected independently of the standard/guidance followed during the assessment."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 2 (specVersion)" ;
+    skos:notation "specVersion" .
+
+# -----------------------------------------------------------------------------
+# B.2 — Boundary declaration (partial vs full)
+# -----------------------------------------------------------------------------
+
+comet-tfs:PartialFullPcf
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Partial or Full PCF Declaration"@en ;
+    rdfs:comment "TfS 'partialFullPcf' (field 3). A partial PCF (cradle-to-gate) covers emissions from resource extraction until the product leaves the gate of the organization, optionally including distribution. A full PCF (cradle-to-grave) covers the complete life cycle through end-of-life. Default for TfS is cradle-to-gate."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 3 (partialFullPcf)" ;
+    skos:notation "partialFullPcf" .
+
+comet-tfs:CradleToGate  a comet-tfs:PartialFullPcf, owl:NamedIndividual ;
+    rdfs:label "cradle-to-gate"@en ; skos:notation "cradle-to-gate" ;
+    rdfs:comment "TfS default. Partial PCF up to the organization's gate."@en .
+comet-tfs:CradleToGrave a comet-tfs:PartialFullPcf, owl:NamedIndividual ;
+    rdfs:label "cradle-to-grave"@en ; skos:notation "cradle-to-grave" ;
+    rdfs:comment "Full PCF across the complete life cycle to end-of-life."@en .
+
+# -----------------------------------------------------------------------------
+# B.3 — Declared unit + geography value lists (constrain the MERGE targets)
+# -----------------------------------------------------------------------------
+
+comet-tfs:DeclaredUnitOfMeasurement
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "TfS Declared Unit of Measurement"@en ;
+    rdfs:comment "TfS 'declaredUnitOfMeasurement' (field 13). Constrained dropdown of the units of analysis permitted for a TfS PCF. ISO unit code + 'piece'."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 13" ;
+    skos:notation "declaredUnitOfMeasurement" .
+
+comet-tfs:Unit_Piece         a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "piece"@en .
+comet-tfs:Unit_Kilogram      a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "kilogram"@en .
+comet-tfs:Unit_Liter         a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "liter"@en .
+comet-tfs:Unit_CubicMeter    a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "cubic meter"@en .
+comet-tfs:Unit_KilowattHour  a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "kilowatt hour"@en .
+comet-tfs:Unit_Megajoule     a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "megajoule"@en .
+comet-tfs:Unit_TonKilometer  a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "ton kilometer"@en .
+comet-tfs:Unit_SquareMeter   a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "square meter"@en .
+comet-tfs:Unit_Hour          a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "hour"@en .
+comet-tfs:Unit_MegabitSecond a comet-tfs:DeclaredUnitOfMeasurement, owl:NamedIndividual ; rdfs:label "megabit second"@en .
+
+comet-tfs:GeographyRegionOrSubregion
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Geography Region or Subregion"@en ;
+    rdfs:comment "TfS 'geographyRegionOrSubregion' (field 34). ISO 3166 region of the supplier production site. Mandatory dropdown when a specific country is not disclosed."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 34" ;
+    skos:notation "geographyRegionOrSubregion" .
+
+comet-tfs:Region_Global              a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Global"@en .
+comet-tfs:Region_Africa              a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Africa"@en .
+comet-tfs:Region_Americas            a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Americas"@en .
+comet-tfs:Region_Asia                a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Asia"@en .
+comet-tfs:Region_Europe              a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Europe"@en .
+comet-tfs:Region_Oceania             a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Oceania"@en .
+comet-tfs:Region_AustraliaNewZealand a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Australia and New Zealand"@en .
+comet-tfs:Region_CentralAsia         a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Central Asia"@en .
+comet-tfs:Region_EasternAsia         a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Eastern Asia"@en .
+comet-tfs:Region_EasternEurope       a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Eastern Europe"@en .
+comet-tfs:Region_LatinAmericaCaribbean a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Latin America and the Caribbean"@en .
+comet-tfs:Region_Melanesia           a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Melanesia"@en .
+comet-tfs:Region_Micronesia          a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Micronesia"@en .
+comet-tfs:Region_NorthernAfrica      a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Northern Africa"@en .
+comet-tfs:Region_NorthernAmerica     a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Northern America"@en .
+comet-tfs:Region_NorthernEurope      a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Northern Europe"@en .
+comet-tfs:Region_Polynesia           a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Polynesia"@en .
+comet-tfs:Region_SouthEasternAsia    a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "South-eastern Asia"@en .
+comet-tfs:Region_SouthernAsia        a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Southern Asia"@en .
+comet-tfs:Region_SouthernEurope      a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Southern Europe"@en .
+comet-tfs:Region_SubSaharanAfrica    a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Sub-Saharan Africa"@en .
+comet-tfs:Region_WesternAsia         a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Western Asia"@en .
+comet-tfs:Region_WesternEurope       a comet-tfs:GeographyRegionOrSubregion, owl:NamedIndividual ; rdfs:label "Western Europe"@en .
+
+# -----------------------------------------------------------------------------
+# B.4 — Boundary specification: cut-off rule
+# -----------------------------------------------------------------------------
+
+comet-tfs:CutOffRule
+    a owl:Class ;
+    rdfs:label "Cut-off Rule"@en ;
+    rdfs:comment "TfS 'exemptedEmissionsPercent' (field 24, range 0-10) + 'exemptedEmissionsDescription' (field 25). The percentage of total emissions excluded from the PCF to reduce effort on irrelevant processes, plus the rationale. TfS caps the cut-off at 10% of total emissions."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 24-25" ;
+    skos:notation "exemptedEmissionsPercent" .
+
+# -----------------------------------------------------------------------------
+# B.5 — Technology descriptors
+# -----------------------------------------------------------------------------
+
+comet-tfs:RecycledContentType
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Type of Recycled Content"@en ;
+    rdfs:comment "TfS 'typeRecycledContent' (field 28). Whether recycled input is post-industrial or post-consumer."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 28" ;
+    skos:notation "typeRecycledContent" .
+
+comet-tfs:PostIndustrial a comet-tfs:RecycledContentType, owl:NamedIndividual ; rdfs:label "post-industrial"@en .
+comet-tfs:PostConsumer   a comet-tfs:RecycledContentType, owl:NamedIndividual ; rdfs:label "post-consumer"@en .
+
+# -----------------------------------------------------------------------------
+# B.6 — Standards + characterization factors + sector rules
+# -----------------------------------------------------------------------------
+
+comet-tfs:CrossSectoralStandard
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Cross-sectoral Standard"@en ;
+    rdfs:comment "TfS 'crossSectoralStandards' (field 43). Multi-select list of the standards the PCF calculation is based on."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 43" ;
+    skos:notation "crossSectoralStandards" .
+
+comet-tfs:Std_ISO14067        a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "ISO 14067"@en .
+comet-tfs:Std_PathfinderV1    a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "Pathfinder v1"@en .
+comet-tfs:Std_PathfinderV2    a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "Pathfinder v2"@en .
+comet-tfs:Std_PathfinderV3    a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "Pathfinder v3"@en .
+comet-tfs:Std_GHGProtocolProduct a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "GHG Protocol Product"@en .
+comet-tfs:Std_PAS2050         a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "PAS 2050"@en .
+comet-tfs:Std_ISO14040_44     a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "ISO 14040-44"@en .
+comet-tfs:Std_PEF             a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "PEF"@en .
+comet-tfs:Std_Other           a comet-tfs:CrossSectoralStandard, owl:NamedIndividual ; rdfs:label "Other"@en .
+
+comet-tfs:ProductOrSectorRule
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Product or Sector Rule"@en ;
+    rdfs:comment "TfS 'productOrSectorSpecificRules' (field 44). The most specific applied rule / Product Category Rule set. Dropdown with free-text option; TfS default is 'TfS PCF Guideline V3.0'."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 44" ;
+    skos:notation "productOrSectorSpecificRules" .
+
+comet-tfs:Rule_TfSGuidelineV3   a comet-tfs:ProductOrSectorRule, owl:NamedIndividual ; rdfs:label "TfS PCF Guideline V3.0"@en ; skos:notation "default" .
+comet-tfs:Rule_CatenaX          a comet-tfs:ProductOrSectorRule, owl:NamedIndividual ; rdfs:label "Catena-X Rulebook"@en .
+comet-tfs:Rule_EN50693          a comet-tfs:ProductOrSectorRule, owl:NamedIndividual ; rdfs:label "EN 50693"@en .
+comet-tfs:Rule_EN15804          a comet-tfs:ProductOrSectorRule, owl:NamedIndividual ; rdfs:label "EN 15804"@en .
+comet-tfs:Rule_BPX30323         a comet-tfs:ProductOrSectorRule, owl:NamedIndividual ; rdfs:label "BPX 30-323"@en .
+comet-tfs:Rule_NotSpecified     a comet-tfs:ProductOrSectorRule, owl:NamedIndividual ; rdfs:label "Not specified"@en .
+
+comet-tfs:CharacterizationFactor
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "IPCC GWP Characterization Factor Version"@en ;
+    rdfs:comment "TfS 'characterizationFactors' (field 46). The IPCC Assessment Report version of the GWP values used. Prefilled AR6, changeable, and including carbon feedback."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 46" ;
+    skos:notation "characterizationFactors" .
+
+comet-tfs:AR1  a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "AR1"@en .
+comet-tfs:AR2  a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "AR2"@en .
+comet-tfs:AR3  a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "AR3"@en .
+comet-tfs:AR4  a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "AR4"@en .
+comet-tfs:AR5  a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "AR5"@en .
+comet-tfs:AR6  a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "AR6"@en ; skos:notation "default" .
+comet-tfs:CF_Unspecified a comet-tfs:CharacterizationFactor, owl:NamedIndividual ; rdfs:label "unspecified"@en .
+
+# -----------------------------------------------------------------------------
+# B.7 — Allocation approaches (foreground / recycling / CCU / waste incineration)
+# -----------------------------------------------------------------------------
+
+comet-tfs:AllocationApproach
+    a owl:Class ;
+    rdfs:label "Allocation Approach"@en ;
+    rdfs:comment "TfS 'allocationRulesDescription' (field 48) + the three approach dropdowns (fields 49-51). Container for how foreground emissions are allocated across co-products, waste incineration with energy recovery, material recycling, and CCU."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 47-51" ;
+    skos:notation "allocation" .
+
+comet-tfs:WasteIncinerationAllocation
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Waste Incineration Allocation Approach"@en ;
+    rdfs:comment "TfS 'allocationWasteIncineration' (field 49). One of cut-off; reverse cut-off; system expansion; not-applicable — for waste treatment with energy recovery."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 49" ;
+    skos:notation "allocationWasteIncineration" .
+
+comet-tfs:WI_CutOff          a comet-tfs:WasteIncinerationAllocation, owl:NamedIndividual ; rdfs:label "cut-off"@en .
+comet-tfs:WI_ReverseCutOff   a comet-tfs:WasteIncinerationAllocation, owl:NamedIndividual ; rdfs:label "reverse cut-off"@en .
+comet-tfs:WI_SystemExpansion a comet-tfs:WasteIncinerationAllocation, owl:NamedIndividual ; rdfs:label "system expansion"@en .
+comet-tfs:WI_NotApplicable   a comet-tfs:WasteIncinerationAllocation, owl:NamedIndividual ; rdfs:label "not-applicable"@en .
+
+comet-tfs:RecycledCarbonAllocation
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Material Recycling Allocation Approach"@en ;
+    rdfs:comment "TfS 'allocationRecycledCarbon' (field 50). Calculation approach for material recycling: upstream system expansion (USE) or cut-off. Refer to pp. 74-75 of TfS PCF Guideline v3."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 50" ;
+    skos:notation "allocationRecycledCarbon" .
+
+comet-tfs:RC_UpstreamSystemExpansion a comet-tfs:RecycledCarbonAllocation, owl:NamedIndividual ; rdfs:label "upstream system expansion"@en .
+comet-tfs:RC_CutOff                  a comet-tfs:RecycledCarbonAllocation, owl:NamedIndividual ; rdfs:label "cut-off"@en .
+
+comet-tfs:CCUCalculationApproach
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "CCU Calculation Approach"@en ;
+    rdfs:comment "TfS 'ccuCalculationApproach' (field 51). Calculation approach for Carbon Capture and Utilization: not-applicable; cut-off method; credit method."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 51" ;
+    skos:notation "ccuCalculationApproach" .
+
+comet-tfs:CCU_NotApplicable a comet-tfs:CCUCalculationApproach, owl:NamedIndividual ; rdfs:label "not-applicable"@en .
+comet-tfs:CCU_CutOffMethod  a comet-tfs:CCUCalculationApproach, owl:NamedIndividual ; rdfs:label "cut-off method"@en .
+comet-tfs:CCU_CreditMethod  a comet-tfs:CCUCalculationApproach, owl:NamedIndividual ; rdfs:label "credit method"@en .
+
+comet-tfs:PositiveListReference
+    a owl:Class ;
+    rdfs:label "TfS Positive List Reference"@en ;
+    rdfs:comment "TfS 'tfsPositivelistPcrUsed' (field 52) + 'systemexpansionPositivelistUsed' (field 53). References into the TfS-published positive lists of accepted PCRs and of substituted products for system expansion and substitution."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 52-53" ;
+    rdfs:seeAlso <https://www.tfs-initiative.com/app/uploads/2024/11/List-of-accepted-PCR-by-TfS.pdf> ,
+                 <https://www.tfs-initiative.com/app/uploads/2024/11/List-of-substitued-products-Multi-output-TfS.pdf> ;
+    skos:notation "tfsPositivelistPcrUsed" .
+
+# -----------------------------------------------------------------------------
+# B.8 — Mass balancing information
+# -----------------------------------------------------------------------------
+
+comet-tfs:MassBalancing
+    a owl:Class ;
+    rdfs:label "Mass Balancing Information"@en ;
+    rdfs:comment "TfS mass-balancing block (fields 55-58). Whether mass balancing (credit method) is used, whether free attribution is applied, the calculation approach, and the certification scheme. TfS chemical-industry mass balance parallels the ASI chain-of-custody mass balance in comet-asi but is certificate-scheme driven (REDcert2, ISCC+)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 54-58" ;
+    skos:notation "massBalancingUsed" .
+
+comet-tfs:MassBalanceCalculationApproach
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Mass-Balance Calculation Approach"@en ;
+    rdfs:comment "TfS 'massBalancingCalculationApproach' (field 57). Required if massBalancingUsed = TRUE. One of: Conventional reference; Inventory; both Conventional reference & Inventory."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 57" ;
+    skos:notation "massBalancingCalculationApproach" .
+
+comet-tfs:MB_ConventionalReference a comet-tfs:MassBalanceCalculationApproach, owl:NamedIndividual ; rdfs:label "Conventional reference"@en .
+comet-tfs:MB_Inventory             a comet-tfs:MassBalanceCalculationApproach, owl:NamedIndividual ; rdfs:label "Inventory"@en .
+comet-tfs:MB_Both                  a comet-tfs:MassBalanceCalculationApproach, owl:NamedIndividual ; rdfs:label "both Conventional reference & Inventory"@en .
+
+# -----------------------------------------------------------------------------
+# B.9 — Data sources and quality (PDS + three-axis DQR)
+# -----------------------------------------------------------------------------
+
+comet-tfs:DataQualityRating
+    a owl:Class ;
+    rdfs:label "TfS Data Quality Rating"@en ;
+    rdfs:comment "TfS data-sources-and-quality block (fields 65-69). Carries the Primary Data Share, secondary emission-factor sources, and the three DQR axes (technological, temporal, geographical), each rated 1-5 per TfS PCF Guideline v3.0 Tables 5.14-5.16. PDS, technological and temporal DQR become mandatory from 2027 (M2027)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 64-69" ;
+    skos:notation "primaryDataShare" .
+
+# -----------------------------------------------------------------------------
+# B.10 — Verification and certification shares
+# -----------------------------------------------------------------------------
+
+comet-tfs:VerificationShare
+    a owl:Class ;
+    rdfs:subClassOf comet-ver:AuditClaim ;
+    rdfs:label "Verification and Certification Shares"@en ;
+    rdfs:comment "TfS verification-and-certification-shares block (fields 71-74). The shares of the PCF result attributable to PCF-Program certified suppliers (PCS) and to first-, second-, and third-party verification (1PVS/2PVS/3PVS), each a percentage 0-100. Sub-class of comet-ver:AuditClaim."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 70-74" ;
+    skos:notation "programCertificationShare" .
+
+# -----------------------------------------------------------------------------
+# B.11 — Attestation of Conformance (object array)
+# -----------------------------------------------------------------------------
+
+comet-tfs:AttestationOfConformance
+    a owl:Class ;
+    rdfs:subClassOf comet-ver:DisclosureRecord ;
+    rdfs:label "Attestation of Conformance"@en ;
+    rdfs:comment "TfS 'attestationOfConformance' object array (fields 78-86). Defines the type and level of trust conveyed by an attestation about the PCF: attestation type, the cross-sectoral / sector rules / mass-balance standard it is based on, the attestation scheme standard, a unique attestation ID (UUID v4), a link to the declaration, the issuer's name + ID (BPN), and the date completed."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 78-86" ;
+    skos:notation "attestationOfConformance" .
+
+comet-tfs:AttestationType
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Attestation Type"@en ;
+    rdfs:comment "TfS 'AttestationType' (field 79). Open value list defining the level of trust: PCF Program Certification; PCF 3rd party verification; PCF 2nd party verification; PCF 1st party verification; Mass balance certificate."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, field 79" ;
+    skos:notation "AttestationType" .
+
+comet-tfs:AT_ProgramCertification a comet-tfs:AttestationType, owl:NamedIndividual ; rdfs:label "PCF Program Certification"@en .
+comet-tfs:AT_ThirdParty  a comet-tfs:AttestationType, owl:NamedIndividual ; rdfs:label "PCF 3rd party verification"@en .
+comet-tfs:AT_SecondParty a comet-tfs:AttestationType, owl:NamedIndividual ; rdfs:label "PCF 2nd party verification"@en .
+comet-tfs:AT_FirstParty  a comet-tfs:AttestationType, owl:NamedIndividual ; rdfs:label "PCF 1st party verification"@en .
+comet-tfs:AT_MassBalanceCertificate a comet-tfs:AttestationType, owl:NamedIndividual ; rdfs:label "Mass balance certificate"@en .
+
+# -----------------------------------------------------------------------------
+# B.12 — Life-cycle stage and the A–H GWP position breakdown
+# -----------------------------------------------------------------------------
+
+comet-tfs:LifeCycleStage
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "TfS Life Cycle Stage"@en ;
+    rdfs:comment "TfS product life-cycle stages (fields 88, 100, 113). One of Production Stage (cradle-to-gate), Packaging Stage, or Distribution Stage. Each carries its own comet-tfs:GWPPositionBreakdown. Packaging emissions must also be included in the Production Stage total when packagingEmissionsIncluded = TRUE."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 87-124" ;
+    skos:notation "lifeCycleStage" .
+
+comet-tfs:ProductionStage   a comet-tfs:LifeCycleStage, owl:NamedIndividual ; rdfs:label "Production Stage"@en ; skos:notation "productionStage" ;
+    rdfs:comment "Cradle-to-gate (gate of the producer) system boundary. Packaging emissions included here when packagingEmissionsIncluded = TRUE."@en .
+comet-tfs:PackagingStage    a comet-tfs:LifeCycleStage, owl:NamedIndividual ; rdfs:label "Packaging Stage"@en ; skos:notation "packaging" ;
+    rdfs:comment "Detail of the GWP contribution of packaging; its impact is included in the Production Stage."@en .
+comet-tfs:DistributionStage a comet-tfs:LifeCycleStage, owl:NamedIndividual ; rdfs:label "Distribution Stage"@en ; skos:notation "distributionStage" ;
+    rdfs:comment "Outbound logistics from production gate to customer gate."@en .
+
+comet-tfs:GWPPositionBreakdown
+    a owl:Class ;
+    rdfs:label "GWP Position Breakdown (A–H)"@en ;
+    rdfs:comment "The TfS / PACT v3.0 emission-position decomposition of a life-cycle stage's GWP. Positions: A fossil, B technological removals (BECCS, <=0), A1 fossil land management, C non-CO2 biogenic, D biogenic CO2 uptake (<=0), E land use change (LUC), F land management CO2 emissions, G land management CO2 removals (<=0), H aviation. T1 = A+B+C+D+E+F+G+H (incl. biogenic uptake); T2 = A+B+C+E+F+G+H (excl. biogenic uptake). Attached to a comet-tfs:LifeCycleStage."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 89-99 / 102-112 / 114-124; PACT v3.0" ;
+    skos:notation "gwpPositionBreakdown" .
+
+# -----------------------------------------------------------------------------
+# B.13 — Carbon content breakdown
+# -----------------------------------------------------------------------------
+
+comet-tfs:CarbonContentBreakdown
+    a owl:Class ;
+    rdfs:label "Carbon Content Breakdown"@en ;
+    rdfs:comment "TfS carbon-content block (fields 126-131). Total carbon content per declared unit and its fossil, biogenic, packaging-biogenic, recycled, and CCU-based components (kg C per declared unit). Fossil defaults to Total minus biogenic."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> ;
+    dcterms:source "TfS PCF Data Model v3.1, fields 125-131" ;
+    skos:notation "carbonContent" .
+
+
+# =============================================================================
+# SECTION C — OBJECT PROPERTIES
+# =============================================================================
+
+comet-tfs:hasBoundaryDeclaration
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:PartialFullPcf ;
+    rdfs:label "boundary declaration"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasLifeCycleStage
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:LifeCycleStage ;
+    rdfs:label "has life-cycle stage"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasGWPBreakdown
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:LifeCycleStage ;
+    rdfs:range comet-tfs:GWPPositionBreakdown ;
+    rdfs:label "has GWP position breakdown"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasCarbonContent
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:CarbonContentBreakdown ;
+    rdfs:label "has carbon content breakdown"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasCutOffRule
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:CutOffRule ;
+    rdfs:label "has cut-off rule"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasAllocation
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:AllocationApproach ;
+    rdfs:label "has allocation approach"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasMassBalancing
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:MassBalancing ;
+    rdfs:label "has mass balancing"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasDataQualityRating
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:DataQualityRating ;
+    rdfs:label "has data quality rating"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasVerificationShare
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:VerificationShare ;
+    rdfs:label "has verification share"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:hasAttestation
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:AttestationOfConformance ;
+    rdfs:label "has attestation of conformance"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:stageType
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:LifeCycleStage ;
+    rdfs:range comet-tfs:LifeCycleStage ;
+    rdfs:label "stage type"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:usesCharacterizationFactor
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:TfSProductFootprint ;
+    rdfs:range comet-tfs:CharacterizationFactor ;
+    rdfs:label "uses characterization factor version"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:attestationType
+    a owl:ObjectProperty ;
+    rdfs:domain comet-tfs:AttestationOfConformance ;
+    rdfs:range comet-tfs:AttestationType ;
+    rdfs:label "attestation type"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+
+# =============================================================================
+# SECTION D — DATATYPE PROPERTIES
+# =============================================================================
+
+# D.1 — Scope of PCF form
+comet-tfs:specVersion
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "data model and version"@en ; skos:notation "specVersion" ;
+    rdfs:comment "TfS field 2. e.g. urn:tfs-initiative.com:datamodel-version:3.1.0"@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.2 — Cut-off
+comet-tfs:exemptedEmissionsPercent
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CutOffRule ; rdfs:range xsd:decimal ;
+    rdfs:label "exempted emissions percent"@en ; skos:notation "exemptedEmissionsPercent" ;
+    rdfs:comment "TfS field 24. Percentage of total emissions excluded (0-10)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:exemptedEmissionsDescription
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CutOffRule ; rdfs:range xsd:string ;
+    rdfs:label "exempted emissions description"@en ; skos:notation "exemptedEmissionsDescription" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.3 — Technology
+comet-tfs:boundaryProcessesDescription
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "important unit processes and technologies"@en ; skos:notation "boundaryProcessesDescription" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:ccuCo2Origin
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "CCU CO2 origin"@en ; skos:notation "ccuCo2Origin" ;
+    rdfs:comment "TfS field 29. Source from where CO2 is captured (e.g. DAC / direct air capture or source ammonia plant)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:ccsBeccsApplied
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:boolean ;
+    rdfs:label "CCS/BECCS applied"@en ; skos:notation "ccsTechnologicalCO2CaptureIncluded" ;
+    rdfs:comment "TfS field 30. TRUE if CCS/BECCS (incl. geological storage) technology is employed."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.4 — Allocation description
+comet-tfs:allocationRulesDescription
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AllocationApproach ; rdfs:range xsd:string ;
+    rdfs:label "allocation rules description"@en ; skos:notation "allocationRulesDescription" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.5 — Mass balancing
+comet-tfs:massBalancingUsed
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:MassBalancing ; rdfs:range xsd:boolean ;
+    rdfs:label "mass balancing used"@en ; skos:notation "massBalancingUsed" ;
+    rdfs:comment "TfS field 55. TRUE if mass balancing (credit method) is used."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:freeAttributionInMassBalancing
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:MassBalancing ; rdfs:range xsd:boolean ;
+    rdfs:label "free attribution in mass balancing"@en ; skos:notation "freeAttributionInMassBalancing" ;
+    rdfs:comment "TfS field 56. Required if massBalancingUsed = TRUE."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:massBalancingCertificateScheme
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:MassBalancing ; rdfs:range xsd:string ;
+    rdfs:label "mass balancing certificate scheme"@en ; skos:notation "massBalancingCertificateScheme" ;
+    rdfs:comment "TfS field 58. Certification scheme used for mass balancing (e.g. REDcert2, ISCC+). Required if massBalancingUsed = TRUE."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.6 — Credit information
+comet-tfs:ccuCreditCertificateScheme
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "CCU credit certificate scheme"@en ; skos:notation "ccuCreditCertificateScheme" ;
+    rdfs:comment "TfS field 60. Required if ccuCalculationApproach = credit method."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:ccsTechnologicalCO2Capture
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:decimal ;
+    rdfs:label "CCS capturing"@en ; skos:notation "ccsTechnologicalCO2Capture" ;
+    rdfs:comment "TfS field 61. kg CO2 captured and stored per declared unit."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:useCredit
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:decimal ;
+    rdfs:label "USE credit"@en ; skos:notation "useCredit" ;
+    rdfs:comment "TfS field 62. kg CO2 amount of the Upstream System Expansion (USE) credit. Required if allocationRecycledCarbon = upstream system expansion."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:useCreditCertificateScheme
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "USE credit certificate scheme"@en ; skos:notation "useCreditCertificateScheme" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.7 — Data sources and quality
+comet-tfs:primaryDataShare
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:DataQualityRating ; rdfs:range xsd:decimal ;
+    rdfs:label "primary data share (PDS)"@en ; skos:notation "primaryDataShare" ;
+    rdfs:comment "TfS field 65 (M2027). Share of primary data in the final PCF (0-100)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:secondaryEmissionFactorSources
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:DataQualityRating ; rdfs:range xsd:string ;
+    rdfs:label "secondary data source and version"@en ; skos:notation "secondaryEmissionFactorSources" ;
+    rdfs:comment "TfS field 66. e.g. ecoinvent v3.8."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:technologicalDQR
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:DataQualityRating ; rdfs:range xsd:decimal ;
+    rdfs:label "technological representativeness (DQR)"@en ; skos:notation "technologicalDQR" ;
+    rdfs:comment "TfS field 67 (M2027). Rated 1-5, fractions allowed. TfS Guideline v3 Table 5.14."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:temporalDQR
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:DataQualityRating ; rdfs:range xsd:decimal ;
+    rdfs:label "temporal representativeness (DQR)"@en ; skos:notation "temporalDQR" ;
+    rdfs:comment "TfS field 68 (M2027). Rated 1-5, fractions allowed. TfS Guideline v3 Table 5.16."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:geographicalDQR
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:DataQualityRating ; rdfs:range xsd:decimal ;
+    rdfs:label "geographical representativeness (DQR)"@en ; skos:notation "geographicalDQR" ;
+    rdfs:comment "TfS field 69 (M2027). Rated 1-5, fractions allowed. TfS Guideline v3 Table 5.15."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.8 — Verification and certification shares
+comet-tfs:programCertificationShare
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:VerificationShare ; rdfs:range xsd:decimal ;
+    rdfs:label "PCF Program Certification Share (PCS)"@en ; skos:notation "programCertificationShare" ;
+    rdfs:comment "TfS field 71. Share (0-100) of the PCF calculated by PCF-program-certified suppliers."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:productVerificationShare3rdParty
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:VerificationShare ; rdfs:range xsd:decimal ;
+    rdfs:label "third-party product verification share (3PVS)"@en ; skos:notation "productVerificationShare3rdParty" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:productVerificationShare2ndParty
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:VerificationShare ; rdfs:range xsd:decimal ;
+    rdfs:label "second-party product verification share (2PVS)"@en ; skos:notation "productVerificationShare2ndParty" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:productVerificationShare1stParty
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:VerificationShare ; rdfs:range xsd:decimal ;
+    rdfs:label "first-party product verification share (1PVS)"@en ; skos:notation "productVerificationShare1stParty" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.9 — General
+comet-tfs:comment
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "comment"@en ; skos:notation "comment" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:pcfLegalStatement
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:string ;
+    rdfs:label "legal statement"@en ; skos:notation "pcfLegalStatement" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.10 — Attestation of Conformance fields
+comet-tfs:standardName
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:string ;
+    rdfs:label "conformant with standard"@en ; skos:notation "standardName" ;
+    rdfs:comment "TfS field 80. Cross-sectoral standard, product/sector rule, or mass-balance standard the attestation is based on (e.g. Catena-X Product Carbon Footprint Rulebook v4)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:attestationStandard
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:string ;
+    rdfs:label "attestation scheme standard"@en ; skos:notation "attestationStandard" ;
+    rdfs:comment "TfS field 81. e.g. PCF Verification and PCF Program Certification Framework V2."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:attestationOfConformanceId
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:string ;
+    rdfs:label "attestation ID"@en ; skos:notation "attestationOfConformanceId" ;
+    rdfs:comment "TfS field 82. UUID v4 of the certificate or verification statement."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:attestationOfConformanceLink
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:anyURI ;
+    rdfs:label "link to attestation"@en ; skos:notation "attestationOfConformanceLink" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:providerName
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:string ;
+    rdfs:label "issuer of attestation"@en ; skos:notation "providerName" ;
+    rdfs:comment "TfS field 84. Name of the issuing certifier's or verifier's legal entity (3rd-party verification and program certification only)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:providerID
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:string ;
+    rdfs:label "issuer of attestation ID"@en ; skos:notation "providerID" ;
+    rdfs:comment "TfS field 85. Business Partner Number (BPN) or other official registration number of the issuer."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:completedAt
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:AttestationOfConformance ; rdfs:range xsd:dateTime ;
+    rdfs:label "date of attestation"@en ; skos:notation "completedAt" ;
+    rdfs:comment "TfS field 86. ISO 8601 UTC timestamp when the attestation was issued."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.11 — Life-cycle stage GWP positions (A–H) + totals (T1/T2)
+# One property set, applied per stage via comet-tfs:GWPPositionBreakdown.
+comet-tfs:pcfIncludingBiogenicUptake
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP total incl. biogenic uptake (T1)"@en ; skos:notation "pcfIncludingBiogenicUptake" ;
+    rdfs:comment "Position T1 = A+B(neg)+C+D(neg)+E+F+G(neg)+H. Unit kg CO2e per declared unit."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:pcfExcludingBiogenicUptake
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP total excl. biogenic uptake (T2)"@en ; skos:notation "pcfExcludingBiogenicUptake" ;
+    rdfs:comment "Position T2 = A+B(neg)+C+E+F+G(neg)+H. Must be >= 0. Unit kg CO2e per declared unit."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:fossilGhgEmissions
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP fossil (Position A)"@en ; skos:notation "fossilGhgEmissions" ;
+    rdfs:comment "Position A (M2027). All fossil emissions incl. industrial processes, combustion, fugitive, and A1 land management. >= 0."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:technologicalCO2Removals
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP removals BECCS (Position B)"@en ; skos:notation "technologicalCO2Removals" ;
+    rdfs:comment "Position B (negative contribution, <= 0). Technological/geologic CO2 capture-and-storage counted as removal (BECCS)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:landManagementFossilGhgEmissions
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP fossil land management (Position A1)"@en ; skos:notation "landManagementFossilGhgEmissions" ;
+    rdfs:comment "Position A1, a detail of Position A. >= 0."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:biogenicNonCO2Emissions
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP biogenic emissions other than CO2 (Position C)"@en ; skos:notation "biogenicNonCO2Emissions" ;
+    rdfs:comment "Position C. Non-CO2 biogenic emissions (CH4 from livestock/manure, biomass burning, rice, degradation). >= 0."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:biogenicCO2Uptake
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP biogenic CO2 uptake (Position D)"@en ; skos:notation "biogenicCO2Uptake" ;
+    rdfs:comment "Position D (negative contribution, <= 0). Biogenic CO2 uptake in the product; required if biogenic carbon content specified."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:landUseChangeGhgEmissions
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP land use change (Position E)"@en ; skos:notation "landUseChangeGhgEmissions" ;
+    rdfs:comment "Position E (M2027). dLUC emissions (iLUC excluded). >= 0."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:landManagementBiogenicCO2Emissions
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP land management CO2 emissions (Position F)"@en ; skos:notation "landManagementBiogenicCO2Emissions" ;
+    rdfs:comment "Position F (M2027). Biogenic CO2 from net carbon-stock loss within a land use category. >= 0."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:landManagementBiogenicCO2Removals
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP land management CO2 removals (Position G)"@en ; skos:notation "landManagementBiogenicCO2Removals" ;
+    rdfs:comment "Position G (negative contribution, <= 0). Net CO2 removals from increased land-based carbon stock."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:aircraftGhgEmissions
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:GWPPositionBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP aviation emissions (Position H)"@en ; skos:notation "aircraftGhgEmissions" ;
+    rdfs:comment "Position H. Aviation emissions occurring in distribution stages cradle-to-gate (if applicable). >= 0."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:packagingEmissionsIncluded
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:boolean ;
+    rdfs:label "packaging emissions included"@en ; skos:notation "packagingEmissionsIncluded" ;
+    rdfs:comment "TfS field 101. TRUE if packaging preparation/production emissions are included (in the Production Stage total)."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.12 — Carbon content (kg C per declared unit)
+comet-tfs:carbonContentTotal
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CarbonContentBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "total carbon content per DU"@en ; skos:notation "carbonContentTotal" ;
+    rdfs:comment "TfS field 126. Total carbon content, kg C per declared unit."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:fossilCarbonContent
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CarbonContentBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "fossil carbon content per DU"@en ; skos:notation "fossilCarbonContent" ;
+    rdfs:comment "TfS field 127. Defaults to Total carbon content minus biogenic carbon content."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:biogenicCarbonContent
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CarbonContentBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "biogenic carbon content per DU"@en ; skos:notation "biogenicCarbonContent" ;
+    rdfs:comment "TfS field 128. Biogenic carbon content, kg C per declared unit."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:packagingBiogenicCarbonContent
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CarbonContentBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "packaging biogenic carbon content per DU"@en ; skos:notation "packagingBiogenicCarbonContent" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:recycledCarbonContent
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CarbonContentBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "recycled carbon content per DU"@en ; skos:notation "recycledCarbonContent" ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+comet-tfs:ccuCarbonContent
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:CarbonContentBreakdown ; rdfs:range xsd:decimal ;
+    rdfs:label "CCU-based carbon content per DU"@en ; skos:notation "ccuCarbonContent" ;
+    rdfs:comment "TfS field 131. Required if ccuCalculationApproach is cut-off or credit method. If credit method, indicates the credit amount."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# D.13 — Product mass per declared unit
+comet-tfs:productMassPerDeclaredUnit
+    a owl:DatatypeProperty ; rdfs:domain comet-tfs:TfSProductFootprint ; rdfs:range xsd:decimal ;
+    rdfs:label "product mass [kg] per declared unit amount"@en ; skos:notation "productMassPerDeclaredUnit" ;
+    rdfs:comment "TfS field 15. Mass of the product per declared-unit amount, excluding packaging. Required especially if the declared unit is 'piece'."@en ;
+    rdfs:isDefinedBy <https://comet.carbon/ext/tfs-pcf> .
+
+# End of file.

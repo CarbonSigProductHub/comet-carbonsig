@@ -1,0 +1,182 @@
+@prefix sh:        <http://www.w3.org/ns/shacl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-tfs: <https://comet.carbon/ext/tfs-pcf#> .
+
+# =============================================================================
+# COMET TfS PCF Data Model Extension — SHACL Validation Shapes
+# =============================================================================
+# Companion to comet-ext-tfs-pcf.ttl. Encodes the TfS PCF Data Model v3.1
+# mandatory/optional/required-under-condition (M/O/D/R) rules that are machine
+# checkable. Run with: pyshacl -s this-file.ttl -d your-data.ttl
+# =============================================================================
+
+
+# ─── The TfS PCF record ────────────────────────────────────────────────────
+comet-tfs:TfSProductFootprintShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:TfSProductFootprint ;
+    sh:property [
+        sh:path comet-tfs:specVersion ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "specVersion (data model and version) is mandatory, e.g. urn:tfs-initiative.com:datamodel-version:3.1.0."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:hasBoundaryDeclaration ;
+        sh:class comet-tfs:PartialFullPcf ;
+        sh:maxCount 1 ;
+        sh:message "partialFullPcf must be cradle-to-gate (default) or cradle-to-grave."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:ccsBeccsApplied ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "ccsTechnologicalCO2CaptureIncluded (CCS/BECCS applied) is mandatory (True/False)."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:productMassPerDeclaredUnit ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "productMassPerDeclaredUnit must be non-negative (required especially when the declared unit is 'piece')."
+    ] .
+
+
+# ─── Cut-off rule (0–10%) ──────────────────────────────────────────────────
+comet-tfs:CutOffRuleShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:CutOffRule ;
+    sh:property [
+        sh:path comet-tfs:exemptedEmissionsPercent ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10 ;
+        sh:message "exemptedEmissionsPercent is mandatory and must be between 0 and 10 (TfS cut-off cap)."
+    ] .
+
+
+# ─── Data quality rating (PDS 0–100; DQR axes 1–5) ─────────────────────────
+comet-tfs:DataQualityRatingShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:DataQualityRating ;
+    sh:property [
+        sh:path comet-tfs:primaryDataShare ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "primaryDataShare (PDS) must be a percentage 0–100 (mandatory from 2027)."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:technologicalDQR ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 5 ;
+        sh:message "technologicalDQR must be between 1 and 5 (fractions allowed)."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:temporalDQR ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 5 ;
+        sh:message "temporalDQR must be between 1 and 5 (fractions allowed)."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:geographicalDQR ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 5 ;
+        sh:message "geographicalDQR must be between 1 and 5 (fractions allowed)."
+    ] .
+
+
+# ─── Verification / certification shares (each 0–100) ──────────────────────
+comet-tfs:VerificationShareShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:VerificationShare ;
+    sh:property [ sh:path comet-tfs:programCertificationShare ;        sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:maxInclusive 100 ; sh:message "PCS must be 0–100." ] ;
+    sh:property [ sh:path comet-tfs:productVerificationShare3rdParty ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:maxInclusive 100 ; sh:message "3PVS must be 0–100." ] ;
+    sh:property [ sh:path comet-tfs:productVerificationShare2ndParty ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:maxInclusive 100 ; sh:message "2PVS must be 0–100." ] ;
+    sh:property [ sh:path comet-tfs:productVerificationShare1stParty ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:maxInclusive 100 ; sh:message "1PVS must be 0–100." ] .
+
+
+# ─── Mass balancing (conditional requirements when used = TRUE) ─────────────
+comet-tfs:MassBalancingUsedShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:MassBalancing ;
+    # If massBalancingUsed = true, then calculation approach + certificate scheme
+    # + free-attribution flag become required (TfS fields 56–58, "R").
+    sh:sparql [
+        sh:message "When massBalancingUsed = true, massBalancingCalculationApproach, massBalancingCertificateScheme and freeAttributionInMassBalancing are required." ;
+        sh:prefixes comet-tfs: ;
+        sh:select """
+            PREFIX comet-tfs: <https://comet.carbon/ext/tfs-pcf#>
+            SELECT $this WHERE {
+              $this comet-tfs:massBalancingUsed true .
+              FILTER NOT EXISTS { $this comet-tfs:massBalancingCertificateScheme ?s }
+            }
+        """
+    ] .
+
+
+# ─── GWP position breakdown (sign + total constraints) ─────────────────────
+comet-tfs:GWPPositionBreakdownShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:GWPPositionBreakdown ;
+    # Position T2 (excl. biogenic uptake) must be >= 0.
+    sh:property [
+        sh:path comet-tfs:pcfExcludingBiogenicUptake ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "pcfExcludingBiogenicUptake (Position T2) must be >= 0."
+    ] ;
+    # Position A (fossil) >= 0.
+    sh:property [
+        sh:path comet-tfs:fossilGhgEmissions ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:message "fossilGhgEmissions (Position A) must be >= 0."
+    ] ;
+    # Position B (BECCS removals) is a negative contribution: <= 0.
+    sh:property [
+        sh:path comet-tfs:technologicalCO2Removals ;
+        sh:datatype xsd:decimal ;
+        sh:maxInclusive 0 ;
+        sh:message "technologicalCO2Removals (Position B) is a negative contribution and must be <= 0."
+    ] ;
+    # Position D (biogenic CO2 uptake) is a negative contribution: <= 0.
+    sh:property [
+        sh:path comet-tfs:biogenicCO2Uptake ;
+        sh:datatype xsd:decimal ;
+        sh:maxInclusive 0 ;
+        sh:message "biogenicCO2Uptake (Position D) is a negative contribution and must be <= 0."
+    ] ;
+    # Position G (land management removals) is a negative contribution: <= 0.
+    sh:property [
+        sh:path comet-tfs:landManagementBiogenicCO2Removals ;
+        sh:datatype xsd:decimal ;
+        sh:maxInclusive 0 ;
+        sh:message "landManagementBiogenicCO2Removals (Position G) is a negative contribution and must be <= 0."
+    ] .
+
+
+# ─── Attestation of Conformance (required fields when present) ──────────────
+comet-tfs:AttestationOfConformanceShape
+    a sh:NodeShape ;
+    sh:targetClass comet-tfs:AttestationOfConformance ;
+    sh:property [
+        sh:path comet-tfs:attestationType ;
+        sh:class comet-tfs:AttestationType ;
+        sh:minCount 1 ;
+        sh:message "AttestationType is required for each attestation of conformance."
+    ] ;
+    sh:property [
+        sh:path comet-tfs:attestationOfConformanceId ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "attestationOfConformanceId (UUID v4) is required for each attestation."
+    ] .

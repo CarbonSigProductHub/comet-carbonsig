@@ -786,6 +786,11 @@
           </tbody>
         </table>
       </div>
+
+      <h3 class="subsection-title">2d. TfS PCF Data Model v3.1 (Chemical Industry)</h3>
+      <p style="margin-bottom:1rem;">
+        The <strong>Together for Sustainability (TfS) PCF Data Model v3.1</strong> (September 2025) is the 131-field data aspect model that the chemical industry exchanges on the TfS PCF Data Exchange Platform. It is technically aligned to WBCSD PACT Pathfinder v3.0, so COMET covers it as a superset of the PACT mapping above via the dedicated <code style="font-family:var(--mono);font-size:0.85em;background:#eeece6;padding:0.1em 0.35em;color:var(--text);">comet-tfs:</code> extension. Beyond the PACT fields, the extension types the chemical-specific machinery: the per-life-cycle-stage A&ndash;H emission decomposition (<code style="font-family:var(--mono);font-size:0.85em;background:#eeece6;padding:0.1em 0.35em;color:var(--text);">comet-tfs:GWPPositionBreakdown</code>), mass balancing (REDcert2 / ISCC+), CCU/CCS and recycled-content allocation, primary-data share + three-axis DQR, verification shares (PCS / 1PVS / 2PVS / 3PVS), and the Attestation of Conformance. A supplier publishes one COMET record and satisfies a TfS exchange, a PACT exchange, an EPD, and a downstream Scope-3 ask. Converter: <code style="font-family:var(--mono);font-size:0.85em;background:#eeece6;padding:0.1em 0.35em;color:var(--text);">tools/converters/tfs_to_comet.py</code>. Full mapping: <a href="tfs-pcf.html">tfs-pcf.html</a>.
+      </p>
     </article>
 
     <!-- SECTION 3: EU CBAM -->

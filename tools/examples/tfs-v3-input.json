@@ -1,0 +1,115 @@
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "specVersion": "urn:tfs-initiative.com:datamodel-version:3.1.0",
+  "version": 1,
+  "status": "Active",
+  "created": "2025-02-14T08:30:00Z",
+  "validityPeriodStart": "2025-02-14T00:00:00Z",
+  "validityPeriodEnd": "2028-02-13T23:59:59Z",
+
+  "partialFullPcf": "cradle-to-gate",
+
+  "companyName": "GreenChem Solutions GmbH",
+  "companyIds": [
+    "urn:tfs-initiative.com:CompanyId:64d20180-7d3a-4f3b-9b7a-0c2f9d5e1a11",
+    "urn:epcis:id:party:4053333000010"
+  ],
+
+  "productNameCompany": "Green Ethanol",
+  "productDescription": "Second-generation bio-based ethanol (99.9% purity) produced from lignocellulosic agricultural residues.",
+  "productIds": [
+    "urn:tfs-initiative.com:ProductId:6b1a4c0e-2f7d-4a91-8e2c-1d3b5f7a9c00",
+    "urn:cas:64-17-5"
+  ],
+  "productClassifications": [
+    "urn:cpc:34110",
+    "urn:cn:2207 10 00"
+  ],
+
+  "declaredUnitOfMeasurement": "kilogram",
+  "declaredUnitAmount": 1.0,
+  "productMassPerDeclaredUnit": 1.0,
+
+  "exemptedEmissionsPercent": 0.0,
+  "exemptedEmissionsDescription": "No processes excluded; full inventory coverage above the 1% relevance threshold.",
+
+  "boundaryProcessesDescription": "Feedstock collection and pre-treatment, enzymatic hydrolysis, fermentation, distillation and dehydration, on-site utilities.",
+
+  "characterizationFactors": "AR6",
+  "crossSectoralStandards": ["ISO 14067", "Pathfinder v3"],
+  "productOrSectorSpecificRules": "TfS PCF Guideline V3.0",
+
+  "typeRecycledContent": "post-industrial",
+
+  "allocationRulesDescription": "Economic allocation between ethanol and co-product lignin residue, based on market value at the plant gate.",
+  "allocationWasteIncineration": "cut-off",
+  "allocationRecycledCarbon": "upstream system expansion",
+  "ccuCalculationApproach": "not-applicable",
+
+  "massBalancingUsed": true,
+  "freeAttributionInMassBalancing": false,
+  "massBalancingCalculationApproach": "Inventory",
+  "massBalancingCertificateScheme": "ISCC PLUS",
+
+  "primaryDataShare": 80.0,
+  "secondaryEmissionFactorSources": "ecoinvent v3.9.1 (cut-off)",
+  "technologicalDQR": 1.5,
+  "temporalDQR": 2.0,
+  "geographicalDQR": 1.0,
+
+  "programCertificationShare": 100.0,
+  "productVerificationShare3rdParty": 100.0,
+  "productVerificationShare2ndParty": 0.0,
+  "productVerificationShare1stParty": 0.0,
+
+  "geographyCountry": "DE",
+  "geographyCountrySubdivision": "DE-BY",
+  "geographyRegionOrSubregion": "Western Europe",
+
+  "referencePeriodStart": "2024-01-01T00:00:00Z",
+  "referencePeriodEnd": "2024-12-31T23:59:59Z",
+
+  "productionStage": {
+    "pcfIncludingBiogenicUptake": 0.49,
+    "pcfExcludingBiogenicUptake": 2.8,
+    "fossilGhgEmissions": 2.2,
+    "technologicalCO2Removals": 0.0,
+    "biogenicNonCO2Emissions": 0.1,
+    "biogenicCO2Uptake": -2.31,
+    "landUseChangeGhgEmissions": 0.5,
+    "landManagementBiogenicCO2Emissions": 0.0,
+    "landManagementBiogenicCO2Removals": 0.0,
+    "aircraftGhgEmissions": 0.0
+  },
+
+  "packagingEmissionsIncluded": true,
+  "packaging": {
+    "pcfIncludingBiogenicUptake": 0.05,
+    "pcfExcludingBiogenicUptake": 0.05,
+    "fossilGhgEmissions": 0.05
+  },
+
+  "distributionStage": {
+    "pcfIncludingBiogenicUptake": 0.15,
+    "pcfExcludingBiogenicUptake": 0.15,
+    "fossilGhgEmissions": 0.13,
+    "aircraftGhgEmissions": 0.02
+  },
+
+  "carbonContentTotal": 0.52,
+  "fossilCarbonContent": 0.0,
+  "biogenicCarbonContent": 0.52,
+
+  "attestationOfConformance": [
+    {
+      "AttestationType": "PCF Program Certification",
+      "standardName": "TfS PCF Guideline V3.0",
+      "attestationStandard": "PCF Verification and PCF Program Certification Framework V2",
+      "attestationOfConformanceId": "b2c9d1e4-8f6a-4c3b-9e21-7a5d0f2c4b88",
+      "attestationOfConformanceLink": "https://certificates.tfs-initiative.com/att/b2c9d1e4",
+      "providerName": "TÜV Rheinland Cert GmbH",
+      "providerID": "urn:tfs-initiative.com:BPN:BPNL000000012345",
+      "completedAt": "2025-01-30T12:00:00Z"
+    }
+  ]
+}

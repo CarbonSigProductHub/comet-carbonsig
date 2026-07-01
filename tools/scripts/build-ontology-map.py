@@ -56,6 +56,7 @@ NS_BASES: dict[str, str] = {
     "comet-sc": "https://comet.carbon/v1/supplychain#",
     "comet-ef": "https://comet.carbon/v1/emfactor#",
     "comet-pj": "https://comet.carbon/ext/pcr-japan#",
+    "comet-tfs": "https://comet.carbon/ext/tfs-pcf#",
     # The RS extension TTLs also use this alternate base in alignments.
     "comet-rs-alt": "https://ontology.materialintelligence.ai/comet/responsiblesteel/",
 }
@@ -72,6 +73,7 @@ NS_META: dict[str, dict[str, str]] = {
     "comet-rs": {"name": "Responsible Steel (ext)", "layer": "Extension", "color": "#c8360a"},
     "comet-cn": {"name": "ISO 14068 Carbon Neutrality (ext)", "layer": "Extension", "color": "#0a7c8c"},
     "comet-pj": {"name": "PCR Japan / SuMPO EcoLeaf (ext)", "layer": "Extension", "color": "#c8720a"},
+    "comet-tfs": {"name": "TfS PCF Data Model (ext)", "layer": "Extension", "color": "#0a8c5a"},
     "cadtrust": {"name": "CAD Trust Data Dictionary", "layer": "CAD Trust (incorporated)", "color": "#5a5a5a", "graph_default": False},
     "cadpick": {"name": "CAD Trust Picklist Values", "layer": "CAD Trust (incorporated)", "color": "#8a8a8a", "graph_default": False},
 }
@@ -94,6 +96,7 @@ ALIGN_NAME_MAP: dict[str, str] = {
     "ghg protocol": "GHG Protocol", "iso 14064": "ISO 14064", "iso 14067": "ISO 14067",
     "iso 14068": "ISO 14068-1", "cbam": "EU CBAM", "esrs": "EU ESRS", "esg": "ESG",
     "iso 14040": "ISO 14040", "iso 14044": "ISO 14044", "prov": "W3C PROV",
+    "tfs": "TfS PCF v3.1",
     "qudt": "QUDT", "geosparql": "GeoSPARQL", "iec": "IEC", "irec": "I-REC",
     "gs": "Gold Standard", "verra": "Verra", "vcs": "Verra VCS",
     # v0.3.0 carbon-verification-market standards (friendly-name crosswalks; no
@@ -118,6 +121,7 @@ EXTERNAL_BASES: dict[str, str] = {
     "esrs": "https://data.europa.eu/api/hub/store/schema/eu.europa.ec.eupl.schema.EBA.esrs.1.0/",
     "ghgp": "https://ghgprotocol.org/scope/",
     "pact": "https://wbcsd.org/spec/pact/pathfinder/v3/",
+    "tfs": "https://tfs-initiative.com/datamodel/3.1#",
     "sdg": "https://metadata.un.org/sdg/",
     "qudt-unit": "http://qudt.org/vocab/UNIT/",
     # CarbonSig Verifier Hub export contract (v4) — crosswalk target.
@@ -133,6 +137,7 @@ EXTERNAL_META: dict[str, dict[str, str]] = {
     "esrs": {"name": "EU ESRS", "color": "#3a6ea0"},
     "ghgp": {"name": "GHG Protocol", "color": "#1a6b3c"},
     "pact": {"name": "WBCSD PACT", "color": "#9a7c2f"},
+    "tfs": {"name": "TfS PCF v3.1", "color": "#0a8c5a"},
     "sdg": {"name": "UN SDG", "color": "#2a8ab0"},
     "qudt-unit": {"name": "QUDT Unit", "color": "#888"},
     "csig": {"name": "CarbonSig Verifier Export v4", "color": "#0a7c5a"},

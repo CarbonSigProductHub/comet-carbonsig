@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMET — TfS PCF Data Model v3.1 Extension</title>
+<meta name="description" content="How the TfS PCF Data Model v3.1 (Together for Sustainability) maps onto the COMET seven-layer stack — merge points, new classes, the A–H GWP position decomposition, and stakeholder benefits for chemical suppliers, downstream buyers, verifiers, and regulators.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0f0f0f;
+    --ink-2: #2a2a2a;
+    --ink-3: #555;
+    --rule: #d0cfc9;
+    --rule-light: #e8e7e3;
+    --bg: #f5f4f0;
+    --bg-card: #ffffff;
+    --accent-r: #c8360a;
+    --accent-g: #1a6b3c;
+    --accent-b: #1a3a6b;
+    --accent-gold: #9a7c2f;
+    --accent-teal: #1a5f6b;
+    --mono: 'DM Mono', monospace;
+    --display: 'Playfair Display', serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 13px; line-height: 1.55; }
+  a { color: var(--accent-r); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: var(--mono); font-size: 11.5px; background: #f0eeea; border: 1px solid var(--rule); padding: 1px 5px; }
+
+  /* MASTHEAD */
+  .masthead { background: var(--ink); color: #f5f4f0; padding: 48px 64px 40px; border-bottom: 3px solid var(--accent-r); }
+  .masthead-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: #999; text-transform: uppercase; margin-bottom: 16px; }
+  .masthead h1 { font-family: var(--display); font-size: 52px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.0; margin-bottom: 6px; }
+  .masthead h1 span { color: var(--accent-r); }
+  .masthead-subtitle { font-family: var(--mono); font-size: 11px; color: #aaa; letter-spacing: 0.08em; margin-bottom: 24px; }
+  .masthead-desc { font-size: 14px; color: #ccc; max-width: 760px; line-height: 1.6; }
+  .masthead-meta { display: flex; gap: 32px; margin-top: 24px; padding-top: 24px; border-top: 1px solid #333; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .meta-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; color: #777; text-transform: uppercase; }
+  .meta-val { font-family: var(--mono); font-size: 12px; color: #f0f0f0; }
+
+  /* NAV */
+  .toc-nav { background: var(--bg-card); border-bottom: 1px solid var(--rule); padding: 14px 64px; display: flex; gap: 22px; flex-wrap: wrap; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; }
+  .toc-link { color: var(--ink-3); text-transform: uppercase; text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; transition: color 0.15s, border-color 0.15s; }
+  .toc-link:hover { color: var(--accent-r); border-color: var(--accent-r); text-decoration: none; }
+
+  /* LAYOUT */
+  .page { max-width: 1400px; margin: 0 auto; padding: 0 64px; }
+  .section-block { padding: 56px 0 40px; border-bottom: 1px solid var(--rule); }
+  .section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-r); margin-bottom: 6px; }
+  .section-title { font-family: var(--display); font-size: 30px; font-weight: 700; color: var(--ink); margin-bottom: 8px; line-height: 1.1; }
+  .section-bluf { font-size: 13.5px; color: var(--ink-3); max-width: 820px; margin-bottom: 28px; border-left: 2px solid var(--rule); padding-left: 14px; }
+
+  /* PILLARS */
+  .pillar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 1000px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .pillar-grid { grid-template-columns: 1fr; } }
+  .pillar { background: var(--bg-card); border: 1px solid var(--rule); padding: 22px 24px; position: relative; }
+  .pillar::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+  .pillar.r::before { background: var(--accent-r); }
+  .pillar.g::before { background: var(--accent-g); }
+  .pillar.b::before { background: var(--accent-b); }
+  .pillar.gold::before { background: var(--accent-gold); }
+  .pillar-num { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+  .pillar-title { font-family: var(--display); font-size: 17px; font-weight: 700; line-height: 1.15; margin-bottom: 8px; color: var(--ink); }
+  .pillar-body { font-size: 12px; color: var(--ink-3); line-height: 1.55; }
+
+  /* TABLES */
+  .data-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--rule); font-size: 12px; }
+  .data-table thead th { background: #ebe9e3; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+  .data-table tbody td { padding: 10px 14px; border-bottom: 1px solid var(--rule-light); vertical-align: top; }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover { background: #fafaf6; }
+  .data-table .iso-ref { font-family: var(--mono); font-size: 11px; color: var(--accent-b); white-space: nowrap; }
+  .data-table .iso-term { font-weight: 600; color: var(--ink); }
+  .data-table .comet-class { font-family: var(--mono); font-size: 11px; color: var(--accent-r); white-space: nowrap; }
+
+  /* STACK DIAGRAM */
+  .stack { display: flex; flex-direction: column; gap: 0; max-width: 1000px; margin: 0 auto; }
+  .stack-layer { display: flex; align-items: stretch; border: 1px solid var(--rule); margin-bottom: -1px; background: var(--bg-card); }
+  .stack-num { font-family: var(--mono); font-size: 10px; color: #fff; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); padding: 16px 10px; min-width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 500; }
+  .stack-content { flex: 1; padding: 16px 22px; }
+  .stack-name { font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--ink); }
+  .stack-desc { font-size: 11.5px; color: var(--ink-3); margin-bottom: 8px; }
+  .stack-nodes { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stack-node { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border: 1px solid; }
+
+  /* STAKEHOLDER GRID */
+  .stake-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .stake-grid { grid-template-columns: 1fr; } }
+  .stake-card { background: var(--bg-card); border: 1px solid var(--rule); padding: 22px 26px; }
+  .stake-role { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-r); margin-bottom: 6px; }
+  .stake-title { font-family: var(--display); font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--ink); }
+  .stake-body { font-size: 12.5px; color: var(--ink-3); }
+  .stake-body ul { padding-left: 18px; margin-top: 6px; }
+  .stake-body li { margin-bottom: 6px; }
+
+  /* CHECKLIST */
+  .checklist { background: var(--bg-card); border: 1px solid var(--rule); padding: 24px 30px; }
+  .checklist ol { padding-left: 22px; }
+  .checklist li { margin-bottom: 10px; font-size: 12.5px; color: var(--ink-2); line-height: 1.55; }
+  .checklist li strong { color: var(--ink); }
+
+  /* RELATED */
+  .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .related-grid { grid-template-columns: 1fr; } }
+  .related-card { background: var(--bg-card); border: 1px solid var(--rule); padding: 20px 22px; display: block; color: inherit; text-decoration: none; transition: border-color 0.15s; }
+  .related-card:hover { border-color: var(--accent-r); text-decoration: none; }
+  .related-card-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+  .related-card-title { font-family: var(--display); font-size: 17px; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
+  .related-card-body { font-size: 12px; color: var(--ink-3); line-height: 1.55; }
+
+  /* COUNTS BANNER */
+  .counts-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  @media (max-width: 900px) { .counts-row { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .counts-row { grid-template-columns: repeat(2, 1fr); } }
+  .count-card { background: var(--ink); color: #f5f4f0; padding: 18px 20px; }
+  .count-num { font-family: var(--display); font-size: 36px; font-weight: 900; color: var(--accent-r); line-height: 1; margin-bottom: 6px; }
+  .count-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: #aaa; text-transform: uppercase; }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: #aaa; padding: 32px 64px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; line-height: 1.8; }
+  footer a { color: #ccc; }
+  footer a:hover { color: var(--accent-r); }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-eyebrow">COMET Extension · comet-ext:tfs-pcf</div>
+  <h1>COMET<span>.</span></h1>
+  <div class="masthead-subtitle">TfS PCF Data Model v3.1 · Together for Sustainability · September 2025</div>
+  <p class="masthead-desc">The TfS PCF Data Model is the 131-field data aspect model of the Together for Sustainability PCF Guideline for the Chemical Industry. It specifies how suppliers report PCF data on the TfS PCF Data Exchange Platform and is technically aligned to WBCSD PACT Pathfinder v3.0. This extension maps all 131 fields onto the COMET seven-layer stack.</p>
+  <div class="masthead-meta">
+    <div class="meta-item"><span class="meta-label">Namespace</span><span class="meta-val">https://comet.carbon/ext/tfs-pcf#</span></div>
+    <div class="meta-item"><span class="meta-label">Prefix</span><span class="meta-val">comet-tfs:</span></div>
+    <div class="meta-item"><span class="meta-label">Version</span><span class="meta-val">0.1.0 · RFC Open</span></div>
+    <div class="meta-item"><span class="meta-label">Layers</span><span class="meta-val">L1 · L4 · L5 · L6</span></div>
+    <div class="meta-item"><span class="meta-label">Standard</span><span class="meta-val">TfS PCF Data Model v3.1</span></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="toc-nav">
+  <a class="toc-link" href="index.html">← Home</a>
+  <a class="toc-link" href="#what">What</a>
+  <a class="toc-link" href="#counts">At a glance</a>
+  <a class="toc-link" href="#merge">Merge</a>
+  <a class="toc-link" href="#expand">Expand</a>
+  <a class="toc-link" href="#positions">A–H positions</a>
+  <a class="toc-link" href="#stack">Stack</a>
+  <a class="toc-link" href="#stakeholders">Stakeholders</a>
+  <a class="toc-link" href="#checklist">Adoption</a>
+  <a class="toc-link" href="ontology.html">Ontology Spec →</a>
+</nav>
+
+<div class="page">
+
+<!-- 01 — WHAT -->
+<section class="section-block" id="what">
+  <div class="section-label">Section 01 — Context</div>
+  <div class="section-title">The TfS PCF Data Model in one page</div>
+  <div class="section-bluf">Together for Sustainability's PCF Guideline for the Chemical Industry gives chemical suppliers a single, exchange-ready reporting form. Four pillars distinguish it from a generic PCF: field-level discipline, PACT-aligned emission decomposition, chemistry-specific allocation machinery, and layered attestation.</div>
+
+  <div class="pillar-grid">
+    <div class="pillar r">
+      <div class="pillar-num">Pillar 01 · Fields 1-131</div>
+      <div class="pillar-title">M/O/D/R field discipline</div>
+      <div class="pillar-body">Every one of the 131 fields is tagged Mandatory, Optional, Default, or Required-under-condition — several phased in on a fixed schedule (e.g. Primary Data Share and two DQR axes become <code>M2027</code>). A supplier cannot silently skip a field; the schedule is machine-readable.</div>
+    </div>
+    <div class="pillar g">
+      <div class="pillar-num">Pillar 02 · Fields 87-124</div>
+      <div class="pillar-title">PACT v3.0-aligned A–H decomposition</div>
+      <div class="pillar-body">Total GWP per life-cycle stage (Production, Packaging, Distribution) is decomposed into eight signed emission positions plus two totals — the same taxonomy WBCSD PACT Pathfinder v3.0 uses, so a TfS PCF and a Pathfinder exchange are structurally the same object.</div>
+    </div>
+    <div class="pillar b">
+      <div class="pillar-num">Pillar 03 · Fields 47-63</div>
+      <div class="pillar-title">Mass balancing + CCU/CCS + recycled-content allocation</div>
+      <div class="pillar-body">Chemistry-specific machinery with no equivalent in a generic PCF: mass-balance credit accounting against REDcert2/ISCC+, CCU cut-off vs. credit method, CCS/BECCS capture volumes, and upstream-system-expansion credits for recycled carbon.</div>
+    </div>
+    <div class="pillar gold">
+      <div class="pillar-num">Pillar 04 · Fields 70-86</div>
+      <div class="pillar-title">Attestation + verification shares</div>
+      <div class="pillar-body">Trust is granular, not binary: PCS/1PVS/2PVS/3PVS shares (0-100%) state how much of the result came from certified suppliers vs. first/second/third-party verification, backed by an array of typed <code>AttestationOfConformance</code> objects.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — COUNTS -->
+<section class="section-block" id="counts">
+  <div class="section-label">Section 02 — At a glance</div>
+  <div class="section-title">What the extension contributes</div>
+  <div class="section-bluf">Twelve of the 131 TfS fields already have a COMET home and are bridged via <code>owl:equivalentClass</code> / <code>skos:closeMatch</code>. The remaining chemistry- and PACT-specific machinery is added as new comet-tfs: classes and properties.</div>
+
+  <div class="counts-row">
+    <div class="count-card"><div class="count-num">131</div><div class="count-label">TfS fields covered</div></div>
+    <div class="count-card"><div class="count-num">12</div><div class="count-label">Fields already in COMET (merge)</div></div>
+    <div class="count-card"><div class="count-num">24</div><div class="count-label">New classes</div></div>
+    <div class="count-card"><div class="count-num">79</div><div class="count-label">Enumerated values</div></div>
+    <div class="count-card"><div class="count-num">13 + 51</div><div class="count-label">Object + datatype properties</div></div>
+    <div class="count-card"><div class="count-num">863</div><div class="count-label">Triples</div></div>
+  </div>
+</section>
+
+<!-- 03 — MERGE -->
+<section class="section-block" id="merge">
+  <div class="section-label">Section 03 — Merge map</div>
+  <div class="section-title">Where COMET already covers TfS</div>
+  <div class="section-bluf">Twelve TfS Section-A concepts — the PCF identity, company, product, declared unit, geography, reference period, GWP totals, fossil emissions, removals, methodology standards, verification body, and audit claim — map directly onto existing COMET classes via <code>owl:equivalentClass</code> or <code>skos:closeMatch</code>. No new class is created here; only the bridge.</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 28%;">TfS field(s)</th>
+        <th style="width: 30%;">COMET class</th>
+        <th style="width: 42%;">Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="iso-term">Id · precedingPfIds · version · status</td><td class="comet-class">comet-pcf:PCFResult</td><td>closeMatch <code>tfs:ProductFootprint</code> and <code>pact:ProductFootprint</code>; the TfS-conformant profile is typed <code>comet-tfs:TfSProductFootprint</code>, a sub-class</td></tr>
+      <tr><td class="iso-term">companyName · companyIds</td><td class="comet-class">comet:Organization</td><td>closeMatch <code>tfs:Company</code>; TfS company IDs follow the URN:FPI scheme (org-id, DUNS, VAT, LEI)</td></tr>
+      <tr><td class="iso-term">productNameCompany · productIds · productClassifications</td><td class="comet-class">comet:Product</td><td>closeMatch <code>tfs:Product</code>; URN:FPI identifiers (GTIN, CAS number, UN CPC, CN code)</td></tr>
+      <tr><td class="iso-term">declaredUnitOfMeasurement · declaredUnitAmount</td><td class="comet-class">comet-pcf:DeclaredUnit</td><td>closeMatch <code>tfs:DeclaredUnit</code> and <code>pact:DeclaredUnit</code>; value list constrained by <code>comet-tfs:DeclaredUnitOfMeasurement</code></td></tr>
+      <tr><td class="iso-term">geographyCountry · geographyCountrySubdivision</td><td class="comet-class">comet:GeographicScope</td><td>closeMatch <code>tfs:Geography</code>; region value constrained by <code>comet-tfs:GeographyRegionOrSubregion</code></td></tr>
+      <tr><td class="iso-term">referencePeriodStart/End · validityPeriod</td><td class="comet-class">comet-pcf:ReferencePeriod</td><td>closeMatch <code>tfs:ReferencePeriod</code> and <code>pact:ReferencePeriod</code>; validity capped at 3 years post reference-period end</td></tr>
+      <tr><td class="iso-term">pcfIncludingBiogenicUptake · pcfExcludingBiogenicUptake</td><td class="comet-class">comet-pcf:GlobalWarmingPotential</td><td>closeMatch <code>tfs:GWPTotal</code>; stage-level A–H decomposition added as <code>comet-tfs:GWPPositionBreakdown</code></td></tr>
+      <tr><td class="iso-term">fossilGhgEmissions (Position A)</td><td class="comet-class">comet-pcf:FossilGHGEmission</td><td>closeMatch <code>tfs:FossilGhgEmissions</code>; positions C/D/E/F/G carry PACT sign semantics beyond COMET core</td></tr>
+      <tr><td class="iso-term">TechnologicalCO2Removals · biogenicCO2Uptake</td><td class="comet-class">comet-pcf:GHGRemoval</td><td>closeMatch <code>tfs:TechnologicalCO2Removals</code>; Positions B and D, both negative-contribution (≤0)</td></tr>
+      <tr><td class="iso-term">crossSectoralStandards</td><td class="comet-class">comet-pcf:MethodologyStandard</td><td>closeMatch <code>tfs:CrossSectoralStandards</code>; value list constrained by <code>comet-tfs:CrossSectoralStandard</code></td></tr>
+      <tr><td class="iso-term">providerName · providerID</td><td class="comet-class">comet-ver:VerificationBody</td><td>closeMatch <code>tfs:AttestationProvider</code>; the certifier's or verifier's legal entity + Business Partner Number</td></tr>
+      <tr><td class="iso-term">attestationOfConformance</td><td class="comet-class">comet-ver:AuditClaim</td><td>closeMatch <code>tfs:AttestationOfConformance</code>; typed as <code>comet-tfs:AttestationOfConformance</code>, sub-class of <code>comet-ver:DisclosureRecord</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 04 — EXPAND -->
+<section class="section-block" id="expand">
+  <div class="section-label">Section 04 — Expansion</div>
+  <div class="section-title">New classes TfS forces COMET to add</div>
+  <div class="section-bluf">Twenty-four concepts in the TfS PCF Data Model had no representation in COMET. They are introduced under the new <code>comet-tfs:</code> namespace, organized by the COMET layer they extend.</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 10%;">Layer</th>
+        <th style="width: 28%;">New class</th>
+        <th style="width: 62%;">Why it is needed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:TfSProductFootprint</td><td>The TfS-conformant PCF profile — sub-class of <code>comet-pcf:PCFResult</code> binding all TfS-specific fields</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:DataModelVersion</td><td>Declares the spec format/version a PCF conforms to (<code>specVersion</code>), independent of the methodology standard used</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:PartialFullPcf</td><td>Cradle-to-gate vs. cradle-to-grave boundary declaration — TfS default is cradle-to-gate</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:DeclaredUnitOfMeasurement</td><td>Constrained dropdown of the ten units of analysis TfS permits</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:GeographyRegionOrSubregion</td><td>ISO 3166 region/subregion value list, mandatory when a specific country is not disclosed</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:CutOffRule</td><td>Exempted-emissions percentage (capped at 10%) plus rationale for excluding irrelevant processes</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:RecycledContentType</td><td>Post-industrial vs. post-consumer recycled input — no COMET equivalent</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:CrossSectoralStandard</td><td>The constrained value list backing the merged <code>MethodologyStandard</code> bridge</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:ProductOrSectorRule</td><td>The most specific applied PCR / rule set, e.g. TfS PCF Guideline V3.0, Catena-X Rulebook, EN 50693</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:CharacterizationFactor</td><td>IPCC Assessment Report version underlying the GWP values (AR6 default, incl. carbon feedback)</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:AllocationApproach</td><td>Container for how foreground emissions are allocated across co-products, waste incineration, recycling, and CCU</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:WasteIncinerationAllocation</td><td>Cut-off / reverse cut-off / system expansion / not-applicable for energy-recovery incineration</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:RecycledCarbonAllocation</td><td>Upstream system expansion (USE) vs. cut-off for material recycling</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:CCUCalculationApproach</td><td>Not-applicable / cut-off method / credit method for Carbon Capture and Utilization</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:PositiveListReference</td><td>References into the TfS-published positive lists of accepted PCRs and substituted products</td></tr>
+      <tr><td><span class="iso-ref">L5 EAC</span></td><td class="comet-class">comet-tfs:MassBalancing</td><td>Whether mass balancing (credit method) is used, free-attribution flag, calculation approach, certification scheme — chemical-industry-specific, certificate-scheme driven (REDcert2, ISCC+)</td></tr>
+      <tr><td><span class="iso-ref">L5 EAC</span></td><td class="comet-class">comet-tfs:MassBalanceCalculationApproach</td><td>Conventional reference / Inventory / both, required if mass balancing is used</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:DataQualityRating</td><td>Primary Data Share plus the three-axis DQR (technological, temporal, geographical), each rated 1-5 — PDS and two axes phase in as M2027</td></tr>
+      <tr><td><span class="iso-ref">L6 Ver</span></td><td class="comet-class">comet-tfs:VerificationShare</td><td>PCS/1PVS/2PVS/3PVS percentage shares — sub-class of <code>comet-ver:AuditClaim</code></td></tr>
+      <tr><td><span class="iso-ref">L6 Ver</span></td><td class="comet-class">comet-tfs:AttestationOfConformance</td><td>The typed attestation object array — sub-class of <code>comet-ver:DisclosureRecord</code></td></tr>
+      <tr><td><span class="iso-ref">L6 Ver</span></td><td class="comet-class">comet-tfs:AttestationType</td><td>Program certification / 3rd, 2nd, 1st party verification / mass-balance certificate — the level of trust conveyed</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:LifeCycleStage</td><td>Production / Packaging / Distribution stage, each carrying its own GWP breakdown</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:GWPPositionBreakdown</td><td>The PACT v3.0-aligned A–H emission-position decomposition per life-cycle stage (Section 05)</td></tr>
+      <tr><td><span class="iso-ref">L4 PCF</span></td><td class="comet-class">comet-tfs:CarbonContentBreakdown</td><td>Total carbon content per declared unit and its fossil, biogenic, packaging-biogenic, recycled, and CCU-based components</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 05 — A-H POSITIONS -->
+<section class="section-block" id="positions">
+  <div class="section-label">Section 05 — A–H positions</div>
+  <div class="section-title">The PACT-aligned emission decomposition</div>
+  <div class="section-bluf">Every <code>comet-tfs:LifeCycleStage</code> — Production, Packaging, Distribution — carries its own <code>comet-tfs:GWPPositionBreakdown</code>: eight signed emission positions plus two totals, identical in structure to the WBCSD PACT Pathfinder v3.0 taxonomy. Reduction positions (removals) are negative contributions by convention; emission positions are non-negative.</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 10%;">Position</th>
+        <th style="width: 30%;">COMET property</th>
+        <th style="width: 10%;">Sign</th>
+        <th style="width: 50%;">Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="iso-ref">A</td><td class="comet-class">comet-tfs:fossilGhgEmissions</td><td>≥ 0</td><td>All fossil emissions incl. industrial processes, combustion, fugitive, and A1 land management</td></tr>
+      <tr><td class="iso-ref">A1</td><td class="comet-class">comet-tfs:landManagementFossilGhgEmissions</td><td>≥ 0</td><td>Fossil land-management detail of Position A</td></tr>
+      <tr><td class="iso-ref">B</td><td class="comet-class">comet-tfs:technologicalCO2Removals</td><td>≤ 0</td><td>Technological/geologic CO2 capture-and-storage counted as removal (BECCS) — negative contribution</td></tr>
+      <tr><td class="iso-ref">C</td><td class="comet-class">comet-tfs:biogenicNonCO2Emissions</td><td>≥ 0</td><td>Non-CO2 biogenic emissions (CH4 from livestock/manure, biomass burning, rice, degradation)</td></tr>
+      <tr><td class="iso-ref">D</td><td class="comet-class">comet-tfs:biogenicCO2Uptake</td><td>≤ 0</td><td>Biogenic CO2 uptake in the product — negative contribution, required if biogenic carbon content specified</td></tr>
+      <tr><td class="iso-ref">E</td><td class="comet-class">comet-tfs:landUseChangeGhgEmissions</td><td>≥ 0</td><td>Direct land-use-change (dLUC) emissions — iLUC excluded (M2027)</td></tr>
+      <tr><td class="iso-ref">F</td><td class="comet-class">comet-tfs:landManagementBiogenicCO2Emissions</td><td>≥ 0</td><td>Biogenic CO2 from net carbon-stock loss within a land-use category (M2027)</td></tr>
+      <tr><td class="iso-ref">G</td><td class="comet-class">comet-tfs:landManagementBiogenicCO2Removals</td><td>≤ 0</td><td>Net CO2 removals from increased land-based carbon stock — negative contribution</td></tr>
+      <tr><td class="iso-ref">H</td><td class="comet-class">comet-tfs:aircraftGhgEmissions</td><td>≥ 0</td><td>Aviation emissions occurring in distribution stages cradle-to-gate, where applicable</td></tr>
+      <tr><td class="iso-ref">T1</td><td class="comet-class">comet-tfs:pcfIncludingBiogenicUptake</td><td>—</td><td>A + B + C + D + E + F + G + H — total GWP incl. biogenic uptake, kg CO2e per declared unit</td></tr>
+      <tr><td class="iso-ref">T2</td><td class="comet-class">comet-tfs:pcfExcludingBiogenicUptake</td><td>≥ 0</td><td>A + B + C + E + F + G + H — total GWP excl. biogenic uptake, kg CO2e per declared unit</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size: 12px; color: var(--ink-3); margin-top: 18px; max-width: 820px;">
+    The full A–H set is reported for <strong>each</strong> of the three <code>comet-tfs:LifeCycleStage</code> individuals — Production, Packaging, Distribution — via <code>comet-tfs:hasLifeCycleStage</code> → <code>comet-tfs:hasGWPBreakdown</code>. Packaging-stage emissions are additionally rolled into the Production-stage total whenever <code>comet-tfs:packagingEmissionsIncluded = TRUE</code>.
+  </p>
+</section>
+
+<!-- 06 — STACK VIEW -->
+<section class="section-block" id="stack">
+  <div class="section-label">Section 06 — Stack view</div>
+  <div class="section-title">Where the new classes live</div>
+  <div class="section-bluf">The extension threads through three of COMET's seven layers. <code>TfSProductFootprint</code>, its GWP and carbon-content breakdowns anchor L4; chemistry-specific allocation and mass-balancing machinery sits at L5; verification shares and attestations close the loop at L6.</div>
+
+  <div class="stack">
+    <div class="stack-layer" style="background:#252521;">
+      <div class="stack-num" style="background:var(--accent-g);">L6</div>
+      <div class="stack-content">
+        <div class="stack-name" style="color:#f5f4f0;">Verification &amp; Attestation</div>
+        <div class="stack-desc" style="color:#aaa;">Trust is granular — PCS/1PVS/2PVS/3PVS shares state how much of the result is certified vs. verified, backed by a typed attestation array with a UUID and an issuer's Business Partner Number.</div>
+        <div class="stack-nodes">
+          <span class="stack-node" style="border-color:var(--accent-g);color:var(--accent-g);">VerificationShare</span>
+          <span class="stack-node" style="border-color:var(--accent-g);color:var(--accent-g);">AttestationOfConformance</span>
+          <span class="stack-node" style="border-color:var(--accent-g);color:var(--accent-g);">AttestationType</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer" style="background:#1a1a1a;">
+      <div class="stack-num" style="background:var(--accent-b);">L5</div>
+      <div class="stack-content">
+        <div class="stack-name" style="color:#f5f4f0;">Allocation &amp; Mass Balancing</div>
+        <div class="stack-desc" style="color:#aaa;">Chemistry-specific credit and allocation machinery: mass-balance certificate schemes, CCU cut-off vs. credit method, CCS/BECCS capture volumes, and upstream-system-expansion credits for recycled carbon.</div>
+        <div class="stack-nodes">
+          <span class="stack-node" style="border-color:var(--accent-b);color:var(--accent-b);">MassBalancing</span>
+          <span class="stack-node" style="border-color:var(--accent-b);color:var(--accent-b);">CCUCalculationApproach</span>
+          <span class="stack-node" style="border-color:var(--accent-b);color:var(--accent-b);">RecycledCarbonAllocation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer" style="background:#fafaf6;">
+      <div class="stack-num" style="background:var(--accent-gold);">L4</div>
+      <div class="stack-content">
+        <div class="stack-name">Product Carbon Footprint</div>
+        <div class="stack-desc">TfSProductFootprint carries the boundary declaration, life-cycle-stage GWP breakdowns (A–H) and the carbon-content breakdown — the bulk of the 131-field surface.</div>
+        <div class="stack-nodes">
+          <span class="stack-node" style="border-color:var(--accent-gold);color:var(--accent-gold);">TfSProductFootprint</span>
+          <span class="stack-node" style="border-color:var(--accent-gold);color:var(--accent-gold);">GWPPositionBreakdown</span>
+          <span class="stack-node" style="border-color:var(--accent-gold);color:var(--accent-gold);">CarbonContentBreakdown</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer" style="background:#f0eee9;">
+      <div class="stack-num" style="background:var(--accent-teal);">L1</div>
+      <div class="stack-content">
+        <div class="stack-name">Core Identity</div>
+        <div class="stack-desc">Company and product identity are reused directly from COMET core via <code>skos:closeMatch</code> — TfS URN:FPI identifiers (GTIN, CAS, UN CPC, CN code) attach as literal properties, no new class needed.</div>
+        <div class="stack-nodes">
+          <span class="stack-node" style="border-color:var(--accent-teal);color:var(--accent-teal);">comet:Organization</span>
+          <span class="stack-node" style="border-color:var(--accent-teal);color:var(--accent-teal);">comet:Product</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size: 12px; color: var(--ink-3); margin-top: 18px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    Cross-cutting (L4 → L6): <code>DataQualityRating</code> · <code>CutOffRule</code> · <code>AllocationApproach</code> · <code>PositiveListReference</code>.
+  </p>
+</section>
+
+<!-- 07 — STAKEHOLDERS -->
+<section class="section-block" id="stakeholders">
+  <div class="section-label">Section 07 — Stakeholder benefits</div>
+  <div class="section-title">What TfS in COMET means to each role</div>
+  <div class="section-bluf">The same 131-field record serves the chemical supplier submitting it, the buyer consuming it, and the verifier attesting to it. The benefit profile below is the basis for stakeholder conversations once an organization adopts the extension.</div>
+
+  <div class="stake-grid">
+    <div class="stake-card">
+      <div class="stake-role">Chemical suppliers</div>
+      <div class="stake-title">One record, every downstream ask satisfied</div>
+      <div class="stake-body">
+        <ul>
+          <li>A single <code>TfSProductFootprint</code> instance satisfies a TfS PCF Data Exchange submission, a PACT Pathfinder exchange, and an EPD request — no parallel spreadsheets per counterparty.</li>
+          <li>The M/O/D/R field discipline, including phased fields (PDS and two DQR axes at M2027), is machine-checkable — gaps surface before a customer audit does.</li>
+          <li>Mass-balance credit accounting (REDcert2, ISCC+) and CCU/CCS allocation are first-class objects, not footnotes bolted onto a generic PCF template.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stake-card">
+      <div class="stake-role">Downstream Scope-3 buyers</div>
+      <div class="stake-title">PACT-structured data without a second mapping pass</div>
+      <div class="stake-body">
+        <ul>
+          <li>Because the A–H position taxonomy is PACT v3.0-aligned, a buyer's Scope-3 ingestion pipeline reads the same eight positions it would from any Pathfinder-conformant supplier.</li>
+          <li>Verification shares (PCS/1PVS/2PVS/3PVS) let a buyer risk-weight supplier data instead of treating every PCF as equally assured.</li>
+          <li>Carbon-content breakdown supports downstream mass-balance and recycled-content claims without re-deriving them from raw process data.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stake-card">
+      <div class="stake-role">Carbon verifiers</div>
+      <div class="stake-title">Attestation scope becomes machine-readable</div>
+      <div class="stake-body">
+        <ul>
+          <li><code>AttestationOfConformance</code> carries a UUID v4, an issuer name + Business Partner Number, and a typed <code>AttestationType</code> — program certification through first-party verification are queryable, not narrative.</li>
+          <li>Sub-classing <code>comet-ver:DisclosureRecord</code> and <code>comet-ver:AuditClaim</code> means existing COMET verification workflows extend to TfS attestations without a bespoke schema.</li>
+          <li>Mass-balancing certificate scheme (REDcert2, ISCC+) is a typed field the verifier can cross-check against the registry directly.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stake-card">
+      <div class="stake-role">LCA practitioners</div>
+      <div class="stake-title">A–H decomposition maps straight from existing LCIA output</div>
+      <div class="stake-body">
+        <ul>
+          <li>SimaPro, openLCA, GaBi and ecoinvent already produce fossil/biogenic/land-use splits close to A–H — the extension gives them a standard export target instead of a bespoke TfS mapping.</li>
+          <li>Characterization-factor version (<code>CharacterizationFactor</code>, AR6 default) is explicit, removing a common source of cross-study GWP discrepancy.</li>
+          <li>Cut-off rule (capped at 10% of total emissions) and allocation approach are typed, auditable objects rather than assumptions buried in the LCA model.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stake-card">
+      <div class="stake-role">Regulators (CBAM · EU Green Claims · ESRS)</div>
+      <div class="stake-title">A structured chemical-sector PCF for cross-checking claims</div>
+      <div class="stake-body">
+        <ul>
+          <li>CBAM precursor-emissions reporting for organic chemicals can draw directly on the fossil (Position A) and process-emission decomposition rather than a bespoke declaration.</li>
+          <li>EU Green Claims substantiation benefits from the same machine-readable, PACT-aligned structure already proven for ISO 14068 claims elsewhere in COMET.</li>
+          <li>ESRS E1 Scope 3 category 1 (purchased goods) disclosures can trace to supplier-level TfS PCFs with verification shares attached, rather than spend-based proxies.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stake-card">
+      <div class="stake-role">Data-exchange platforms (TfS Platform · Catena-X · PACT)</div>
+      <div class="stake-title">One ontology bridges three exchange networks</div>
+      <div class="stake-body">
+        <ul>
+          <li>Because <code>TfSProductFootprint</code> is a sub-class of <code>comet-pcf:PCFResult</code> with PACT-aligned A–H positions, the same graph serves the TfS PCF Data Exchange Platform, Catena-X (via <code>ProductOrSectorRule</code>), and any PACT Pathfinder network without transformation.</li>
+          <li>The TfS positive lists (accepted PCRs, substituted products for system expansion) are referenced, not copied, so platform-side updates to those lists do not require an ontology migration.</li>
+          <li>URN:FPI identifiers (GTIN, CAS, DUNS, LEI) already used across these networks pass through unchanged as literal properties on <code>comet:Organization</code> / <code>comet:Product</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 — CHECKLIST -->
+<section class="section-block" id="checklist">
+  <div class="section-label">Section 08 — Adoption</div>
+  <div class="section-title">Implementation checklist for adopters</div>
+  <div class="section-bluf">Step-by-step path from a working COMET PCF to a published TfS-conformant exchange. Each step produces a concrete object in the graph; each object is verifiable independently.</div>
+
+  <div class="checklist">
+    <ol>
+      <li><strong>Declare the profile.</strong> Type the record <code>comet-tfs:TfSProductFootprint</code>; set <code>specVersion</code> (e.g. <code>urn:tfs-initiative.com:datamodel-version:3.1.0</code>) and <code>partialFullPcf</code> (default cradle-to-gate).</li>
+      <li><strong>Map identity and scope.</strong> Bind <code>comet:Organization</code> / <code>comet:Product</code> to their URN:FPI identifiers, set <code>DeclaredUnit</code>, <code>GeographicScope</code>, and <code>ReferencePeriod</code>.</li>
+      <li><strong>Compute per-stage GWP breakdown.</strong> For each <code>LifeCycleStage</code> (Production, Packaging, Distribution), populate Positions A through H via <code>comet-tfs:hasGWPBreakdown</code>, then derive totals T1 (<code>pcfIncludingBiogenicUptake</code>) and T2 (<code>pcfExcludingBiogenicUptake</code>).</li>
+      <li><strong>Set carbon content.</strong> Populate <code>CarbonContentBreakdown</code> — total, fossil, biogenic, packaging-biogenic, recycled, and CCU-based carbon per declared unit.</li>
+      <li><strong>Declare allocation and mass balancing.</strong> Set <code>CutOffRule</code> (≤10%), <code>AllocationApproach</code> (waste incineration, recycled carbon, CCU), and — if applicable — <code>MassBalancing</code> with its certificate scheme.</li>
+      <li><strong>Record data quality and provenance.</strong> Set <code>DataQualityRating</code> (Primary Data Share + three-axis DQR) and cite the secondary emission-factor source and version (e.g. ecoinvent v3.8).</li>
+      <li><strong>Attach verification shares.</strong> Populate <code>VerificationShare</code> (PCS/1PVS/2PVS/3PVS) and attach one or more <code>AttestationOfConformance</code> objects with their <code>AttestationType</code>, UUID, and issuer.</li>
+      <li><strong>Export to the TfS Data Exchange Platform / PACT.</strong> Serialize the graph to the TfS Data Exchange schema and, where the counterparty is Pathfinder-based, the same A–H decomposition satisfies a WBCSD PACT v3.0 exchange with no re-mapping.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 09 — RELATED -->
+<section class="section-block" id="related">
+  <div class="section-label">Section 09 — Go deeper</div>
+  <div class="section-title">Related documentation</div>
+
+  <div class="related-grid">
+    <a class="related-card" href="ontology.html">
+      <div class="related-card-label">Reference Specification</div>
+      <div class="related-card-title">Ontology Specification →</div>
+      <div class="related-card-body">Twenty visualizations covering architecture, stakeholders, maturity, namespace, data flow, governance, trust chain, transport layer, and economics.</div>
+    </a>
+    <a class="related-card" href="index.html">
+      <div class="related-card-label">Overview</div>
+      <div class="related-card-title">COMET Home →</div>
+      <div class="related-card-body">The full seven-layer stack and the complete set of standard extensions COMET has mapped so far.</div>
+    </a>
+    <a class="related-card" href="https://github.com/CarbonSigProductHub/comet-carbonsig/tree/main/ext/tfs-pcf" target="_blank" rel="noopener noreferrer">
+      <div class="related-card-label">Source · Turtle</div>
+      <div class="related-card-title">ext/tfs-pcf →</div>
+      <div class="related-card-body">The OWL ontology in Turtle (24 classes, 79 individuals, 13 object + 51 datatype properties, 863 triples). Pull-request-ready.</div>
+    </a>
+    <a class="related-card" href="https://www.tfs-initiative.com/scope-3-ghg-emissions" target="_blank" rel="noopener noreferrer">
+      <div class="related-card-label">Standard</div>
+      <div class="related-card-title">TfS Scope 3 &amp; PCF Guideline →</div>
+      <div class="related-card-body">Together for Sustainability's own Scope-3 and Product Carbon Footprint Guideline for the Chemical Industry, the source standard for this extension.</div>
+    </a>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer>
+  <div>COMET — Carbon Ontology for Markets, Emissions &amp; Trade · TfS PCF Data Model Extension v0.1.0 · CC BY 4.0 + Apache 2.0</div>
+  <div>Chemicals-WG · RFC Open · <a href="https://github.com/CarbonSigProductHub/comet-carbonsig" target="_blank" rel="noopener noreferrer">github.com/CarbonSigProductHub/comet-carbonsig</a></div>
+</footer>
+
+</body>
+</html>

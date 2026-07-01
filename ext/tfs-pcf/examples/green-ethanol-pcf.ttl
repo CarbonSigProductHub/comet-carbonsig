@@ -1,0 +1,94 @@
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix comet:     <https://comet.carbon/v1/core#> .
+@prefix comet-pcf: <https://comet.carbon/v1/pcf#> .
+@prefix comet-tfs: <https://comet.carbon/ext/tfs-pcf#> .
+@prefix ex:        <https://example.com/tfs/> .
+
+# =============================================================================
+# Worked example — a TfS-conformant PCF for "Green Ethanol"
+# =============================================================================
+# Mirrors the sample values in the TfS PCF Data Model v3.1 (September 2025).
+# Validate with:
+#   pyshacl -s ../comet-ext-tfs-pcf-shapes.ttl -e ../comet-ext-tfs-pcf.ttl -d green-ethanol-pcf.ttl
+# =============================================================================
+
+ex:green-ethanol-pcf
+    a comet-tfs:TfSProductFootprint ;
+    rdfs:label "Green Ethanol — cradle-to-gate PCF"@en ;
+    comet-tfs:specVersion "urn:tfs-initiative.com:datamodel-version:3.1.0" ;
+    comet-tfs:hasBoundaryDeclaration comet-tfs:CradleToGate ;
+    comet-pcf:pcfId "550e8400-e29b-11d4-a716-446655440000" ;
+    comet-tfs:usesCharacterizationFactor comet-tfs:AR6 ;
+    comet-tfs:ccsBeccsApplied false ;
+    comet-tfs:productMassPerDeclaredUnit "0.123"^^xsd:decimal ;
+    comet-tfs:boundaryProcessesDescription "Hydrogen liquid chlor-alkali electrolysis; electricity consumption in production phase." ;
+    comet-tfs:hasCutOffRule ex:cutoff ;
+    comet-tfs:hasAllocation ex:alloc ;
+    comet-tfs:hasMassBalancing ex:mb ;
+    comet-tfs:hasDataQualityRating ex:dqr ;
+    comet-tfs:hasVerificationShare ex:vshare ;
+    comet-tfs:hasLifeCycleStage ex:production ;
+    comet-tfs:hasCarbonContent ex:carbon ;
+    comet-tfs:hasAttestation ex:attestation ;
+    comet-tfs:packagingEmissionsIncluded true .
+
+ex:cutoff a comet-tfs:CutOffRule ;
+    comet-tfs:exemptedEmissionsPercent "3"^^xsd:decimal ;
+    comet-tfs:exemptedEmissionsDescription "Criteria to exclude certain activities (cut-off) according to TfS guideline." .
+
+ex:alloc a comet-tfs:AllocationApproach ;
+    comet-tfs:allocationRulesDescription "mass allocation" .
+
+ex:mb a comet-tfs:MassBalancing ;
+    comet-tfs:massBalancingUsed true ;
+    comet-tfs:freeAttributionInMassBalancing true ;
+    comet-tfs:massBalancingCalculationApproach comet-tfs:MB_Inventory ;
+    comet-tfs:massBalancingCertificateScheme "ISCC+" .
+
+ex:dqr a comet-tfs:DataQualityRating ;
+    comet-tfs:primaryDataShare "80"^^xsd:decimal ;
+    comet-tfs:secondaryEmissionFactorSources "ecoinvent v3.8" ;
+    comet-tfs:technologicalDQR "2.1"^^xsd:decimal ;
+    comet-tfs:temporalDQR "2.1"^^xsd:decimal ;
+    comet-tfs:geographicalDQR "1.4"^^xsd:decimal .
+
+ex:vshare a comet-tfs:VerificationShare ;
+    comet-tfs:programCertificationShare "50.5"^^xsd:decimal ;
+    comet-tfs:productVerificationShare3rdParty "0.0"^^xsd:decimal ;
+    comet-tfs:productVerificationShare2ndParty "50.5"^^xsd:decimal ;
+    comet-tfs:productVerificationShare1stParty "50.5"^^xsd:decimal .
+
+ex:production a comet-tfs:LifeCycleStage ;
+    comet-tfs:stageType comet-tfs:ProductionStage ;
+    comet-tfs:hasGWPBreakdown ex:prod-gwp .
+
+ex:prod-gwp a comet-tfs:GWPPositionBreakdown ;
+    comet-tfs:pcfIncludingBiogenicUptake "0.49"^^xsd:decimal ;
+    comet-tfs:pcfExcludingBiogenicUptake "2.8"^^xsd:decimal ;
+    comet-tfs:fossilGhgEmissions "2.2"^^xsd:decimal ;
+    comet-tfs:technologicalCO2Removals "0.0"^^xsd:decimal ;
+    comet-tfs:biogenicNonCO2Emissions "0.4"^^xsd:decimal ;
+    comet-tfs:biogenicCO2Uptake "-2.31"^^xsd:decimal ;
+    comet-tfs:landUseChangeGhgEmissions "0.2"^^xsd:decimal ;
+    comet-tfs:landManagementBiogenicCO2Emissions "0.0"^^xsd:decimal ;
+    comet-tfs:landManagementBiogenicCO2Removals "0.0"^^xsd:decimal ;
+    comet-tfs:aircraftGhgEmissions "0.0"^^xsd:decimal .
+
+ex:carbon a comet-tfs:CarbonContentBreakdown ;
+    comet-tfs:carbonContentTotal "0.52"^^xsd:decimal ;
+    comet-tfs:fossilCarbonContent "0.0"^^xsd:decimal ;
+    comet-tfs:biogenicCarbonContent "0.52"^^xsd:decimal ;
+    comet-tfs:recycledCarbonContent "0.0"^^xsd:decimal ;
+    comet-tfs:ccuCarbonContent "0.0"^^xsd:decimal .
+
+ex:attestation a comet-tfs:AttestationOfConformance ;
+    comet-tfs:attestationType comet-tfs:AT_ProgramCertification ;
+    comet-tfs:standardName "Catena-X Product Carbon Footprint Rulebook v4" ;
+    comet-tfs:attestationStandard "PCF Verification and PCF Program Certification Framework V2" ;
+    comet-tfs:attestationOfConformanceId "4a7c4482-8431-4c31-a895-70341d2a1376" ;
+    comet-tfs:attestationOfConformanceLink "https://www.Certifierrepository_example.com/Certificate123456"^^xsd:anyURI ;
+    comet-tfs:providerName "TÜV X Germany" ;
+    comet-tfs:providerID "BPNL0000000A0IVV" ;
+    comet-tfs:completedAt "2022-11-20T08:30:00.000Z"^^xsd:dateTime .

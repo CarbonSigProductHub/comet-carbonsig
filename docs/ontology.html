@@ -499,6 +499,7 @@
 
 <!-- NAV -->
 <nav class="toc-nav">
+  <a class="toc-link" href="tfs-pcf.html" style="color:var(--accent-r);">★ TfS PCF</a>
   <a class="toc-link" href="iso14068.html" style="color:var(--accent-r);">★ ISO 14068</a>
   <a class="toc-link" href="materials.html" style="color:var(--accent-r);">★ Materials</a>
   <a class="toc-link" href="#v1">01 Architecture</a>
@@ -846,6 +847,7 @@
 <span class="ns-prefix">@prefix comet-ext:</span>  <span class="ns-uri">&lt;https://comet.carbon/ext/{org}#&gt;</span>
 <span class="ns-prefix">@prefix comet-beta:</span> <span class="ns-uri">&lt;https://comet.carbon/beta#&gt;</span>
 <span class="ns-prefix">@prefix comet-pj:</span>   <span class="ns-uri">&lt;https://comet.carbon/ext/pcr-japan#&gt;</span>  <span class="ns-comment"># PCR Japan / SuMPO EcoLeaf (v0.1)</span>
+<span class="ns-prefix">@prefix comet-tfs:</span>  <span class="ns-uri">&lt;https://comet.carbon/ext/tfs-pcf#&gt;</span>    <span class="ns-comment"># TfS PCF Data Model v3.1 (v0.1)</span>
       </div>
     </div>
     <div>
@@ -1851,6 +1853,13 @@
       <div class="card-title" style="font-size:13px;">comet-pj: PCR Japan</div>
       <div class="card-body">SuMPO EcoLeaf extension: <code style="font-family:monospace;font-size:0.85em;">SuMPOPCRDocument</code>, <code style="font-family:monospace;font-size:0.85em;">EcoLeafDeclaration</code>, 13-concept SKOS product field taxonomy. Full <span lang="ja">日本語</span> labels for all COMET core terms. 76 PCRs from ecoleaf-label.jp via PCRbase.</div>
       <div style="margin-top:8px;font-family:var(--mono);font-size:9px;color:#aaa;">PCRbase WG · RFC Open · <a href="https://github.com/nickgogerty/comet-ontology/tree/main/ext/pcr-japan" style="color:#c8720a;" target="_blank">ext/pcr-japan ↗</a></div>
+    </div>
+    <div class="card" style="border-color:#0a8c5a;">
+      <div class="card-accent" style="background:#0a8c5a;"></div>
+      <div class="card-label">New Extension · v0.1</div>
+      <div class="card-title" style="font-size:13px;">comet-tfs: TfS PCF Data Model v3.1</div>
+      <div class="card-body">All 131 fields of the Together for Sustainability PCF Data Model v3.1 (chemical industry): <code style="font-family:monospace;font-size:0.85em;">TfSProductFootprint</code>, the PACT-aligned A–H <code style="font-family:monospace;font-size:0.85em;">GWPPositionBreakdown</code>, <code style="font-family:monospace;font-size:0.85em;">MassBalancing</code>, <code style="font-family:monospace;font-size:0.85em;">DataQualityRating</code>, <code style="font-family:monospace;font-size:0.85em;">VerificationShare</code>, and <code style="font-family:monospace;font-size:0.85em;">AttestationOfConformance</code>. 24 new classes · 79 enum values · SHACL shapes. Interoperable with WBCSD PACT + Catena-X.</div>
+      <div style="margin-top:8px;font-family:var(--mono);font-size:9px;color:#aaa;">Chemicals WG · RFC Open · <a href="tfs-pcf.html" style="color:#0a8c5a;">tfs-pcf.html →</a> · <a href="https://github.com/CarbonSigProductHub/comet-carbonsig/tree/main/ext/tfs-pcf" style="color:#0a8c5a;" target="_blank">ext/tfs-pcf ↗</a></div>
     </div>
   </div>
 </section>

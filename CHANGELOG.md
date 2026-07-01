@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+**TfS PCF Data Model v3.1 extension** (`ext/tfs-pcf/`, `docs/tfs-pcf.html`)
+- New extension module `comet-ext:tfs-pcf` (`comet-tfs:`, namespace `https://comet.carbon/ext/tfs-pcf#`) mapping all 131 fields of the Together for Sustainability **PCF Data Model v3.1** (September 2025) — the data aspect model of the TfS PCF Guideline for the Chemical Industry, technically aligned to WBCSD PACT Pathfinder v3.0 — onto the COMET seven-layer stack. 167 `comet-tfs` terms: **24 new classes**, **79 enumerated value individuals**, **13 object properties**, **51 datatype properties**, **12 `owl:equivalentClass`/`skos:closeMatch` bridges** to existing COMET (`comet-pcf:PCFResult`, `comet:Organization`, `comet:Product`, `comet-pcf:DeclaredUnit`, `comet:GeographicScope`, `comet-pcf:ReferencePeriod`, `comet-pcf:GlobalWarmingPotential`, `comet-pcf:FossilGHGEmission`, `comet-pcf:GHGRemoval`, `comet-pcf:MethodologyStandard`, `comet-ver:VerificationBody`, `comet-ver:AuditClaim`)
+- New classes cover the TfS-specific machinery with no prior COMET home: `TfSProductFootprint` (sub-class of `comet-pcf:PCFResult`), the partial/full boundary declaration, the per-life-cycle-stage **A–H GWP position decomposition** (`GWPPositionBreakdown`, PACT v3.0-aligned, with sign + total constraints), `CarbonContentBreakdown`, `CutOffRule`, the allocation approaches (waste incineration / recycled carbon / CCU), `MassBalancing` (+ certificate schemes REDcert2 / ISCC+), the TfS PCR/system-expansion positive-list references, `DataQualityRating` (primary-data share + three-axis DQR), `VerificationShare` (PCS / 1PVS / 2PVS / 3PVS), and the `AttestationOfConformance` object array (sub-class of `comet-ver:DisclosureRecord`)
+- `ext/tfs-pcf/comet-ext-tfs-pcf-shapes.ttl` SHACL shapes (cut-off 0–10%, PDS 0–100, DQR 1–5, A–H position sign rules, T2 ≥ 0, conditional mass-balancing requirements, mandatory attestation fields) validated with pyshacl against the worked example `ext/tfs-pcf/examples/green-ethanol-pcf.ttl` (Conforms: True)
+- New converter `tools/converters/tfs_to_comet.py` (+ `tools/examples/tfs-v3-input.json`) turning a TfS PCF Data Model v3.1 JSON payload into a COMET JSON-LD `comet-tfs:TfSProductFootprint`
+- Registered in `registry/namespaces.json`, `registry/comet-curies.json` (88 `comet_tfs_pending` CURIEs), `comet-context.jsonld`, and the ontology map (`tools/scripts/build-ontology-map.py` → `docs/ontology-data.{json,js}`, `docs/comet-ontology-values.xlsx`); surfaced in `docs/index.html`, `docs/ontology.html`, `docs/data-exchange.html`, and the dedicated per-standard page `docs/tfs-pcf.html`
+
+### Changed
+- Ontology term count rises to 1113 total (from 946) with the addition of 167 `comet-tfs` terms
+
 ## [0.3.0] - 2026-06-17
 
 ### Added
