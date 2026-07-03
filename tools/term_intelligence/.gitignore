@@ -1,0 +1,8 @@
+# Generated pipeline outputs — re-created by scripts, not versioned
+data/terms.json
+data/batches/
+data/candidates/
+data/descriptions/
+data/matches/
+__pycache__/
+*.pyc
