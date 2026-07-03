@@ -36,6 +36,12 @@ def main() -> int:
             t["plainDescription"] = pd
             covered += 1
 
+    # 1b. mirror plainDescription onto graph nodes (used by the schema-map popup)
+    for n in data.get("graph", {}).get("nodes", []):
+        pd = desc.get(n.get("curie") or n.get("id"))
+        if pd:
+            n["plainDescription"] = pd
+
     # 2. per-term similarTerms (bidirectional)
     sim: dict[str, list] = {}
     for m in proposals:
