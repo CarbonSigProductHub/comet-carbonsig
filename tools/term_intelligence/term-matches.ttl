@@ -1,0 +1,749 @@
+@prefix comet-match: <https://comet.carbon/meta/match#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Proposed cross-namespace term matches (status: proposed / human-gated).
+# Each is a reviewable proposal, NOT an asserted skos:exactMatch axiom.
+
+comet-match:proposal-000 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/responsiblesteel#transfersFrom> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#transfersTo> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.92"^^xsd:decimal ;
+    comet-match:confidenceLow "0.82"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.97"^^xsd:decimal ;
+    skos:note "Inverse directional object properties in the same namespace — antonyms expressing opposite directions of the same transfer relationship, not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-001 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#AT_FirstParty> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#AT_SecondParty> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.9"^^xsd:decimal ;
+    comet-match:confidenceLow "0.8"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.96"^^xsd:decimal ;
+    skos:note "Sibling enumeration individuals in the same audit-type classification: 1st-party vs 2nd-party PCF verification — same classification axis, distinct values."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-002 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#AT_FirstParty> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#AT_ThirdParty> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.9"^^xsd:decimal ;
+    comet-match:confidenceLow "0.8"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.96"^^xsd:decimal ;
+    skos:note "Sibling enumeration individuals: 1st-party vs 3rd-party PCF verification — same classification axis, distinct values."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-003 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#AT_SecondParty> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#AT_ThirdParty> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.9"^^xsd:decimal ;
+    comet-match:confidenceLow "0.8"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.96"^^xsd:decimal ;
+    skos:note "Sibling enumeration individuals: 2nd-party vs 3rd-party PCF verification — same classification axis, distinct values."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-004 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#productVerificationShare1stParty> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#productVerificationShare2ndParty> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.88"^^xsd:decimal ;
+    comet-match:confidenceLow "0.77"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.95"^^xsd:decimal ;
+    skos:note "Parallel datatype properties measuring product verification share for different parties (1PVS vs 2PVS); same structural role, distinct party-scope — not interchangeable."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-005 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#productVerificationShare1stParty> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#productVerificationShare3rdParty> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.88"^^xsd:decimal ;
+    comet-match:confidenceLow "0.77"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.95"^^xsd:decimal ;
+    skos:note "Parallel datatype properties for 1PVS vs 3PVS; same structural role across different party scopes."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-006 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#productVerificationShare2ndParty> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#productVerificationShare3rdParty> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.88"^^xsd:decimal ;
+    comet-match:confidenceLow "0.77"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.95"^^xsd:decimal ;
+    skos:note "Parallel datatype properties for 2PVS vs 3PVS; same structural role across different party scopes."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-007 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#co_benefit.cadTrustProjectId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    comet-match:relation "exactMatch" ;
+    comet-match:confidence "0.88"^^xsd:decimal ;
+    comet-match:confidenceLow "0.75"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.96"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    skos:note "Both are the CAD Trust project GUID — identical label, identical definition, both are identifiers for the same CAD Trust project entity; comet-ver is a more published layer so it is preferred as canonical."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-008 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#estimation.cadTrustProjectId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    comet-match:relation "exactMatch" ;
+    comet-match:confidence "0.88"^^xsd:decimal ;
+    comet-match:confidenceLow "0.75"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.96"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    skos:note "Both are the CAD Trust project GUID with identical label and definition; the comet-ver instance is the more foundational published-layer definition."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-009 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#Material> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#RSInputMaterial> ;
+    comet-match:relation "broadMatch" ;
+    comet-match:confidence "0.88"^^xsd:decimal ;
+    comet-match:confidenceLow "0.78"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.95"^^xsd:decimal ;
+    skos:note "RSInputMaterial is a domain-constrained subtype of Material scoped to ResponsibleSteel Annex 1 ferrous inputs; comet:Material is the general input/output substance concept that encompasses it."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-010 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/iso14068#Baseline> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#ProcessGasBaseline> ;
+    comet-match:relation "broadMatch" ;
+    comet-match:confidence "0.87"^^xsd:decimal ;
+    comet-match:confidenceLow "0.77"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.94"^^xsd:decimal ;
+    skos:note "comet-cn:Baseline is the ISO 14068-1 general concept of quantified GHG emissions for a base period; ProcessGasBaseline is a highly specific counterfactual baseline restricted to captured process gases in steelmaking CCUS credits."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-011 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    comet-match:objectTerm <https://comet.carbon/v1/emfactor#GWP100Value.gwpValue> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.85"^^xsd:decimal ;
+    comet-match:confidenceLow "0.74"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.93"^^xsd:decimal ;
+    skos:note "GWP100Value is the class representing a GWP100 measurement object; gwpValue is the datatype property slot carrying the numeric factor on that class — a is broader than b."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-012 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#co_benefit_id.SDG%201%20-%20No%20poverty> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.85"^^xsd:decimal ;
+    comet-match:confidenceLow "0.73"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.93"^^xsd:decimal ;
+    skos:note "a is a specific SDG 1 (No Poverty) co-benefit picklist instance; b is the general CoBenefit class — a is a named individual falling under the class, making a narrower."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-013 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#co_benefit_id.SDG%202%20-%20Zero%20hunger> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.85"^^xsd:decimal ;
+    comet-match:confidenceLow "0.73"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.93"^^xsd:decimal ;
+    skos:note "a is a specific SDG 2 (Zero Hunger) co-benefit picklist instance; b is the general CoBenefit class — a is a named individual falling under the class, making a narrower."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-014 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#co_benefit_id.SDG%204%20-%20Quality%20education> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.85"^^xsd:decimal ;
+    comet-match:confidenceLow "0.73"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.93"^^xsd:decimal ;
+    skos:note "a is a specific SDG 4 (Quality Education) co-benefit picklist instance; b is the general CoBenefit class — a is a named individual falling under the class, making a narrower."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-015 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#co_benefit_id.SDG%205%20-%20Gender%20equality> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.85"^^xsd:decimal ;
+    comet-match:confidenceLow "0.73"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.93"^^xsd:decimal ;
+    skos:note "a is a specific SDG 5 (Gender Equality) co-benefit picklist instance; b is the general CoBenefit class — a is a named individual falling under the class, making a narrower."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-016 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#Site> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#siteAuditBoundary> ;
+    comet-match:relation "broadMatch" ;
+    comet-match:confidence "0.85"^^xsd:decimal ;
+    comet-match:confidenceLow "0.75"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.93"^^xsd:decimal ;
+    skos:note "comet:Site is the concept of a physical facility, while siteAuditBoundary is a descriptive property of the boundary defined at certification time — the class is broader than the attribute it subsumes."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-017 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#BiogenicCarbon.biogenicCarbonContent> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#packagingBiogenicCarbonContent> ;
+    comet-match:relation "broadMatch" ;
+    comet-match:confidence "0.82"^^xsd:decimal ;
+    comet-match:confidenceLow "0.69"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.91"^^xsd:decimal ;
+    skos:note "a is the general biogenic carbon content property; b is scoped specifically to packaging per declared unit (TfS field), making a broader and b narrower."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-018 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#EmbeddedEmissions.productionRoute> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#productionRoute> ;
+    comet-match:relation "exactMatch" ;
+    comet-match:confidence "0.82"^^xsd:decimal ;
+    comet-match:confidenceLow "0.68"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.91"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/pcf#EmbeddedEmissions.productionRoute> ;
+    skos:note "Identical labels and identical definition (manufacturing route, BOF/EAF/etc.) in two namespaces; comet-pcf is a published layer while comet-rs is an extension, making comet-pcf the canonical term."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-019 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/iso14068#retirementDate> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#RetirementEvent.retirementDate> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.82"^^xsd:decimal ;
+    comet-match:confidenceLow "0.7"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.91"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/eac#RetirementEvent.retirementDate> ;
+    skos:note "Both record the calendar date of a retirement event; they differ in domain context (carbon neutrality claim vs. EAC retirement) but represent the same temporal data point, with the EAC term residing in the more foundational published layer."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-020 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#TimePeriod.endDate> ;
+    comet-match:objectTerm <https://comet.carbon/ext/iso14068#reportingPeriodEnd> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.8"^^xsd:decimal ;
+    comet-match:confidenceLow "0.67"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.9"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/core#TimePeriod.endDate> ;
+    skos:note "Both capture the end date of a period; comet-cn scopes it to reporting period in a carbon-neutrality context, but the underlying temporal concept is the same; comet is the more foundational namespace."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-021 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#TimePeriod.startDate> ;
+    comet-match:objectTerm <https://comet.carbon/ext/iso14068#reportingPeriodStart> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.8"^^xsd:decimal ;
+    comet-match:confidenceLow "0.67"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.9"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/core#TimePeriod.startDate> ;
+    skos:note "Both capture the start date of a period; comet-cn restricts scope to reporting period, but the underlying temporal property is the same; comet is more foundational."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-022 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#rating.ratingValue> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating.ratingValue> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.8"^^xsd:decimal ;
+    comet-match:confidenceLow "0.66"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.9"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/ver#Rating.ratingValue> ;
+    skos:note "Both hold the awarded rating score or grade; comet-ver is the published ontology layer preferred over the cadtrust source schema."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-023 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/eac#EAC> ;
+    comet-match:objectTerm <https://comet.carbon/v1/market#EACSpotPrice> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.8"^^xsd:decimal ;
+    comet-match:confidenceLow "0.68"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.9"^^xsd:decimal ;
+    skos:note "EAC is the certificate instrument itself; EACSpotPrice is a market price observation for that instrument — related as instrument-to-price but not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-024 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/responsiblesteel#hasSPL> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#splLevel> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.78"^^xsd:decimal ;
+    comet-match:confidenceLow "0.64"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.88"^^xsd:decimal ;
+    skos:note "hasSPL is an object property linking an entity to its Sourcing Progress Level; splLevel is the datatype property carrying the integer 1–4 level value — structurally related but not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-025 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#rating.ratingType> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating.ratingType> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.78"^^xsd:decimal ;
+    comet-match:confidenceLow "0.63"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.88"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/ver#Rating.ratingType> ;
+    skos:note "Both are properties describing the type/provider of a rating; comet-ver is the published ontology layer preferred over the cadtrust source schema."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-026 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#BiogenicCarbon.biogenicCarbonContent> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#biogenicCarbonContent> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.78"^^xsd:decimal ;
+    comet-match:confidenceLow "0.63"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.88"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/pcf#BiogenicCarbon.biogenicCarbonContent> ;
+    skos:note "Both measure biogenic carbon content; comet-tfs scopes to per-declared-unit (TfS field 128), while comet-pcf is the general property — semantically the same measurement; comet-pcf is the published layer and preferred canonical."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-027 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/responsiblesteel#nonConformitySeverity> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#severity> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.78"^^xsd:decimal ;
+    comet-match:confidenceLow "0.64"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.89"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/ver#severity> ;
+    skos:note "Both are severity properties on non-conformity findings in audit/verification contexts; comet-rs:nonConformitySeverity is RS-scoped with enumerated values (major/minor), while comet-ver:severity is the more general published-layer property that should be canonical."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-028 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#project.cadTrustReferenceProjectID> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.76"^^xsd:decimal ;
+    comet-match:confidenceLow "0.61"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.87"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    skos:note "Both are identifier fields for a CAD Trust project — one on the source cadtrust schema, one on the COMET attestation object; comet-ver is the published ontology layer preferred over the cadtrust extension."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-029 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#co_benefit.cobenefit> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.76"^^xsd:decimal ;
+    comet-match:confidenceLow "0.61"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.87"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    skos:note "cadtrust:cobenefit is a field capturing which co-benefit a project achieves; comet-eac:CoBenefit is the class defining SDG co-benefits — same concept, different representation layer; comet-eac is the published ontology layer."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-030 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/supplychain#PrimaryDataShare> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#primaryDataShare> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.75"^^xsd:decimal ;
+    comet-match:confidenceLow "0.6"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.86"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/supplychain#PrimaryDataShare> ;
+    skos:note "Both represent the share of primary vs secondary data (0–100); comet-sc models it as a Class while comet-tfs is a DatatypeProperty carrying the value, but they encode the same measurement concept; comet-sc (published layer) is preferred over the TfS extension."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-031 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#estimation.estimationEndDate> ;
+    comet-match:objectTerm <https://comet.carbon/v1/core#TimePeriod.endDate> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.74"^^xsd:decimal ;
+    comet-match:confidenceLow "0.59"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.85"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/core#TimePeriod.endDate> ;
+    skos:note "Both mark the end date of a defined period; cadtrust scopes to estimation period, comet is a general period end property; comet is the foundational canonical term."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-032 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#ProductCarbonFootprint.totalGWP> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#pcfIncludingBiogenicUptake> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.74"^^xsd:decimal ;
+    comet-match:confidenceLow "0.59"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.85"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/pcf#ProductCarbonFootprint.totalGWP> ;
+    skos:note "Both represent total GWP including biogenic for a product carbon footprint; comet-tfs adds TfS-specific position accounting (T1 = A+B+C+D+E+F+G+H) but covers the same measurement; comet-pcf is the published layer preferred over the TfS extension."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-033 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#CCU_NotApplicable> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#WI_NotApplicable> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.72"^^xsd:decimal ;
+    comet-match:confidenceLow "0.58"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.83"^^xsd:decimal ;
+    skos:note "Both are 'not-applicable' sentinel individuals sharing the same semantic intent (field does not apply), but scoped to different TfS position slots (CCU vs WI), so they cannot be merged without losing positional context."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-034 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#hasDataQualityRating> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.72"^^xsd:decimal ;
+    comet-match:confidenceLow "0.57"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.84"^^xsd:decimal ;
+    skos:note "hasDataQualityRating is an object property linking to a rating; comet-ver:Rating is the class being linked to — a property and its range class are semantically related but not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-035 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    comet-match:objectTerm <https://comet.carbon/v1/pcf#ProductCarbonFootprint.totalGWP> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.72"^^xsd:decimal ;
+    comet-match:confidenceLow "0.57"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.83"^^xsd:decimal ;
+    skos:note "GWP100Value is a reusable value object class for any GWP100 factor; totalGWP is a specific property slot on a PCF record holding the total GWP — related (totalGWP likely uses GWP100Value instances) but not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-036 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/iso14068#Principle> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#RSPrinciple> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.72"^^xsd:decimal ;
+    comet-match:confidenceLow "0.58"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.84"^^xsd:decimal ;
+    skos:note "Both model 'principle' within their respective standards (ISO 14068-1 carbon neutrality vs. ResponsibleSteel production) — structurally analogous but semantically governed by entirely different frameworks and not interchangeable."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-037 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/tfs-pcf#RC_CutOff> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#WI_CutOff> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.7"^^xsd:decimal ;
+    comet-match:confidenceLow "0.55"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.82"^^xsd:decimal ;
+    skos:note "Both encode the 'cut-off' approach individual but are typed to different TfS position slots (RC = recycled content, WI = waste incineration); same concept, incompatible positional scope."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-038 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/iso14068#VerificationOpinion> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#VerificationOpinion> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.7"^^xsd:decimal ;
+    comet-match:confidenceLow "0.55"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.82"^^xsd:decimal ;
+    skos:note "Shared label masks a conceptual divergence: comet-cn:VerificationOpinion is the whole ISO 14068-1 §12 independent verification statement/process, while comet-ver:VerificationOpinion is the formal opinion type enumeration (unqualified/qualified/adverse/disclaimer) — related but not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-039 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/iso14068#Principle> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#principleAssessed> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.7"^^xsd:decimal ;
+    comet-match:confidenceLow "0.54"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.82"^^xsd:decimal ;
+    skos:note "comet-cn:Principle is a class for ISO 14068-1 carbon-neutrality principles; comet-rs:principleAssessed is an object property pointing to a principle in a responsible-sourcing audit context — different domains and OWL roles, though the 'principle' concept overlaps."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-040 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#BiogenicCarbon> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#packagingBiogenicCarbonContent> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.7"^^xsd:decimal ;
+    comet-match:confidenceLow "0.55"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.82"^^xsd:decimal ;
+    skos:note "b is specifically the biogenic carbon content of packaging per declared unit (a narrow datatype property), whereas a is the general Class for biogenic carbon per ISO 14067; a is broader."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-041 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/iso14068#hasBoundary> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#hasBoundaryDeclaration> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.68"^^xsd:decimal ;
+    comet-match:confidenceLow "0.52"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    skos:note "Both are object properties linking an entity to its scope/boundary definition; comet-cn operates in a carbon-neutrality context, comet-tfs in a PCF boundary-declaration context — same structural intent with minor scope difference; neither namespace is clearly more foundational for this concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-042 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#hasGWPBreakdown> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.68"^^xsd:decimal ;
+    comet-match:confidenceLow "0.52"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    skos:note "GWP100Value is a class for a single GWP factor value; hasGWPBreakdown is an object property linking to a structured breakdown of GWP positions — related in the GWP domain but different concepts."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-043 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/responsiblesteel#EndOfLifeScrap> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#PostConsumer> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.68"^^xsd:decimal ;
+    comet-match:confidenceLow "0.5"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.82"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/ext/responsiblesteel#EndOfLifeScrap> ;
+    skos:note "Both denote material recovered after consumer use (post-consumer / end-of-life scrap); the label of a explicitly includes 'Post-consumer' as a synonym, making these near-identical concepts with minor framing differences."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-044 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#validation_type.Validation%20of%20Project%20Design%20Document> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#ValidationRecord> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.65"^^xsd:decimal ;
+    comet-match:confidenceLow "0.49"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.78"^^xsd:decimal ;
+    skos:note "a is a picklist enumeration value labeling a type of validation activity; b is a class representing the validation record artifact — related in domain (project design validation) but different ontological roles."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-045 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#co_benefit.cadTrustCobenefitId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/eac#CoBenefit> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.65"^^xsd:decimal ;
+    comet-match:confidenceLow "0.48"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    skos:note "a is an identifier field pointing to a specific co-benefit instance within CAD Trust, while b is the general SDG co-benefit Class; a is narrower (an identifier for an instance of b's concept)."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-046 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#estimation.estimationStartDate> ;
+    comet-match:objectTerm <https://comet.carbon/v1/core#TimePeriod.startDate> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.65"^^xsd:decimal ;
+    comet-match:confidenceLow "0.48"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/core#TimePeriod.startDate> ;
+    skos:note "Both represent the start date of a bounded time period; comet:TimePeriod.startDate is the more foundational definition and a is a domain-specific usage of that concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-047 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#aef_t2_authorizations.aefT2AuthorizationsGwpValue> ;
+    comet-match:objectTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.65"^^xsd:decimal ;
+    comet-match:confidenceLow "0.48"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    skos:note "Both represent an applicable Global Warming Potential value; a is a data field in the CAD Trust AEF authorization table, b is the formal GWP100Value class — same concept, with b being the more foundational definition."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-048 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#aef_t3_actions.aefT3ActionsGwpValue> ;
+    comet-match:objectTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.65"^^xsd:decimal ;
+    comet-match:confidenceLow "0.48"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    skos:note "Same reasoning as T2 pair above: a is the GWP field in the AEF actions table, b is the canonical GWP100Value class; closeMatch with b as canonical."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-049 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#aef_t4_holdings.aefT4HoldingsGwpValue> ;
+    comet-match:objectTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.65"^^xsd:decimal ;
+    comet-match:confidenceLow "0.48"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.8"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/v1/emfactor#GWP100Value> ;
+    skos:note "Same reasoning: a is the GWP field in the AEF holdings table, b is the canonical GWP100Value class; same concept expressed in a domain-specific field vs ontology class."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-050 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/ext/pcr-japan#ISO21930PCR> ;
+    comet-match:objectTerm <https://comet.carbon/ext/pcr-japan#SuMPOPCRDocument> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.62"^^xsd:decimal ;
+    comet-match:confidenceLow "0.46"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.76"^^xsd:decimal ;
+    skos:note "ISO21930PCR is defined as a SuMPO PCR formally based on ISO 21930, while SuMPOPCRDocument is the broader SuMPO-issued PCR (ISO 21930 or EN 15804); they overlap heavily but ISO21930PCR is a specific subtype of SuMPOPCRDocument."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-051 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#project_status.Certified> ;
+    comet-match:objectTerm <https://comet.carbon/ext/iso14068#Certified> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.62"^^xsd:decimal ;
+    comet-match:confidenceLow "0.45"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.78"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/ext/iso14068#Certified> ;
+    skos:note "Both denote a 'certified' status in the carbon-project lifecycle, but a is a picklist enumeration value while b is an Individual in the crediting-notes layer; same concept, different modeling level, so closeMatch rather than exactMatch."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-052 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#estimation.estimationEndDate> ;
+    comet-match:objectTerm <https://comet.carbon/ext/iso14068#reportingPeriodEnd> ;
+    comet-match:relation "closeMatch" ;
+    comet-match:confidence "0.6"^^xsd:decimal ;
+    comet-match:confidenceLow "0.42"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.75"^^xsd:decimal ;
+    comet-match:canonicalTerm <https://comet.carbon/ext/iso14068#reportingPeriodEnd> ;
+    skos:note "Both capture the end date of an accounting/reporting period; estimation period end and reporting period end are near-synonymous in carbon-project context, though 'estimation' vs 'reporting' introduces a slight scope difference."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-053 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#validation.validationId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#ValidationRecord> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.6"^^xsd:decimal ;
+    comet-match:confidenceLow "0.43"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.75"^^xsd:decimal ;
+    skos:note "a is an identifier field for a validation event, while b is the class representing the full project-design ValidationRecord; a references an instance of b's concept but is not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-054 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#Site> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#auditedSite> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.6"^^xsd:decimal ;
+    comet-match:confidenceLow "0.43"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.75"^^xsd:decimal ;
+    skos:note "a is the general Site class (physical facility), while b is an object property pointing to an audited site; b references instances of a's class but is a property, not the class itself."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-055 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#BiogenicCarbon> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#biogenicCarbonContent> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.58"^^xsd:decimal ;
+    comet-match:confidenceLow "0.4"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.73"^^xsd:decimal ;
+    skos:note "a is the Class representing biogenic carbon per ISO 14067, while b is a DatatypeProperty for the numeric biogenic carbon content value per declared unit in TfS; different modeling levels (class vs datatype property) but closely related in domain."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-056 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#rating_type.CCQI> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.58"^^xsd:decimal ;
+    comet-match:confidenceLow "0.4"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.73"^^xsd:decimal ;
+    skos:note "CCQI (Carbon Credit Quality Initiative) is a specific rating scheme instance — a particular value of rating_type — while comet-ver:Rating is the general class for any independent quality rating; a is narrower."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-057 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#rating.ratingValue> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.58"^^xsd:decimal ;
+    comet-match:confidenceLow "0.4"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.73"^^xsd:decimal ;
+    skos:note "a is a field holding the specific value awarded in a rating, which is an attribute of b (the Rating class for independent quality assessment); a is a property-level concept that is narrower than the class b."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-058 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#rating.ratingName> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.55"^^xsd:decimal ;
+    comet-match:confidenceLow "0.38"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.7"^^xsd:decimal ;
+    skos:note "a is a data-field holding the name of a rating, which is an attribute of b (the Rating class representing an independent quality assessment); a is narrower and property-level, b is a class."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-059 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#Site> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#SiteVisitRecord> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.55"^^xsd:decimal ;
+    comet-match:confidenceLow "0.38"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.7"^^xsd:decimal ;
+    skos:note "a is the general class for a physical facility or production location, while b is documentation of a visit to such a site during verification; related but distinct — one is the entity, the other is an activity record."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-060 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd/pick#rating_type.CDP> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#Rating> ;
+    comet-match:relation "narrowMatch" ;
+    comet-match:confidence "0.55"^^xsd:decimal ;
+    comet-match:confidenceLow "0.38"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.7"^^xsd:decimal ;
+    skos:note "CDP is a specific rating-scheme picklist value, while comet-ver:Rating is the general Rating class; a names a particular rating provider, b is the broader concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-061 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#Material> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#materialOriginRegion> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.55"^^xsd:decimal ;
+    comet-match:confidenceLow "0.38"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.7"^^xsd:decimal ;
+    skos:note "a is the general Class for an input/output substance, while b is a datatype property recording the geographic origin region of a material supplier; b is an attribute of instances of a, not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-062 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/emfactor#GWP100Value.gwpValue> ;
+    comet-match:objectTerm <https://comet.carbon/v1/pcf#ProductCarbonFootprint.totalGWP> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.55"^^xsd:decimal ;
+    comet-match:confidenceLow "0.38"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.7"^^xsd:decimal ;
+    skos:note "a is the GWP100 factor for a specific gas species, while b is the total GWP of an entire product carbon footprint including biogenic; they are related numeric GWP quantities but at different levels of aggregation."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-063 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#StandardRef> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#VerificationClaim.standardRef> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.52"^^xsd:decimal ;
+    comet-match:confidenceLow "0.35"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.68"^^xsd:decimal ;
+    skos:note "Both use the term 'standardRef' but a is the PCF cross-sectoral standard class while b is a property on a VerificationClaim pointing to the verification standard; same naming pattern, different domains and modeling levels."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-064 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#BiogenicCarbon.biogenicCarbonContent> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#hasCarbonContent> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.5"^^xsd:decimal ;
+    comet-match:confidenceLow "0.33"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.65"^^xsd:decimal ;
+    skos:note "a is a property for biogenic carbon content specifically (per ISO 14067), while b is an object property linking to a carbon content breakdown structure; related in domain but not interchangeable — b is a structural link, a is a specific biogenic value."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-065 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/pcf#BiogenicCarbon.biogenicCarbonContent> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#recycledCarbonContent> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.45"^^xsd:decimal ;
+    comet-match:confidenceLow "0.28"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.6"^^xsd:decimal ;
+    skos:note "Both are carbon-content properties per declared unit but cover distinct carbon pools (biogenic vs recycled); they are siblings in the carbon-content domain, not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-066 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#estimation.cadTrustEstimationId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.45"^^xsd:decimal ;
+    comet-match:confidenceLow "0.28"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.62"^^xsd:decimal ;
+    skos:note "a is an identifier for a specific estimation record, while b is the project-level GUID; both are CAD Trust identifiers but at different entity levels (estimation vs project), so related but not the same concept."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-067 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/core#Process> ;
+    comet-match:objectTerm <https://comet.carbon/ext/responsiblesteel#processGasPowerMWh> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.45"^^xsd:decimal ;
+    comet-match:confidenceLow "0.28"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.62"^^xsd:decimal ;
+    skos:note "a is the general Class for a manufacturing or transformation step, while b is a specific datatype property for power generated from process gases in MWh; b is an energy-quantity property associated with a process, not a synonym for the Process class itself."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-068 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#validation.validationType> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#ValidationRecord> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.42"^^xsd:decimal ;
+    comet-match:confidenceLow "0.25"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.6"^^xsd:decimal ;
+    skos:note "a is an attribute describing the type of validation performed, while b is the ValidationRecord class itself; they are related within the validation domain but at different levels and different semantic roles."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-069 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://comet.carbon/v1/emfactor#GWP100Value.gwpValue> ;
+    comet-match:objectTerm <https://comet.carbon/ext/tfs-pcf#hasGWPBreakdown> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.42"^^xsd:decimal ;
+    comet-match:confidenceLow "0.25"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.58"^^xsd:decimal ;
+    skos:note "a is a scalar GWP100 factor value, while b is an object property linking to a GWP position breakdown structure; related in domain but a is a scalar and b is a structural link to a complex breakdown."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-070 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#location.cadTrustLocationId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#CADTrustAttestation.cadTrustProjectId> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.4"^^xsd:decimal ;
+    comet-match:confidenceLow "0.22"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.57"^^xsd:decimal ;
+    skos:note "a is an identifier for a specific project location within CAD Trust, while b is the project-level GUID; they are related CAD Trust identifiers but at different entity levels (location vs project)."@en ;
+    comet-match:status "proposed" .
+
+comet-match:proposal-071 a comet-match:MatchProposal ;
+    comet-match:subjectTerm <https://cadtrust.org/dd#stakeholder.cadTrustStakeholderId> ;
+    comet-match:objectTerm <https://comet.carbon/v1/ver#CADTrustAttestation> ;
+    comet-match:relation "relatedMatch" ;
+    comet-match:confidence "0.38"^^xsd:decimal ;
+    comet-match:confidenceLow "0.2"^^xsd:decimal ;
+    comet-match:confidenceHigh "0.55"^^xsd:decimal ;
+    skos:note "a is a stakeholder identifier field within the CAD Trust data model, while b is the class for a CAD Trust project attestation record; they share the CAD Trust namespace but are at different levels (entity identifier vs attestation class)."@en ;
+    comet-match:status "proposed" .

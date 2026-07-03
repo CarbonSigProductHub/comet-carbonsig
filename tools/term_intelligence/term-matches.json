@@ -1,0 +1,727 @@
+{
+ "generated_by": "tools/term_intelligence",
+ "status": "proposed",
+ "count": 72,
+ "proposals": [
+  {
+   "a": "comet-rs:transfersFrom",
+   "b": "comet-rs:transfersTo",
+   "relation": "relatedMatch",
+   "confidence": 0.92,
+   "confidenceLow": 0.82,
+   "confidenceHigh": 0.97,
+   "canonical": null,
+   "rationale": "Inverse directional object properties in the same namespace \u2014 antonyms expressing opposite directions of the same transfer relationship, not the same concept."
+  },
+  {
+   "a": "comet-tfs:AT_FirstParty",
+   "b": "comet-tfs:AT_SecondParty",
+   "relation": "relatedMatch",
+   "confidence": 0.9,
+   "confidenceLow": 0.8,
+   "confidenceHigh": 0.96,
+   "canonical": null,
+   "rationale": "Sibling enumeration individuals in the same audit-type classification: 1st-party vs 2nd-party PCF verification \u2014 same classification axis, distinct values."
+  },
+  {
+   "a": "comet-tfs:AT_FirstParty",
+   "b": "comet-tfs:AT_ThirdParty",
+   "relation": "relatedMatch",
+   "confidence": 0.9,
+   "confidenceLow": 0.8,
+   "confidenceHigh": 0.96,
+   "canonical": null,
+   "rationale": "Sibling enumeration individuals: 1st-party vs 3rd-party PCF verification \u2014 same classification axis, distinct values."
+  },
+  {
+   "a": "comet-tfs:AT_SecondParty",
+   "b": "comet-tfs:AT_ThirdParty",
+   "relation": "relatedMatch",
+   "confidence": 0.9,
+   "confidenceLow": 0.8,
+   "confidenceHigh": 0.96,
+   "canonical": null,
+   "rationale": "Sibling enumeration individuals: 2nd-party vs 3rd-party PCF verification \u2014 same classification axis, distinct values."
+  },
+  {
+   "a": "comet-tfs:productVerificationShare1stParty",
+   "b": "comet-tfs:productVerificationShare2ndParty",
+   "relation": "relatedMatch",
+   "confidence": 0.88,
+   "confidenceLow": 0.77,
+   "confidenceHigh": 0.95,
+   "canonical": null,
+   "rationale": "Parallel datatype properties measuring product verification share for different parties (1PVS vs 2PVS); same structural role, distinct party-scope \u2014 not interchangeable."
+  },
+  {
+   "a": "comet-tfs:productVerificationShare1stParty",
+   "b": "comet-tfs:productVerificationShare3rdParty",
+   "relation": "relatedMatch",
+   "confidence": 0.88,
+   "confidenceLow": 0.77,
+   "confidenceHigh": 0.95,
+   "canonical": null,
+   "rationale": "Parallel datatype properties for 1PVS vs 3PVS; same structural role across different party scopes."
+  },
+  {
+   "a": "comet-tfs:productVerificationShare2ndParty",
+   "b": "comet-tfs:productVerificationShare3rdParty",
+   "relation": "relatedMatch",
+   "confidence": 0.88,
+   "confidenceLow": 0.77,
+   "confidenceHigh": 0.95,
+   "canonical": null,
+   "rationale": "Parallel datatype properties for 2PVS vs 3PVS; same structural role across different party scopes."
+  },
+  {
+   "a": "cadtrust:co_benefit.cadTrustProjectId",
+   "b": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "relation": "exactMatch",
+   "confidence": 0.88,
+   "confidenceLow": 0.75,
+   "confidenceHigh": 0.96,
+   "canonical": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "rationale": "Both are the CAD Trust project GUID \u2014 identical label, identical definition, both are identifiers for the same CAD Trust project entity; comet-ver is a more published layer so it is preferred as canonical."
+  },
+  {
+   "a": "cadtrust:estimation.cadTrustProjectId",
+   "b": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "relation": "exactMatch",
+   "confidence": 0.88,
+   "confidenceLow": 0.75,
+   "confidenceHigh": 0.96,
+   "canonical": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "rationale": "Both are the CAD Trust project GUID with identical label and definition; the comet-ver instance is the more foundational published-layer definition."
+  },
+  {
+   "a": "comet:Material",
+   "b": "comet-rs:RSInputMaterial",
+   "relation": "broadMatch",
+   "confidence": 0.88,
+   "confidenceLow": 0.78,
+   "confidenceHigh": 0.95,
+   "canonical": null,
+   "rationale": "RSInputMaterial is a domain-constrained subtype of Material scoped to ResponsibleSteel Annex 1 ferrous inputs; comet:Material is the general input/output substance concept that encompasses it."
+  },
+  {
+   "a": "comet-cn:Baseline",
+   "b": "comet-rs:ProcessGasBaseline",
+   "relation": "broadMatch",
+   "confidence": 0.87,
+   "confidenceLow": 0.77,
+   "confidenceHigh": 0.94,
+   "canonical": null,
+   "rationale": "comet-cn:Baseline is the ISO 14068-1 general concept of quantified GHG emissions for a base period; ProcessGasBaseline is a highly specific counterfactual baseline restricted to captured process gases in steelmaking CCUS credits."
+  },
+  {
+   "a": "comet-ef:GWP100Value",
+   "b": "comet-ef:GWP100Value.gwpValue",
+   "relation": "narrowMatch",
+   "confidence": 0.85,
+   "confidenceLow": 0.74,
+   "confidenceHigh": 0.93,
+   "canonical": null,
+   "rationale": "GWP100Value is the class representing a GWP100 measurement object; gwpValue is the datatype property slot carrying the numeric factor on that class \u2014 a is broader than b."
+  },
+  {
+   "a": "cadpick:co_benefit_id.SDG 1 - No poverty",
+   "b": "comet-eac:CoBenefit",
+   "relation": "narrowMatch",
+   "confidence": 0.85,
+   "confidenceLow": 0.73,
+   "confidenceHigh": 0.93,
+   "canonical": null,
+   "rationale": "a is a specific SDG 1 (No Poverty) co-benefit picklist instance; b is the general CoBenefit class \u2014 a is a named individual falling under the class, making a narrower."
+  },
+  {
+   "a": "cadpick:co_benefit_id.SDG 2 - Zero hunger",
+   "b": "comet-eac:CoBenefit",
+   "relation": "narrowMatch",
+   "confidence": 0.85,
+   "confidenceLow": 0.73,
+   "confidenceHigh": 0.93,
+   "canonical": null,
+   "rationale": "a is a specific SDG 2 (Zero Hunger) co-benefit picklist instance; b is the general CoBenefit class \u2014 a is a named individual falling under the class, making a narrower."
+  },
+  {
+   "a": "cadpick:co_benefit_id.SDG 4 - Quality education",
+   "b": "comet-eac:CoBenefit",
+   "relation": "narrowMatch",
+   "confidence": 0.85,
+   "confidenceLow": 0.73,
+   "confidenceHigh": 0.93,
+   "canonical": null,
+   "rationale": "a is a specific SDG 4 (Quality Education) co-benefit picklist instance; b is the general CoBenefit class \u2014 a is a named individual falling under the class, making a narrower."
+  },
+  {
+   "a": "cadpick:co_benefit_id.SDG 5 - Gender equality",
+   "b": "comet-eac:CoBenefit",
+   "relation": "narrowMatch",
+   "confidence": 0.85,
+   "confidenceLow": 0.73,
+   "confidenceHigh": 0.93,
+   "canonical": null,
+   "rationale": "a is a specific SDG 5 (Gender Equality) co-benefit picklist instance; b is the general CoBenefit class \u2014 a is a named individual falling under the class, making a narrower."
+  },
+  {
+   "a": "comet:Site",
+   "b": "comet-rs:siteAuditBoundary",
+   "relation": "broadMatch",
+   "confidence": 0.85,
+   "confidenceLow": 0.75,
+   "confidenceHigh": 0.93,
+   "canonical": null,
+   "rationale": "comet:Site is the concept of a physical facility, while siteAuditBoundary is a descriptive property of the boundary defined at certification time \u2014 the class is broader than the attribute it subsumes."
+  },
+  {
+   "a": "comet-pcf:BiogenicCarbon.biogenicCarbonContent",
+   "b": "comet-tfs:packagingBiogenicCarbonContent",
+   "relation": "broadMatch",
+   "confidence": 0.82,
+   "confidenceLow": 0.69,
+   "confidenceHigh": 0.91,
+   "canonical": null,
+   "rationale": "a is the general biogenic carbon content property; b is scoped specifically to packaging per declared unit (TfS field), making a broader and b narrower."
+  },
+  {
+   "a": "comet-pcf:EmbeddedEmissions.productionRoute",
+   "b": "comet-rs:productionRoute",
+   "relation": "exactMatch",
+   "confidence": 0.82,
+   "confidenceLow": 0.68,
+   "confidenceHigh": 0.91,
+   "canonical": "comet-pcf:EmbeddedEmissions.productionRoute",
+   "rationale": "Identical labels and identical definition (manufacturing route, BOF/EAF/etc.) in two namespaces; comet-pcf is a published layer while comet-rs is an extension, making comet-pcf the canonical term."
+  },
+  {
+   "a": "comet-cn:retirementDate",
+   "b": "comet-eac:RetirementEvent.retirementDate",
+   "relation": "closeMatch",
+   "confidence": 0.82,
+   "confidenceLow": 0.7,
+   "confidenceHigh": 0.91,
+   "canonical": "comet-eac:RetirementEvent.retirementDate",
+   "rationale": "Both record the calendar date of a retirement event; they differ in domain context (carbon neutrality claim vs. EAC retirement) but represent the same temporal data point, with the EAC term residing in the more foundational published layer."
+  },
+  {
+   "a": "comet:TimePeriod.endDate",
+   "b": "comet-cn:reportingPeriodEnd",
+   "relation": "closeMatch",
+   "confidence": 0.8,
+   "confidenceLow": 0.67,
+   "confidenceHigh": 0.9,
+   "canonical": "comet:TimePeriod.endDate",
+   "rationale": "Both capture the end date of a period; comet-cn scopes it to reporting period in a carbon-neutrality context, but the underlying temporal concept is the same; comet is the more foundational namespace."
+  },
+  {
+   "a": "comet:TimePeriod.startDate",
+   "b": "comet-cn:reportingPeriodStart",
+   "relation": "closeMatch",
+   "confidence": 0.8,
+   "confidenceLow": 0.67,
+   "confidenceHigh": 0.9,
+   "canonical": "comet:TimePeriod.startDate",
+   "rationale": "Both capture the start date of a period; comet-cn restricts scope to reporting period, but the underlying temporal property is the same; comet is more foundational."
+  },
+  {
+   "a": "cadtrust:rating.ratingValue",
+   "b": "comet-ver:Rating.ratingValue",
+   "relation": "closeMatch",
+   "confidence": 0.8,
+   "confidenceLow": 0.66,
+   "confidenceHigh": 0.9,
+   "canonical": "comet-ver:Rating.ratingValue",
+   "rationale": "Both hold the awarded rating score or grade; comet-ver is the published ontology layer preferred over the cadtrust source schema."
+  },
+  {
+   "a": "comet-eac:EAC",
+   "b": "comet-mkt:EACSpotPrice",
+   "relation": "relatedMatch",
+   "confidence": 0.8,
+   "confidenceLow": 0.68,
+   "confidenceHigh": 0.9,
+   "canonical": null,
+   "rationale": "EAC is the certificate instrument itself; EACSpotPrice is a market price observation for that instrument \u2014 related as instrument-to-price but not the same concept."
+  },
+  {
+   "a": "comet-rs:hasSPL",
+   "b": "comet-rs:splLevel",
+   "relation": "relatedMatch",
+   "confidence": 0.78,
+   "confidenceLow": 0.64,
+   "confidenceHigh": 0.88,
+   "canonical": null,
+   "rationale": "hasSPL is an object property linking an entity to its Sourcing Progress Level; splLevel is the datatype property carrying the integer 1\u20134 level value \u2014 structurally related but not the same concept."
+  },
+  {
+   "a": "cadtrust:rating.ratingType",
+   "b": "comet-ver:Rating.ratingType",
+   "relation": "closeMatch",
+   "confidence": 0.78,
+   "confidenceLow": 0.63,
+   "confidenceHigh": 0.88,
+   "canonical": "comet-ver:Rating.ratingType",
+   "rationale": "Both are properties describing the type/provider of a rating; comet-ver is the published ontology layer preferred over the cadtrust source schema."
+  },
+  {
+   "a": "comet-pcf:BiogenicCarbon.biogenicCarbonContent",
+   "b": "comet-tfs:biogenicCarbonContent",
+   "relation": "closeMatch",
+   "confidence": 0.78,
+   "confidenceLow": 0.63,
+   "confidenceHigh": 0.88,
+   "canonical": "comet-pcf:BiogenicCarbon.biogenicCarbonContent",
+   "rationale": "Both measure biogenic carbon content; comet-tfs scopes to per-declared-unit (TfS field 128), while comet-pcf is the general property \u2014 semantically the same measurement; comet-pcf is the published layer and preferred canonical."
+  },
+  {
+   "a": "comet-rs:nonConformitySeverity",
+   "b": "comet-ver:severity",
+   "relation": "closeMatch",
+   "confidence": 0.78,
+   "confidenceLow": 0.64,
+   "confidenceHigh": 0.89,
+   "canonical": "comet-ver:severity",
+   "rationale": "Both are severity properties on non-conformity findings in audit/verification contexts; comet-rs:nonConformitySeverity is RS-scoped with enumerated values (major/minor), while comet-ver:severity is the more general published-layer property that should be canonical."
+  },
+  {
+   "a": "cadtrust:project.cadTrustReferenceProjectID",
+   "b": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "relation": "closeMatch",
+   "confidence": 0.76,
+   "confidenceLow": 0.61,
+   "confidenceHigh": 0.87,
+   "canonical": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "rationale": "Both are identifier fields for a CAD Trust project \u2014 one on the source cadtrust schema, one on the COMET attestation object; comet-ver is the published ontology layer preferred over the cadtrust extension."
+  },
+  {
+   "a": "cadtrust:co_benefit.cobenefit",
+   "b": "comet-eac:CoBenefit",
+   "relation": "closeMatch",
+   "confidence": 0.76,
+   "confidenceLow": 0.61,
+   "confidenceHigh": 0.87,
+   "canonical": "comet-eac:CoBenefit",
+   "rationale": "cadtrust:cobenefit is a field capturing which co-benefit a project achieves; comet-eac:CoBenefit is the class defining SDG co-benefits \u2014 same concept, different representation layer; comet-eac is the published ontology layer."
+  },
+  {
+   "a": "comet-sc:PrimaryDataShare",
+   "b": "comet-tfs:primaryDataShare",
+   "relation": "closeMatch",
+   "confidence": 0.75,
+   "confidenceLow": 0.6,
+   "confidenceHigh": 0.86,
+   "canonical": "comet-sc:PrimaryDataShare",
+   "rationale": "Both represent the share of primary vs secondary data (0\u2013100); comet-sc models it as a Class while comet-tfs is a DatatypeProperty carrying the value, but they encode the same measurement concept; comet-sc (published layer) is preferred over the TfS extension."
+  },
+  {
+   "a": "cadtrust:estimation.estimationEndDate",
+   "b": "comet:TimePeriod.endDate",
+   "relation": "closeMatch",
+   "confidence": 0.74,
+   "confidenceLow": 0.59,
+   "confidenceHigh": 0.85,
+   "canonical": "comet:TimePeriod.endDate",
+   "rationale": "Both mark the end date of a defined period; cadtrust scopes to estimation period, comet is a general period end property; comet is the foundational canonical term."
+  },
+  {
+   "a": "comet-pcf:ProductCarbonFootprint.totalGWP",
+   "b": "comet-tfs:pcfIncludingBiogenicUptake",
+   "relation": "closeMatch",
+   "confidence": 0.74,
+   "confidenceLow": 0.59,
+   "confidenceHigh": 0.85,
+   "canonical": "comet-pcf:ProductCarbonFootprint.totalGWP",
+   "rationale": "Both represent total GWP including biogenic for a product carbon footprint; comet-tfs adds TfS-specific position accounting (T1 = A+B+C+D+E+F+G+H) but covers the same measurement; comet-pcf is the published layer preferred over the TfS extension."
+  },
+  {
+   "a": "comet-tfs:CCU_NotApplicable",
+   "b": "comet-tfs:WI_NotApplicable",
+   "relation": "closeMatch",
+   "confidence": 0.72,
+   "confidenceLow": 0.58,
+   "confidenceHigh": 0.83,
+   "canonical": null,
+   "rationale": "Both are 'not-applicable' sentinel individuals sharing the same semantic intent (field does not apply), but scoped to different TfS position slots (CCU vs WI), so they cannot be merged without losing positional context."
+  },
+  {
+   "a": "comet-tfs:hasDataQualityRating",
+   "b": "comet-ver:Rating",
+   "relation": "relatedMatch",
+   "confidence": 0.72,
+   "confidenceLow": 0.57,
+   "confidenceHigh": 0.84,
+   "canonical": null,
+   "rationale": "hasDataQualityRating is an object property linking to a rating; comet-ver:Rating is the class being linked to \u2014 a property and its range class are semantically related but not the same concept."
+  },
+  {
+   "a": "comet-ef:GWP100Value",
+   "b": "comet-pcf:ProductCarbonFootprint.totalGWP",
+   "relation": "relatedMatch",
+   "confidence": 0.72,
+   "confidenceLow": 0.57,
+   "confidenceHigh": 0.83,
+   "canonical": null,
+   "rationale": "GWP100Value is a reusable value object class for any GWP100 factor; totalGWP is a specific property slot on a PCF record holding the total GWP \u2014 related (totalGWP likely uses GWP100Value instances) but not the same concept."
+  },
+  {
+   "a": "comet-cn:Principle",
+   "b": "comet-rs:RSPrinciple",
+   "relation": "relatedMatch",
+   "confidence": 0.72,
+   "confidenceLow": 0.58,
+   "confidenceHigh": 0.84,
+   "canonical": null,
+   "rationale": "Both model 'principle' within their respective standards (ISO 14068-1 carbon neutrality vs. ResponsibleSteel production) \u2014 structurally analogous but semantically governed by entirely different frameworks and not interchangeable."
+  },
+  {
+   "a": "comet-tfs:RC_CutOff",
+   "b": "comet-tfs:WI_CutOff",
+   "relation": "closeMatch",
+   "confidence": 0.7,
+   "confidenceLow": 0.55,
+   "confidenceHigh": 0.82,
+   "canonical": null,
+   "rationale": "Both encode the 'cut-off' approach individual but are typed to different TfS position slots (RC = recycled content, WI = waste incineration); same concept, incompatible positional scope."
+  },
+  {
+   "a": "comet-cn:VerificationOpinion",
+   "b": "comet-ver:VerificationOpinion",
+   "relation": "relatedMatch",
+   "confidence": 0.7,
+   "confidenceLow": 0.55,
+   "confidenceHigh": 0.82,
+   "canonical": null,
+   "rationale": "Shared label masks a conceptual divergence: comet-cn:VerificationOpinion is the whole ISO 14068-1 \u00a712 independent verification statement/process, while comet-ver:VerificationOpinion is the formal opinion type enumeration (unqualified/qualified/adverse/disclaimer) \u2014 related but not the same concept."
+  },
+  {
+   "a": "comet-cn:Principle",
+   "b": "comet-rs:principleAssessed",
+   "relation": "relatedMatch",
+   "confidence": 0.7,
+   "confidenceLow": 0.54,
+   "confidenceHigh": 0.82,
+   "canonical": null,
+   "rationale": "comet-cn:Principle is a class for ISO 14068-1 carbon-neutrality principles; comet-rs:principleAssessed is an object property pointing to a principle in a responsible-sourcing audit context \u2014 different domains and OWL roles, though the 'principle' concept overlaps."
+  },
+  {
+   "a": "comet-pcf:BiogenicCarbon",
+   "b": "comet-tfs:packagingBiogenicCarbonContent",
+   "relation": "narrowMatch",
+   "confidence": 0.7,
+   "confidenceLow": 0.55,
+   "confidenceHigh": 0.82,
+   "canonical": null,
+   "rationale": "b is specifically the biogenic carbon content of packaging per declared unit (a narrow datatype property), whereas a is the general Class for biogenic carbon per ISO 14067; a is broader."
+  },
+  {
+   "a": "comet-cn:hasBoundary",
+   "b": "comet-tfs:hasBoundaryDeclaration",
+   "relation": "closeMatch",
+   "confidence": 0.68,
+   "confidenceLow": 0.52,
+   "confidenceHigh": 0.8,
+   "canonical": null,
+   "rationale": "Both are object properties linking an entity to its scope/boundary definition; comet-cn operates in a carbon-neutrality context, comet-tfs in a PCF boundary-declaration context \u2014 same structural intent with minor scope difference; neither namespace is clearly more foundational for this concept."
+  },
+  {
+   "a": "comet-ef:GWP100Value",
+   "b": "comet-tfs:hasGWPBreakdown",
+   "relation": "relatedMatch",
+   "confidence": 0.68,
+   "confidenceLow": 0.52,
+   "confidenceHigh": 0.8,
+   "canonical": null,
+   "rationale": "GWP100Value is a class for a single GWP factor value; hasGWPBreakdown is an object property linking to a structured breakdown of GWP positions \u2014 related in the GWP domain but different concepts."
+  },
+  {
+   "a": "comet-rs:EndOfLifeScrap",
+   "b": "comet-tfs:PostConsumer",
+   "relation": "closeMatch",
+   "confidence": 0.68,
+   "confidenceLow": 0.5,
+   "confidenceHigh": 0.82,
+   "canonical": "comet-rs:EndOfLifeScrap",
+   "rationale": "Both denote material recovered after consumer use (post-consumer / end-of-life scrap); the label of a explicitly includes 'Post-consumer' as a synonym, making these near-identical concepts with minor framing differences."
+  },
+  {
+   "a": "cadpick:validation_type.Validation of Project Design Document",
+   "b": "comet-ver:ValidationRecord",
+   "relation": "relatedMatch",
+   "confidence": 0.65,
+   "confidenceLow": 0.49,
+   "confidenceHigh": 0.78,
+   "canonical": null,
+   "rationale": "a is a picklist enumeration value labeling a type of validation activity; b is a class representing the validation record artifact \u2014 related in domain (project design validation) but different ontological roles."
+  },
+  {
+   "a": "cadtrust:co_benefit.cadTrustCobenefitId",
+   "b": "comet-eac:CoBenefit",
+   "relation": "narrowMatch",
+   "confidence": 0.65,
+   "confidenceLow": 0.48,
+   "confidenceHigh": 0.8,
+   "canonical": null,
+   "rationale": "a is an identifier field pointing to a specific co-benefit instance within CAD Trust, while b is the general SDG co-benefit Class; a is narrower (an identifier for an instance of b's concept)."
+  },
+  {
+   "a": "cadtrust:estimation.estimationStartDate",
+   "b": "comet:TimePeriod.startDate",
+   "relation": "closeMatch",
+   "confidence": 0.65,
+   "confidenceLow": 0.48,
+   "confidenceHigh": 0.8,
+   "canonical": "comet:TimePeriod.startDate",
+   "rationale": "Both represent the start date of a bounded time period; comet:TimePeriod.startDate is the more foundational definition and a is a domain-specific usage of that concept."
+  },
+  {
+   "a": "cadtrust:aef_t2_authorizations.aefT2AuthorizationsGwpValue",
+   "b": "comet-ef:GWP100Value",
+   "relation": "closeMatch",
+   "confidence": 0.65,
+   "confidenceLow": 0.48,
+   "confidenceHigh": 0.8,
+   "canonical": "comet-ef:GWP100Value",
+   "rationale": "Both represent an applicable Global Warming Potential value; a is a data field in the CAD Trust AEF authorization table, b is the formal GWP100Value class \u2014 same concept, with b being the more foundational definition."
+  },
+  {
+   "a": "cadtrust:aef_t3_actions.aefT3ActionsGwpValue",
+   "b": "comet-ef:GWP100Value",
+   "relation": "closeMatch",
+   "confidence": 0.65,
+   "confidenceLow": 0.48,
+   "confidenceHigh": 0.8,
+   "canonical": "comet-ef:GWP100Value",
+   "rationale": "Same reasoning as T2 pair above: a is the GWP field in the AEF actions table, b is the canonical GWP100Value class; closeMatch with b as canonical."
+  },
+  {
+   "a": "cadtrust:aef_t4_holdings.aefT4HoldingsGwpValue",
+   "b": "comet-ef:GWP100Value",
+   "relation": "closeMatch",
+   "confidence": 0.65,
+   "confidenceLow": 0.48,
+   "confidenceHigh": 0.8,
+   "canonical": "comet-ef:GWP100Value",
+   "rationale": "Same reasoning: a is the GWP field in the AEF holdings table, b is the canonical GWP100Value class; same concept expressed in a domain-specific field vs ontology class."
+  },
+  {
+   "a": "comet-pj:ISO21930PCR",
+   "b": "comet-pj:SuMPOPCRDocument",
+   "relation": "closeMatch",
+   "confidence": 0.62,
+   "confidenceLow": 0.46,
+   "confidenceHigh": 0.76,
+   "canonical": null,
+   "rationale": "ISO21930PCR is defined as a SuMPO PCR formally based on ISO 21930, while SuMPOPCRDocument is the broader SuMPO-issued PCR (ISO 21930 or EN 15804); they overlap heavily but ISO21930PCR is a specific subtype of SuMPOPCRDocument."
+  },
+  {
+   "a": "cadpick:project_status.Certified",
+   "b": "comet-cn:Certified",
+   "relation": "closeMatch",
+   "confidence": 0.62,
+   "confidenceLow": 0.45,
+   "confidenceHigh": 0.78,
+   "canonical": "comet-cn:Certified",
+   "rationale": "Both denote a 'certified' status in the carbon-project lifecycle, but a is a picklist enumeration value while b is an Individual in the crediting-notes layer; same concept, different modeling level, so closeMatch rather than exactMatch."
+  },
+  {
+   "a": "cadtrust:estimation.estimationEndDate",
+   "b": "comet-cn:reportingPeriodEnd",
+   "relation": "closeMatch",
+   "confidence": 0.6,
+   "confidenceLow": 0.42,
+   "confidenceHigh": 0.75,
+   "canonical": "comet-cn:reportingPeriodEnd",
+   "rationale": "Both capture the end date of an accounting/reporting period; estimation period end and reporting period end are near-synonymous in carbon-project context, though 'estimation' vs 'reporting' introduces a slight scope difference."
+  },
+  {
+   "a": "cadtrust:validation.validationId",
+   "b": "comet-ver:ValidationRecord",
+   "relation": "narrowMatch",
+   "confidence": 0.6,
+   "confidenceLow": 0.43,
+   "confidenceHigh": 0.75,
+   "canonical": null,
+   "rationale": "a is an identifier field for a validation event, while b is the class representing the full project-design ValidationRecord; a references an instance of b's concept but is not the same concept."
+  },
+  {
+   "a": "comet:Site",
+   "b": "comet-rs:auditedSite",
+   "relation": "relatedMatch",
+   "confidence": 0.6,
+   "confidenceLow": 0.43,
+   "confidenceHigh": 0.75,
+   "canonical": null,
+   "rationale": "a is the general Site class (physical facility), while b is an object property pointing to an audited site; b references instances of a's class but is a property, not the class itself."
+  },
+  {
+   "a": "comet-pcf:BiogenicCarbon",
+   "b": "comet-tfs:biogenicCarbonContent",
+   "relation": "relatedMatch",
+   "confidence": 0.58,
+   "confidenceLow": 0.4,
+   "confidenceHigh": 0.73,
+   "canonical": null,
+   "rationale": "a is the Class representing biogenic carbon per ISO 14067, while b is a DatatypeProperty for the numeric biogenic carbon content value per declared unit in TfS; different modeling levels (class vs datatype property) but closely related in domain."
+  },
+  {
+   "a": "cadpick:rating_type.CCQI",
+   "b": "comet-ver:Rating",
+   "relation": "narrowMatch",
+   "confidence": 0.58,
+   "confidenceLow": 0.4,
+   "confidenceHigh": 0.73,
+   "canonical": null,
+   "rationale": "CCQI (Carbon Credit Quality Initiative) is a specific rating scheme instance \u2014 a particular value of rating_type \u2014 while comet-ver:Rating is the general class for any independent quality rating; a is narrower."
+  },
+  {
+   "a": "cadtrust:rating.ratingValue",
+   "b": "comet-ver:Rating",
+   "relation": "narrowMatch",
+   "confidence": 0.58,
+   "confidenceLow": 0.4,
+   "confidenceHigh": 0.73,
+   "canonical": null,
+   "rationale": "a is a field holding the specific value awarded in a rating, which is an attribute of b (the Rating class for independent quality assessment); a is a property-level concept that is narrower than the class b."
+  },
+  {
+   "a": "cadtrust:rating.ratingName",
+   "b": "comet-ver:Rating",
+   "relation": "narrowMatch",
+   "confidence": 0.55,
+   "confidenceLow": 0.38,
+   "confidenceHigh": 0.7,
+   "canonical": null,
+   "rationale": "a is a data-field holding the name of a rating, which is an attribute of b (the Rating class representing an independent quality assessment); a is narrower and property-level, b is a class."
+  },
+  {
+   "a": "comet:Site",
+   "b": "comet-ver:SiteVisitRecord",
+   "relation": "relatedMatch",
+   "confidence": 0.55,
+   "confidenceLow": 0.38,
+   "confidenceHigh": 0.7,
+   "canonical": null,
+   "rationale": "a is the general class for a physical facility or production location, while b is documentation of a visit to such a site during verification; related but distinct \u2014 one is the entity, the other is an activity record."
+  },
+  {
+   "a": "cadpick:rating_type.CDP",
+   "b": "comet-ver:Rating",
+   "relation": "narrowMatch",
+   "confidence": 0.55,
+   "confidenceLow": 0.38,
+   "confidenceHigh": 0.7,
+   "canonical": null,
+   "rationale": "CDP is a specific rating-scheme picklist value, while comet-ver:Rating is the general Rating class; a names a particular rating provider, b is the broader concept."
+  },
+  {
+   "a": "comet:Material",
+   "b": "comet-rs:materialOriginRegion",
+   "relation": "relatedMatch",
+   "confidence": 0.55,
+   "confidenceLow": 0.38,
+   "confidenceHigh": 0.7,
+   "canonical": null,
+   "rationale": "a is the general Class for an input/output substance, while b is a datatype property recording the geographic origin region of a material supplier; b is an attribute of instances of a, not the same concept."
+  },
+  {
+   "a": "comet-ef:GWP100Value.gwpValue",
+   "b": "comet-pcf:ProductCarbonFootprint.totalGWP",
+   "relation": "relatedMatch",
+   "confidence": 0.55,
+   "confidenceLow": 0.38,
+   "confidenceHigh": 0.7,
+   "canonical": null,
+   "rationale": "a is the GWP100 factor for a specific gas species, while b is the total GWP of an entire product carbon footprint including biogenic; they are related numeric GWP quantities but at different levels of aggregation."
+  },
+  {
+   "a": "comet-pcf:StandardRef",
+   "b": "comet-ver:VerificationClaim.standardRef",
+   "relation": "relatedMatch",
+   "confidence": 0.52,
+   "confidenceLow": 0.35,
+   "confidenceHigh": 0.68,
+   "canonical": null,
+   "rationale": "Both use the term 'standardRef' but a is the PCF cross-sectoral standard class while b is a property on a VerificationClaim pointing to the verification standard; same naming pattern, different domains and modeling levels."
+  },
+  {
+   "a": "comet-pcf:BiogenicCarbon.biogenicCarbonContent",
+   "b": "comet-tfs:hasCarbonContent",
+   "relation": "relatedMatch",
+   "confidence": 0.5,
+   "confidenceLow": 0.33,
+   "confidenceHigh": 0.65,
+   "canonical": null,
+   "rationale": "a is a property for biogenic carbon content specifically (per ISO 14067), while b is an object property linking to a carbon content breakdown structure; related in domain but not interchangeable \u2014 b is a structural link, a is a specific biogenic value."
+  },
+  {
+   "a": "comet-pcf:BiogenicCarbon.biogenicCarbonContent",
+   "b": "comet-tfs:recycledCarbonContent",
+   "relation": "relatedMatch",
+   "confidence": 0.45,
+   "confidenceLow": 0.28,
+   "confidenceHigh": 0.6,
+   "canonical": null,
+   "rationale": "Both are carbon-content properties per declared unit but cover distinct carbon pools (biogenic vs recycled); they are siblings in the carbon-content domain, not the same concept."
+  },
+  {
+   "a": "cadtrust:estimation.cadTrustEstimationId",
+   "b": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "relation": "relatedMatch",
+   "confidence": 0.45,
+   "confidenceLow": 0.28,
+   "confidenceHigh": 0.62,
+   "canonical": null,
+   "rationale": "a is an identifier for a specific estimation record, while b is the project-level GUID; both are CAD Trust identifiers but at different entity levels (estimation vs project), so related but not the same concept."
+  },
+  {
+   "a": "comet:Process",
+   "b": "comet-rs:processGasPowerMWh",
+   "relation": "relatedMatch",
+   "confidence": 0.45,
+   "confidenceLow": 0.28,
+   "confidenceHigh": 0.62,
+   "canonical": null,
+   "rationale": "a is the general Class for a manufacturing or transformation step, while b is a specific datatype property for power generated from process gases in MWh; b is an energy-quantity property associated with a process, not a synonym for the Process class itself."
+  },
+  {
+   "a": "cadtrust:validation.validationType",
+   "b": "comet-ver:ValidationRecord",
+   "relation": "relatedMatch",
+   "confidence": 0.42,
+   "confidenceLow": 0.25,
+   "confidenceHigh": 0.6,
+   "canonical": null,
+   "rationale": "a is an attribute describing the type of validation performed, while b is the ValidationRecord class itself; they are related within the validation domain but at different levels and different semantic roles."
+  },
+  {
+   "a": "comet-ef:GWP100Value.gwpValue",
+   "b": "comet-tfs:hasGWPBreakdown",
+   "relation": "relatedMatch",
+   "confidence": 0.42,
+   "confidenceLow": 0.25,
+   "confidenceHigh": 0.58,
+   "canonical": null,
+   "rationale": "a is a scalar GWP100 factor value, while b is an object property linking to a GWP position breakdown structure; related in domain but a is a scalar and b is a structural link to a complex breakdown."
+  },
+  {
+   "a": "cadtrust:location.cadTrustLocationId",
+   "b": "comet-ver:CADTrustAttestation.cadTrustProjectId",
+   "relation": "relatedMatch",
+   "confidence": 0.4,
+   "confidenceLow": 0.22,
+   "confidenceHigh": 0.57,
+   "canonical": null,
+   "rationale": "a is an identifier for a specific project location within CAD Trust, while b is the project-level GUID; they are related CAD Trust identifiers but at different entity levels (location vs project)."
+  },
+  {
+   "a": "cadtrust:stakeholder.cadTrustStakeholderId",
+   "b": "comet-ver:CADTrustAttestation",
+   "relation": "relatedMatch",
+   "confidence": 0.38,
+   "confidenceLow": 0.2,
+   "confidenceHigh": 0.55,
+   "canonical": null,
+   "rationale": "a is a stakeholder identifier field within the CAD Trust data model, while b is the class for a CAD Trust project attestation record; they share the CAD Trust namespace but are at different levels (entity identifier vs attestation class)."
+  }
+ ]
+}

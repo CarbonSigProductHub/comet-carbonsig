@@ -1,8 +1,3 @@
-# Generated pipeline outputs — re-created by scripts, not versioned
-data/terms.json
-data/batches/
-data/candidates/
-data/descriptions/
-data/matches/
-__pycache__/
-*.pyc
+# Regenerable pipeline scratch (batches + per-batch subagent outputs).
+# Canonical merged artifacts live one level up: descriptions.json, term-matches.{json,ttl}
+data/
