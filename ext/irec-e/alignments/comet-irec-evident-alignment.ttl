@@ -79,3 +79,16 @@ comet-irec:IssueRequest     dcterms:source "SF-04 Issue Request v1.2" .
 comet-irec:FuelConsumptionStatement dcterms:source "SF-04C Fuel Consumption Statement" .
 comet-irec:ProductionFacility dcterms:source "SF-02 Production Facility Registration v1.3, s.7" .
 comet-irec:RedemptionStatement dcterms:source "Evident I-REC Code for Electricity v1.13, s.10 Redemption & Assignment" .
+
+# ─── External standard crosswalks (feed the schema map + at-the-heart graphic) ──
+# Map COMET I-REC terms to the Evident I-REC Code concept space so the standard
+# is counted as an external alignment target (market/credits cluster).
+@prefix irec: <https://evident.global/i-rec/electricity#> .
+
+comet-irec:IRECCertificate          skos:exactMatch   irec:Certificate .
+comet-irec:ProductionFacility       skos:closeMatch   irec:ProductionFacility .
+comet-irec:IssueRequest             skos:closeMatch   irec:IssueRequest .
+comet-irec:RedemptionStatement      skos:closeMatch   irec:RedemptionStatement .
+comet-irec:FuelConsumptionStatement skos:closeMatch   irec:FuelConsumptionStatement .
+comet-irec:Account                  skos:closeMatch   irec:Account .
+comet-irec:chainOfCustodyReference  skos:relatedMatch irec:chainOfCustody .
