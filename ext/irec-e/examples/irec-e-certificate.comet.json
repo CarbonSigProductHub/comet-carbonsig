@@ -1,0 +1,72 @@
+{
+  "@context": [
+    "https://comet.carbon/v1/jsonld/context.json",
+    "https://comet.carbon/ext/irec-e#"
+  ],
+  "@type": "comet-eac:EnergyAttributeCertificate",
+  "eacId": "urn:uuid:7c2f9e10-4b3a-4d81-9f27-1a6b0d5e2c44",
+  "eacType": "EnergyAttributeCertificate",
+  "subType": "IREC",
+  "serialNumber": "TH-IREC-2025-06-000001-to-4081",
+  "unitType": "Avoidance",
+  "quantity": 4081.632653,
+  "unit": "MWh",
+  "status": "retired",
+  "registry": {
+    "@type": "comet-eac:CertificateRegistry",
+    "registryName": "I-REC",
+    "programName": "Evident I-REC Standard for Electricity",
+    "registryURI": "https://evident.global/"
+  },
+  "project": {
+    "@type": "comet-eac:Project",
+    "projectName": "Rayong Co-firing Plant",
+    "projectId": "TH-IREC-RAYONG-01",
+    "projectType": "Biomass co-firing (renewable share)",
+    "country": "TH"
+  },
+  "vintage": {
+    "@type": "comet:TimePeriod",
+    "startDate": "2025-06-01",
+    "endDate": "2025-06-30",
+    "vintageYear": 2025
+  },
+  "site": {
+    "@type": "comet:Site",
+    "siteName": "Rayong Co-firing Plant",
+    "siteCountry": "TH",
+    "latitude": 12.6810,
+    "longitude": 101.2789
+  },
+  "productionFacility": {
+    "@type": "comet-irec:ProductionFacility",
+    "installedCapacityMW": 45.0,
+    "technologyCode": "TC110",
+    "fuelCode": "ES200",
+    "commissioningDate": "2019-06-01",
+    "effectiveRegistrationDate": "2024-07-01",
+    "meterId": "TH-MTR-RAYONG-01"
+  },
+  "issueRequest": {
+    "@type": "comet-irec:IssueRequest",
+    "requestType": "Normal",
+    "totalProductionMWh": 5000.0,
+    "amountAppliedForMWh": 4081.632653,
+    "evidenceType": "SettlementMetering",
+    "definedByForm": "comet-irec:SF-04"
+  },
+  "chainOfCustodyReference": "TH-IREC-COC-RAYONG-202506-0001",
+  "carbonOffsetRightsExcluded": false,
+  "retirementInfo": {
+    "@type": "comet-eac:RetirementEvent",
+    "retiredDate": "2025-08-02T00:00:00Z",
+    "beneficiary": "Bangkok Manufacturing PCL",
+    "purpose": "Scope 2 market-based emissions matching, FY2025"
+  },
+  "redemptionStatement": {
+    "@type": "comet-irec:RedemptionStatement",
+    "redemptionPurpose": "Scope 2 market-based emissions matching, FY2025",
+    "qrCode": "https://redemption.evident.global/verify/TH-IREC-2025-06-000001",
+    "verificationKey": "9f8b-2a1c-77de-4410"
+  }
+}
