@@ -49,7 +49,7 @@ VALIDATORS_DIR = TOOLS_DIR / "validators"
 # ── Supported formats ───────────────────────────────────────────────────
 INGEST_FORMATS = ["csv", "pact", "cbam-xml", "cad-trust",
                   "ghg-protocol", "esrs", "45v", "epd", "corsia",
-                  "verra", "gold-standard"]
+                  "verra", "gold-standard", "irec"]
 EXPORT_FORMATS = ["pact", "cbam-xml", "csv"]
 TEMPLATE_TYPES = ["pcf", "eac", "scope3"]
 
@@ -126,6 +126,7 @@ def cmd_convert(args: argparse.Namespace) -> int:
         "corsia": "corsia_to_comet",
         "verra": "verra_to_comet",
         "gold-standard": "verra_to_comet",
+        "irec": "irec_to_comet",
     }
 
     module_name = converter_map.get(from_fmt)

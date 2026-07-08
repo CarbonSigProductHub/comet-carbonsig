@@ -1,0 +1,470 @@
+@prefix owl:        <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:       <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms:    <http://purl.org/dc/terms/> .
+@prefix comet:      <https://comet.carbon/v1/core#> .
+@prefix comet-eac:  <https://comet.carbon/v1/eac#> .
+@prefix comet-ver:  <https://comet.carbon/v1/ver#> .
+@prefix comet-ef:   <https://comet.carbon/v1/emfactor#> .
+@prefix comet-irec: <https://comet.carbon/ext/irec-e#> .
+
+# =============================================================================
+# COMET Extension — I-REC(E): Evident I-REC Code for Electricity
+# =============================================================================
+# Maps the data model of the Evident I-REC Code for Electricity v1.13
+# (Document ID EC-I-REC(E), Release Date 12 June 2025) and its subsidiary
+# Standard Forms — SF-02 Production Facility Registration (v1.3, +A/B/C) and
+# SF-04 Issue Request (v1.2, +A/B/C) — onto the COMET seven-layer stack.
+#
+# DESIGN PRINCIPLE: reuse before invention. Every I-REC(E) concept that already
+# has a COMET home points at it (see alignments/comet-irec-evident-alignment.ttl):
+#   Entity / Registrant / Participant / Owner  -> comet:Organization
+#   Production Facility / Device / Installation -> comet:Site
+#   Production Period                           -> comet:TimePeriod
+#   I-REC(E) certificate                        -> comet-eac:EnergyAttributeCert
+#   Registry (Evident)                          -> comet-eac:CertificateRegistry
+#   serial / issue date / vintage / unit count  -> comet-eac:EAC.* properties
+#   Redemption (cancel-to-claim)                -> comet-eac:RetirementEvent
+#   Book-and-claim chain of custody             -> comet-eac:BookAndClaim
+#   Verification Agent / Production Auditor      -> comet-ver:QualifiedVerifier
+# New terms below cover only the I-REC(E)-specific machinery that has no prior
+# COMET home: the issuance workflow (SF-04), the multi-fuel co-firing allocation
+# (SF-04C), the QR/verification-key redemption statement (Code s.10), Accounts,
+# and the anti-double-counting warranty declarations.
+# =============================================================================
+
+<https://comet.carbon/ext/irec-e>
+    a owl:Ontology ;
+    dcterms:title "COMET I-REC(E) Extension Module" ;
+    dcterms:description "Evident I-REC Code for Electricity v1.13 data model (Standard Forms SF-02/SF-04) expressed as COMET, reusing comet-eac / comet / comet-ver where a term already exists."@en ;
+    dcterms:source "Evident I-REC Code for Electricity v1.13 (EC-I-REC(E), 12 Jun 2025)",
+                   "SF-02 Production Facility Registration v1.3 (07 Sep 2023)",
+                   "SF-04 Issue Request v1.2 (07 Sep 2023)",
+                   "SD-02 Technologies and Fuels" ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:comment "Status: RFC Open. License CC BY 4.0 + Apache 2.0."@en .
+
+# =============================================================================
+# L1 CORE — Entities, Accounts, Facilities (SF-02, Code s.6-7)
+# =============================================================================
+
+comet-irec:Registrant a owl:Class ;
+    rdfs:subClassOf comet:Organization ;
+    rdfs:label "Registrant"@en ;
+    skos:definition "An Entity that has registered a Production Facility and submits Issue Requests under the I-REC Code (SF-02 Registrant Contact Details). A role of comet:Organization."@en .
+
+comet-irec:Participant a owl:Class ;
+    rdfs:subClassOf comet:Organization ;
+    rdfs:label "Participant"@en ;
+    skos:definition "An Entity holding an Account for the purpose of holding, transferring or redeeming I-REC(E)s. A role of comet:Organization."@en .
+
+comet-irec:Account a owl:Class ;
+    rdfs:label "Registry Account"@en ;
+    skos:definition "A data store within a Registry attributed to a single Entity for holding certificates (Code Definitions). Sub-typed via accountType into Trade / Redemption accounts."@en .
+
+comet-irec:ProductionFacility a owl:Class ;
+    rdfs:subClassOf comet:Site ;
+    rdfs:label "Production Facility"@en ;
+    skos:definition "One or more generating units of substantially the same technology delivering through an identifiable measurement point (Code s.7). Specialises comet:Site with I-REC registration attributes (SF-02 Production Facility Details)."@en .
+
+comet-irec:ProductionGroup a owl:Class ;
+    rdfs:subClassOf comet-irec:ProductionFacility ;
+    rdfs:label "Production Group"@en ;
+    skos:definition "A Production Facility composed of multiple individually-metered Installations, registered and issued as a group (SF-02B / SF-04B)."@en .
+
+comet-irec:ProductionInstallation a owl:Class ;
+    rdfs:subClassOf comet:Site ;
+    rdfs:label "Production Installation"@en ;
+    skos:definition "A single metered generating installation within a Production Group, identified by Installation name and Meter ID (SF-04B reading table row)."@en .
+
+comet-irec:LabellingScheme a owl:Class ;
+    rdfs:label "Labelling Scheme"@en ;
+    skos:definition "A labelling / accreditation scheme (Verification Label) recorded against a Production Facility registration and requestable at issuance (SF-02 s.1.3, SF-04 Requested Labels)."@en .
+
+comet-irec:StandardForm a owl:Class ;
+    rdfs:label "I-REC Standard Form"@en ;
+    skos:definition "A subsidiary Evident Standard Form (SF-xx) that defines the column-level layout for a lifecycle stage. Used as provenance on instances via definedByForm."@en .
+
+# =============================================================================
+# L5 EAC — Certificate, Issuance, Redemption (SF-04, Code s.8-10)
+# =============================================================================
+
+comet-irec:IRECCertificate a owl:Class ;
+    rdfs:subClassOf comet-eac:EnergyAttributeCert ;
+    rdfs:label "I-REC(E) Certificate"@en ;
+    skos:definition "A verified record of electricity production at a Production Facility, issued under the I-REC Standard. Denominated in MWh with optional resolution to the Wh. Corresponds to comet-eac subType 'IREC'."@en ;
+    skos:altLabel "International REC (Electricity)"@en .
+
+comet-irec:IssueRequest a owl:Class ;
+    rdfs:label "Issue Request"@en ;
+    skos:definition "A request (SF-04) tying a volume of metered generation from a Production Facility over a Production Period to an issuance of I-REC(E)s into a receiving Account."@en .
+
+comet-irec:RedemptionStatement a owl:Class ;
+    rdfs:subClassOf comet-eac:RetirementEvent ;
+    rdfs:label "Redemption Statement"@en ;
+    skos:definition "A uniquely verifiable report confirming the Redemption and Assignment of I-REC(E)s (Code Definitions, s.10). The final cancel-to-claim event; carries a QR code and verification key for account-less third-party verification. Specialises comet-eac:RetirementEvent."@en .
+
+comet-irec:FuelConsumptionStatement a owl:Class ;
+    rdfs:label "Fuel Consumption Statement"@en ;
+    skos:definition "SF-04C statement submitted for every Issue Request of a multi-fuel generator; determines the renewable portion eligible for I-REC(E) via per-fuel calorific allocation."@en .
+
+comet-irec:FuelInputRecord a owl:Class ;
+    rdfs:label "Fuel Input Record"@en ;
+    skos:definition "A single fuel row of a Fuel Consumption Statement (SF-04C). Fuel Consumed = StockStart + StockAdded - StockEnd (kg); Energy from Source (MJ) = Gross Calorific Value x Fuel Consumed."@en .
+
+comet-irec:ProductionAuditor a owl:Class ;
+    rdfs:subClassOf comet-ver:QualifiedVerifier ;
+    rdfs:label "Production Auditor"@en ;
+    skos:definition "An independent auditor who reviews an Issue Request or Fuel Consumption Statement and attests no material reason to doubt the measured volume (SF-04 s.1.6, SF-04C). Specialises comet-ver:QualifiedVerifier."@en .
+
+comet-irec:VerificationAgent a owl:Class ;
+    rdfs:subClassOf comet-ver:QualifiedVerifier ;
+    rdfs:label "Verification Agent"@en ;
+    skos:definition "The Verification Agent proposed at Production Facility registration to verify facility eligibility (SF-02 s.1.6). Specialises comet-ver:QualifiedVerifier."@en .
+
+# =============================================================================
+# L6 VERIFICATION — Anti-double-counting declarations (SF-02A/C, SF-04A)
+# =============================================================================
+
+comet-irec:Declaration a owl:Class ;
+    rdfs:label "Declaration"@en ;
+    skos:definition "A signed warranty submitted with a registration or issuance. Base class for the SF-02A / SF-02C / SF-04A declarations."@en .
+
+comet-irec:RegistrantDeclaration a owl:Class ;
+    rdfs:subClassOf comet-irec:Declaration ;
+    rdfs:label "Registrant's Declaration"@en ;
+    skos:definition "SF-02A. Registrant's acceptance of the I-REC Code and privacy policy, submitted with every Production Facility registration."@en .
+
+comet-irec:OwnerDeclaration a owl:Class ;
+    rdfs:subClassOf comet-irec:Declaration ;
+    rdfs:label "Owner's Declaration"@en ;
+    skos:definition "SF-02C. Facility Owner's confirmation of energy-attribute ownership, required whenever the Registrant is not the Facility Owner."@en .
+
+comet-irec:IssuingDeclaration a owl:Class ;
+    rdfs:subClassOf comet-irec:Declaration ;
+    rdfs:label "Issuing Declaration"@en ;
+    skos:definition "SF-04A. Registrant's warranty that the generation has not and will not be submitted to any other attribute-tracking or offset scheme (the core anti-double-counting warranty), submitted with every Issue Request."@en .
+
+# =============================================================================
+# OBJECT PROPERTIES
+# =============================================================================
+
+comet-irec:generatedByFacility a owl:ObjectProperty ;
+    rdfs:label "generated by facility"@en ;
+    rdfs:domain comet-irec:IRECCertificate ;
+    rdfs:range comet-irec:ProductionFacility ;
+    skos:definition "Links an I-REC(E) to the Production Facility whose metered output it represents."@en .
+
+comet-irec:fromIssueRequest a owl:ObjectProperty ;
+    rdfs:label "from issue request"@en ;
+    rdfs:domain comet-irec:IRECCertificate ;
+    rdfs:range comet-irec:IssueRequest ;
+    skos:definition "The Issue Request (SF-04) under which the certificate was issued."@en .
+
+comet-irec:requestsFacility a owl:ObjectProperty ;
+    rdfs:label "requests facility"@en ;
+    rdfs:domain comet-irec:IssueRequest ;
+    rdfs:range comet-irec:ProductionFacility ;
+    skos:definition "The Production Facility named in the Issue Request Registrant and Facility Details."@en .
+
+comet-irec:hasProductionPeriod a owl:ObjectProperty ;
+    rdfs:label "has production period"@en ;
+    rdfs:domain comet-irec:IssueRequest ;
+    rdfs:range comet:TimePeriod ;
+    skos:definition "The generation Production Period (Period start/end dates). Reuses comet:TimePeriod."@en .
+
+comet-irec:hasInstallation a owl:ObjectProperty ;
+    rdfs:label "has installation"@en ;
+    rdfs:domain comet-irec:ProductionGroup ;
+    rdfs:range comet-irec:ProductionInstallation ;
+    skos:definition "A metered Installation belonging to a Production Group (SF-04B)."@en .
+
+comet-irec:receivingAccount a owl:ObjectProperty ;
+    rdfs:label "receiving account"@en ;
+    rdfs:domain comet-irec:IssueRequest ;
+    rdfs:range comet-irec:Account ;
+    skos:definition "The Account into which issued certificates are placed (SF-04 Receiving Account Details)."@en .
+
+comet-irec:heldInAccount a owl:ObjectProperty ;
+    rdfs:label "held in account"@en ;
+    rdfs:domain comet-irec:IRECCertificate ;
+    rdfs:range comet-irec:Account ;
+    skos:definition "The Account currently holding the certificate."@en .
+
+comet-irec:accountHolder a owl:ObjectProperty ;
+    rdfs:label "account holder"@en ;
+    rdfs:domain comet-irec:Account ;
+    rdfs:range comet:Organization ;
+    skos:definition "The single Entity to which the Account is attributed."@en .
+
+comet-irec:redemptionStatement a owl:ObjectProperty ;
+    rdfs:label "redemption statement"@en ;
+    rdfs:domain comet-irec:IRECCertificate ;
+    rdfs:range comet-irec:RedemptionStatement ;
+    skos:definition "The Redemption Statement produced when the certificate is redeemed."@en .
+
+comet-irec:hasFuelConsumptionStatement a owl:ObjectProperty ;
+    rdfs:label "has fuel consumption statement"@en ;
+    rdfs:domain comet-irec:IssueRequest ;
+    rdfs:range comet-irec:FuelConsumptionStatement ;
+    skos:definition "SF-04C attached to an Issue Request for a multi-fuel generator."@en .
+
+comet-irec:hasFuelInput a owl:ObjectProperty ;
+    rdfs:label "has fuel input"@en ;
+    rdfs:domain comet-irec:FuelConsumptionStatement ;
+    rdfs:range comet-irec:FuelInputRecord ;
+    skos:definition "A per-fuel input row of the Fuel Consumption Statement."@en .
+
+comet-irec:reviewedByAuditor a owl:ObjectProperty ;
+    rdfs:label "reviewed by auditor"@en ;
+    rdfs:domain comet-irec:IssueRequest ;
+    rdfs:range comet-irec:ProductionAuditor ;
+    skos:definition "The Production Auditor who reviewed the Issue Request evidence (SF-04 s.1.6)."@en .
+
+comet-irec:verifiedByAgent a owl:ObjectProperty ;
+    rdfs:label "verified by agent"@en ;
+    rdfs:domain comet-irec:ProductionFacility ;
+    rdfs:range comet-irec:VerificationAgent ;
+    skos:definition "The Verification Agent proposed / used to verify the facility (SF-02 s.1.6)."@en .
+
+comet-irec:accreditedForLabel a owl:ObjectProperty ;
+    rdfs:label "accredited for label"@en ;
+    rdfs:domain comet-irec:ProductionFacility ;
+    rdfs:range comet-irec:LabellingScheme ;
+    skos:definition "A Labelling Scheme for which the facility is accredited (SF-02)."@en .
+
+comet-irec:requestedLabel a owl:ObjectProperty ;
+    rdfs:label "requested label"@en ;
+    rdfs:domain comet-irec:IssueRequest ;
+    rdfs:range comet-irec:LabellingScheme ;
+    skos:definition "A Label requested at issuance; only Labels recorded against the facility registration are permitted (SF-04)."@en .
+
+comet-irec:facilityOwner a owl:ObjectProperty ;
+    rdfs:label "facility owner"@en ;
+    rdfs:domain comet-irec:ProductionFacility ;
+    rdfs:range comet:Organization ;
+    skos:definition "The Owner of the Production Facility's energy attributes (SF-02 Submitter status / SF-02C)."@en .
+
+comet-irec:hasDeclaration a owl:ObjectProperty ;
+    rdfs:label "has declaration"@en ;
+    rdfs:range comet-irec:Declaration ;
+    skos:definition "A signed declaration submitted with a registration or Issue Request."@en .
+
+comet-irec:definedByForm a owl:ObjectProperty ;
+    rdfs:label "defined by form"@en ;
+    rdfs:range comet-irec:StandardForm ;
+    skos:definition "Provenance link to the Standard Form (SF-xx) that governs the record's layout."@en .
+
+# =============================================================================
+# DATA PROPERTIES — Production Facility (SF-02)
+# =============================================================================
+
+comet-irec:installedCapacityMW a owl:DatatypeProperty ;
+    rdfs:label "installed capacity (MW)"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:decimal ;
+    skos:definition "Installed capacity in MW, up to 6 decimal places (SF-02)."@en .
+
+comet-irec:numberOfGeneratingUnits a owl:DatatypeProperty ;
+    rdfs:label "number of generating units"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:integer ;
+    skos:definition "Number of generating units at the facility (SF-02)."@en .
+
+comet-irec:commissioningDate a owl:DatatypeProperty ;
+    rdfs:label "commissioning date"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:date ;
+    skos:definition "Date the Production Device was commissioned (SF-02)."@en .
+
+comet-irec:effectiveRegistrationDate a owl:DatatypeProperty ;
+    rdfs:label "effective registration date"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:date ;
+    skos:definition "Requested effective date of registration; no earlier than 12 months prior to submission (SF-02). Sets the start of issuance eligibility."@en .
+
+comet-irec:meterId a owl:DatatypeProperty ;
+    rdfs:label "meter or measurement ID"@en ;
+    rdfs:range xsd:string ;
+    skos:definition "Meter or Measurement ID(s) identifying the measurement point (SF-02 / SF-04B)."@en .
+
+comet-irec:gridConnectionVoltage a owl:DatatypeProperty ;
+    rdfs:label "grid connection voltage"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:string ;
+    skos:definition "Voltage of the network connection to which the Production Device is connected (SF-02)."@en .
+
+comet-irec:networkOwner a owl:DatatypeProperty ;
+    rdfs:label "network owner"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:string ;
+    skos:definition "Owner of the network to which the Production Device is connected (SF-02)."@en .
+
+comet-irec:technologyCode a owl:DatatypeProperty ;
+    rdfs:label "technology code"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:string ;
+    skos:definition "Technology code per SD-02 Technologies and Fuels (SF-02 / SF-04)."@en .
+
+comet-irec:fuelCode a owl:DatatypeProperty ;
+    rdfs:label "fuel code"@en ;
+    rdfs:range xsd:string ;
+    skos:definition "Fuel code per SD-02 Technologies and Fuels (SF-02 / SF-04 / SF-04C)."@en .
+
+comet-irec:captiveConsumerPresent a owl:DatatypeProperty ;
+    rdfs:label "captive consumer present"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:boolean ;
+    skos:definition "Whether an on-site (captive) consumer is present (SF-02)."@en .
+
+comet-irec:auxiliaryEnergyPresent a owl:DatatypeProperty ;
+    rdfs:label "auxiliary energy present"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:boolean ;
+    skos:definition "Whether auxiliary / standby energy sources are present (SF-02)."@en .
+
+comet-irec:publicFundingType a owl:DatatypeProperty ;
+    rdfs:label "public funding type"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:string ;
+    skos:definition "Public (government) funding received: None, Investment, or Production, e.g. Feed-in Tariff (SF-02)."@en .
+
+comet-irec:publicFundingEndDate a owl:DatatypeProperty ;
+    rdfs:label "public funding end date"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:date ;
+    skos:definition "Date public funding did / will finish (SF-02)."@en .
+
+comet-irec:expectedVolumeEvidence a owl:DatatypeProperty ;
+    rdfs:label "expected form of volume evidence"@en ;
+    rdfs:domain comet-irec:ProductionFacility ; rdfs:range xsd:string ;
+    skos:definition "Expected form of volume evidence: Metering data / Contract sales invoice / Other (SF-02)."@en .
+
+# =============================================================================
+# DATA PROPERTIES — Issue Request & Certificate (SF-04)
+# =============================================================================
+
+comet-irec:requestType a owl:DatatypeProperty ;
+    rdfs:label "request type"@en ;
+    rdfs:domain comet-irec:IssueRequest ; rdfs:range xsd:string ;
+    skos:definition "Issue Request type: Normal or SelfConsumption (SF-04)."@en .
+
+comet-irec:totalProductionMWh a owl:DatatypeProperty ;
+    rdfs:label "total production (MWh)"@en ;
+    rdfs:domain comet-irec:IssueRequest ; rdfs:range xsd:decimal ;
+    skos:definition "Total production during the period in MWh, up to 6 decimal places (SF-04)."@en .
+
+comet-irec:amountAppliedForMWh a owl:DatatypeProperty ;
+    rdfs:label "I-REC(E) applied for (MWh)"@en ;
+    rdfs:domain comet-irec:IssueRequest ; rdfs:range xsd:decimal ;
+    skos:definition "Volume of I-REC(E) applied for in MWh; if blank the total production amount is issued on approval (SF-04)."@en .
+
+comet-irec:evidenceType a owl:DatatypeProperty ;
+    rdfs:label "type of supporting evidence"@en ;
+    rdfs:domain comet-irec:IssueRequest ; rdfs:range xsd:string ;
+    skos:definition "Type of supporting evidence: SettlementMetering / NonSettlementMetering / MeasuredVolumeTransfer / Other (SF-04)."@en .
+
+comet-irec:carbonOffsetRightsExcluded a owl:DatatypeProperty ;
+    rdfs:label "carbon offset rights excluded"@en ;
+    rdfs:domain comet-irec:IRECCertificate ; rdfs:range xsd:boolean ;
+    skos:definition "Where carbon-offset rights are excluded, this exclusion shall be clearly stated on each I-REC(E) and visible to Participants and Beneficiaries (Code s.9)."@en .
+
+comet-irec:chainOfCustodyReference a owl:DatatypeProperty ;
+    rdfs:label "chain-of-custody reference"@en ;
+    rdfs:domain comet-irec:IRECCertificate ; rdfs:range xsd:string ;
+    skos:definition "The unique reference that can be traced throughout the chain of custody back to the source generator (Code identity model). Backbone of the traceability guarantee."@en .
+
+# =============================================================================
+# DATA PROPERTIES — Redemption Statement (Code s.10)
+# =============================================================================
+
+comet-irec:qrCode a owl:DatatypeProperty ;
+    rdfs:label "verification QR code"@en ;
+    rdfs:domain comet-irec:RedemptionStatement ; rdfs:range xsd:anyURI ;
+    skos:definition "QR code embedded in the Redemption Statement enabling account-less verification of validity (Code s.10)."@en .
+
+comet-irec:verificationKey a owl:DatatypeProperty ;
+    rdfs:label "verification key"@en ;
+    rdfs:domain comet-irec:RedemptionStatement ; rdfs:range xsd:string ;
+    skos:definition "Verification key accompanying the QR code; only Registry-generated statements are valid (Code s.10)."@en .
+
+comet-irec:redemptionPurpose a owl:DatatypeProperty ;
+    rdfs:label "redemption purpose"@en ;
+    rdfs:domain comet-irec:RedemptionStatement ; rdfs:range xsd:string ;
+    skos:definition "Stated consumption / redemption purpose recorded on the Redemption Statement (Code s.10)."@en .
+
+# =============================================================================
+# DATA PROPERTIES — Fuel Consumption Statement (SF-04C)
+# =============================================================================
+
+comet-irec:grossCalorificValueMJkg a owl:DatatypeProperty ;
+    rdfs:label "gross calorific value (MJ/kg)"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:decimal ;
+    skos:definition "Gross Calorific Value of the fuel in MJ/kg — factor 'a' in the SF-04C allocation."@en .
+
+comet-irec:stockBalanceStartKg a owl:DatatypeProperty ;
+    rdfs:label "stock balance at start (kg)"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:decimal ;
+    skos:definition "Fuel stock balance at period start in kg — factor 'b' in the SF-04C allocation."@en .
+
+comet-irec:stockAddedKg a owl:DatatypeProperty ;
+    rdfs:label "stock added during period (kg)"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:decimal ;
+    skos:definition "Fuel stock added during the period in kg — factor 'c' in the SF-04C allocation."@en .
+
+comet-irec:stockBalanceEndKg a owl:DatatypeProperty ;
+    rdfs:label "stock balance at end (kg)"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:decimal ;
+    skos:definition "Fuel stock balance at period end in kg — factor 'd' in the SF-04C allocation."@en .
+
+comet-irec:fuelConsumedKg a owl:DatatypeProperty ;
+    rdfs:label "fuel consumed (kg)"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:decimal ;
+    skos:definition "Fuel consumed in kg. SF-04C: Fuel Consumed = StockStart + StockAdded - StockEnd (b + c - d)."@en .
+
+comet-irec:energyFromSourceMJ a owl:DatatypeProperty ;
+    rdfs:label "energy from source (MJ)"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:decimal ;
+    skos:definition "Energy contributed by the fuel in MJ. SF-04C: Energy from Source = GrossCalorificValue x FuelConsumed (a x (b + c - d)). The renewable share of total energy determines the I-REC(E)-eligible volume."@en .
+
+comet-irec:isRenewableSource a owl:DatatypeProperty ;
+    rdfs:label "is renewable source"@en ;
+    rdfs:domain comet-irec:FuelInputRecord ; rdfs:range xsd:boolean ;
+    skos:definition "Whether the fuel is a renewable energy source; only the renewable portion is I-REC(E)-eligible (SF-04C)."@en .
+
+comet-irec:measurementUnit a owl:DatatypeProperty ;
+    rdfs:label "measurement unit"@en ;
+    rdfs:domain comet-irec:FuelConsumptionStatement ; rdfs:range xsd:string ;
+    skos:definition "Unit of measure for all readings in a Production Group statement: MWh or kWh (SF-04B)."@en .
+
+# =============================================================================
+# DATA PROPERTIES — Account & Standard Form
+# =============================================================================
+
+comet-irec:accountId a owl:DatatypeProperty ;
+    rdfs:label "account ID/code"@en ;
+    rdfs:domain comet-irec:Account ; rdfs:range xsd:string ;
+    skos:definition "Account ID/code as displayed in the Evident Registry (SF-04)."@en .
+
+comet-irec:accountType a owl:DatatypeProperty ;
+    rdfs:label "account type"@en ;
+    rdfs:domain comet-irec:Account ; rdfs:range xsd:string ;
+    skos:definition "Account type: Trade or Redemption (Code Definitions)."@en .
+
+comet-irec:formCode a owl:DatatypeProperty ;
+    rdfs:label "form code"@en ;
+    rdfs:domain comet-irec:StandardForm ; rdfs:range xsd:string ;
+    skos:definition "Standard Form code, e.g. SF-02, SF-04C (Code Standard Forms register)."@en .
+
+comet-irec:formVersion a owl:DatatypeProperty ;
+    rdfs:label "form version"@en ;
+    rdfs:domain comet-irec:StandardForm ; rdfs:range xsd:string ;
+    skos:definition "Version of the Standard Form."@en .
+
+# =============================================================================
+# NAMED INDIVIDUALS — the Standard Forms register (Code, s. 'A note on completeness')
+# =============================================================================
+
+comet-irec:SF-02  a comet-irec:StandardForm ; comet-irec:formCode "SF-02"  ; rdfs:label "SF-02 Production Facility Registration"@en .
+comet-irec:SF-02A a comet-irec:StandardForm ; comet-irec:formCode "SF-02A" ; rdfs:label "SF-02A Registrant's Declaration"@en .
+comet-irec:SF-02B a comet-irec:StandardForm ; comet-irec:formCode "SF-02B" ; rdfs:label "SF-02B Production Group Template"@en .
+comet-irec:SF-02C a comet-irec:StandardForm ; comet-irec:formCode "SF-02C" ; rdfs:label "SF-02C Owner's Declaration"@en .
+comet-irec:SF-03  a comet-irec:StandardForm ; comet-irec:formCode "SF-03"  ; rdfs:label "SF-03 Change Request"@en .
+comet-irec:SF-04  a comet-irec:StandardForm ; comet-irec:formCode "SF-04"  ; rdfs:label "SF-04 Issue Request"@en .
+comet-irec:SF-04A a comet-irec:StandardForm ; comet-irec:formCode "SF-04A" ; rdfs:label "SF-04A Issuing Declaration"@en .
+comet-irec:SF-04B a comet-irec:StandardForm ; comet-irec:formCode "SF-04B" ; rdfs:label "SF-04B Production Group Statement"@en .
+comet-irec:SF-04C a comet-irec:StandardForm ; comet-irec:formCode "SF-04C" ; rdfs:label "SF-04C Fuel Consumption Statement"@en .
+comet-irec:SF-05  a comet-irec:StandardForm ; comet-irec:formCode "SF-05"  ; rdfs:label "SF-05 Complaint"@en .
+comet-irec:SF-06  a comet-irec:StandardForm ; comet-irec:formCode "SF-06"  ; rdfs:label "SF-06 Accredited Entity Application"@en .
+comet-irec:SF-07  a comet-irec:StandardForm ; comet-irec:formCode "SF-07"  ; rdfs:label "SF-07 Country Report Template"@en .

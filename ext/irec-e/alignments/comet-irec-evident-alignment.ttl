@@ -1,0 +1,81 @@
+@prefix owl:        <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:       <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms:    <http://purl.org/dc/terms/> .
+@prefix dcat:       <http://www.w3.org/ns/dcat#> .
+@prefix comet:      <https://comet.carbon/v1/core#> .
+@prefix comet-eac:  <https://comet.carbon/v1/eac#> .
+@prefix comet-ver:  <https://comet.carbon/v1/ver#> .
+@prefix comet-irec: <https://comet.carbon/ext/irec-e#> .
+
+# =============================================================================
+# COMET I-REC(E) — Reuse & Standards Alignment
+# =============================================================================
+# Two jobs:
+#  (1) Make the REUSE explicit: every I-REC(E) concept that is served by an
+#      existing COMET term is bridged here with skos:closeMatch / subClassOf,
+#      so downstream tools see one graph, not two vocabularies.
+#  (2) Register the external source: the Evident I-REC Code v1.13 and its
+#      Standard Forms as the authority for each mapped term.
+# =============================================================================
+
+<https://comet.carbon/ext/irec-e/alignment>
+    a owl:Ontology ;
+    dcterms:title "COMET I-REC(E) Reuse & Standards Alignment"@en ;
+    dcterms:description "Bridges the Evident I-REC(E) data model to existing COMET core / EAC / verification terms and records SF-02/SF-04 as source."@en ;
+    dcterms:source "Evident I-REC Code for Electricity v1.13", "SF-02 v1.3", "SF-04 v1.2" ;
+    owl:versionInfo "0.1.0" ;
+    dcat:keyword "COMET", "I-REC", "EAC", "renewable energy certificate", "reuse", "alignment" .
+
+# ─── L1 CORE reuse ───────────────────────────────────────────────────────
+# I-REC "Entity" (Registrant / Participant / Owner) IS a COMET Organization.
+comet-irec:Registrant   rdfs:subClassOf comet:Organization ;
+    skos:closeMatch comet:Organization ;
+    skos:note "I-REC Entity in the Registrant role (SF-02 Registrant Contact Details)."@en .
+comet-irec:Participant  rdfs:subClassOf comet:Organization ;
+    skos:closeMatch comet:Organization ;
+    skos:note "I-REC Entity in the Participant role (holds/redeems certificates)."@en .
+
+# Production Facility / Device / Installation ARE COMET Sites.
+comet-irec:ProductionFacility rdfs:subClassOf comet:Site ;
+    skos:closeMatch comet:Site ;
+    skos:note "SF-02 Production Facility Details map onto comet:Site.siteName / siteCountry / siteGIS plus I-REC registration attributes."@en .
+comet-irec:ProductionInstallation rdfs:subClassOf comet:Site .
+
+# Production Period reuses comet:TimePeriod (no new period class).
+comet-irec:hasProductionPeriod rdfs:range comet:TimePeriod ;
+    skos:note "SF-04 Period start/end dates are a comet:TimePeriod."@en .
+
+# ─── L5 EAC reuse ────────────────────────────────────────────────────────
+# The I-REC(E) unit IS a COMET Energy Attribute Certificate.
+comet-irec:IRECCertificate rdfs:subClassOf comet-eac:EnergyAttributeCert ;
+    skos:closeMatch comet-eac:EnergyAttributeCert ;
+    skos:exactMatch comet-eac:EAC ;
+    skos:note "Corresponds to comet-eac:EAC with eacType EnergyAttributeCertificate and subType 'IREC' (already enumerated in tools/schemas/comet-eac.schema.json). serialNumber -> comet-eac:EAC.serialNumber; issue date -> comet-eac:EAC.issueDate; volume (MWh) -> comet-eac:EAC.unitCount; vintage -> comet-eac:EAC.vintageYear; status -> comet-eac:EAC.unitStatus; registry -> comet-eac:EAC.registry."@en .
+
+# Registry: the Evident I-REC registry is a comet-eac:CertificateRegistry.
+comet-irec:IRECCertificate skos:related comet-eac:CertificateRegistry .
+
+# Redemption ("cancel to claim") IS a COMET RetirementEvent.
+comet-irec:RedemptionStatement rdfs:subClassOf comet-eac:RetirementEvent ;
+    skos:closeMatch comet-eac:RetirementEvent ;
+    skos:note "Code s.10 Redemption & Assignment. Beneficiary -> comet-eac:RetirementEvent.retirementBeneficiary; redemption date -> comet-eac:RetirementEvent.retirementDate. QR code + verification key are I-REC-specific additions."@en .
+
+# The unique chain-of-custody reference relates to book-and-claim custody.
+comet-irec:chainOfCustodyReference skos:related comet-eac:BookAndClaim ;
+    skos:note "The Code's chain-of-custody unique reference underpins book-and-claim traceability back to the source generator."@en .
+
+# ─── L6 VERIFICATION reuse ───────────────────────────────────────────────
+comet-irec:VerificationAgent  rdfs:subClassOf comet-ver:QualifiedVerifier ;
+    skos:closeMatch comet-ver:QualifiedVerifier ;
+    skos:note "SF-02 Verification Agent; verifierName -> comet-ver:QualifiedVerifier.verifierName."@en .
+comet-irec:ProductionAuditor  rdfs:subClassOf comet-ver:QualifiedVerifier ;
+    skos:closeMatch comet-ver:QualifiedVerifier ;
+    skos:note "SF-04 / SF-04C Production Auditor attestation is a verification claim under comet-ver."@en .
+
+# ─── Standards provenance ────────────────────────────────────────────────
+comet-irec:IRECCertificate  dcterms:source "Evident I-REC Code for Electricity v1.13, s.8 Certificate Issuing" .
+comet-irec:IssueRequest     dcterms:source "SF-04 Issue Request v1.2" .
+comet-irec:FuelConsumptionStatement dcterms:source "SF-04C Fuel Consumption Statement" .
+comet-irec:ProductionFacility dcterms:source "SF-02 Production Facility Registration v1.3, s.7" .
+comet-irec:RedemptionStatement dcterms:source "Evident I-REC Code for Electricity v1.13, s.10 Redemption & Assignment" .

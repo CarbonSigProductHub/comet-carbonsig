@@ -1,0 +1,174 @@
+@prefix sh:         <http://www.w3.org/ns/shacl#> .
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix comet:      <https://comet.carbon/v1/core#> .
+@prefix comet-irec: <https://comet.carbon/ext/irec-e#> .
+
+# =============================================================================
+# COMET I-REC(E) — SHACL Validation Shapes
+# Companion to comet-ext-irec-e.ttl
+# Run: pyshacl -s comet-ext-irec-e-shapes.ttl -d your-data.ttl
+# =============================================================================
+
+# ─── I-REC(E) Certificate ────────────────────────────────────────────────
+comet-irec:IRECCertificateShape
+    a sh:NodeShape ;
+    sh:targetClass comet-irec:IRECCertificate ;
+    sh:property [
+        sh:path comet-irec:generatedByFacility ;
+        sh:minCount 1 ;
+        sh:message "An I-REC(E) certificate must reference the Production Facility that generated it."
+    ] ;
+    sh:property [
+        sh:path comet-irec:chainOfCustodyReference ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "An I-REC(E) certificate must carry a chain-of-custody reference traceable to the source generator."
+    ] ;
+    sh:property [
+        sh:path comet-irec:carbonOffsetRightsExcluded ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "carbonOffsetRightsExcluded must be a single boolean."
+    ] .
+
+# ─── Issue Request (SF-04) ───────────────────────────────────────────────
+comet-irec:IssueRequestShape
+    a sh:NodeShape ;
+    sh:targetClass comet-irec:IssueRequest ;
+    sh:property [
+        sh:path comet-irec:requestType ;
+        sh:in ( "Normal" "SelfConsumption" ) ;
+        sh:maxCount 1 ;
+        sh:message "requestType must be 'Normal' or 'SelfConsumption' (SF-04)."
+    ] ;
+    sh:property [
+        sh:path comet-irec:evidenceType ;
+        sh:in ( "SettlementMetering" "NonSettlementMetering" "MeasuredVolumeTransfer" "Other" ) ;
+        sh:message "evidenceType must be one of SettlementMetering, NonSettlementMetering, MeasuredVolumeTransfer, Other (SF-04)."
+    ] ;
+    sh:property [
+        sh:path comet-irec:totalProductionMWh ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:minCount 1 ;
+        sh:message "totalProductionMWh is required and must be >= 0 (SF-04)."
+    ] ;
+    sh:property [
+        sh:path comet-irec:amountAppliedForMWh ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path comet-irec:hasProductionPeriod ;
+        sh:minCount 1 ;
+        sh:message "An Issue Request must reference a comet:TimePeriod (Production Period)."
+    ] ;
+    # The requested volume cannot exceed metered production.
+    sh:sparql [
+        sh:message "amountAppliedForMWh must not exceed totalProductionMWh (SF-04)." ;
+        sh:prefixes comet-irec: ;
+        sh:select """
+            SELECT $this WHERE {
+                $this <https://comet.carbon/ext/irec-e#totalProductionMWh> ?total .
+                $this <https://comet.carbon/ext/irec-e#amountAppliedForMWh> ?applied .
+                FILTER (?applied > ?total)
+            }
+        """
+    ] .
+
+# ─── Fuel Input Record (SF-04C) — enforce the co-firing allocation ───────
+comet-irec:FuelInputRecordShape
+    a sh:NodeShape ;
+    sh:targetClass comet-irec:FuelInputRecord ;
+    sh:property [ sh:path comet-irec:grossCalorificValueMJkg ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:minCount 1 ] ;
+    sh:property [ sh:path comet-irec:stockBalanceStartKg ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:minCount 1 ] ;
+    sh:property [ sh:path comet-irec:stockAddedKg ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:minCount 1 ] ;
+    sh:property [ sh:path comet-irec:stockBalanceEndKg ; sh:datatype xsd:decimal ; sh:minInclusive 0 ; sh:minCount 1 ] ;
+    sh:property [ sh:path comet-irec:isRenewableSource ; sh:datatype xsd:boolean ; sh:minCount 1 ] ;
+    # Fuel Consumed = StockStart + StockAdded - StockEnd  (b + c - d)
+    sh:sparql [
+        sh:message "fuelConsumedKg must equal stockBalanceStartKg + stockAddedKg - stockBalanceEndKg (SF-04C: b + c - d)." ;
+        sh:select """
+            SELECT $this WHERE {
+                $this <https://comet.carbon/ext/irec-e#fuelConsumedKg> ?consumed .
+                $this <https://comet.carbon/ext/irec-e#stockBalanceStartKg> ?b .
+                $this <https://comet.carbon/ext/irec-e#stockAddedKg> ?c .
+                $this <https://comet.carbon/ext/irec-e#stockBalanceEndKg> ?d .
+                BIND ( ?b + ?c - ?d AS ?expected )
+                FILTER ( ABS(?consumed - ?expected) > 0.000001 )
+            }
+        """
+    ] ;
+    # Energy from Source = GrossCalorificValue * Fuel Consumed  (a * (b + c - d))
+    sh:sparql [
+        sh:message "energyFromSourceMJ must equal grossCalorificValueMJkg * fuelConsumedKg (SF-04C: a * (b + c - d))." ;
+        sh:select """
+            SELECT $this WHERE {
+                $this <https://comet.carbon/ext/irec-e#energyFromSourceMJ> ?energy .
+                $this <https://comet.carbon/ext/irec-e#grossCalorificValueMJkg> ?a .
+                $this <https://comet.carbon/ext/irec-e#fuelConsumedKg> ?consumed .
+                BIND ( ?a * ?consumed AS ?expected )
+                FILTER ( ABS(?energy - ?expected) > 0.001 )
+            }
+        """
+    ] .
+
+# ─── Registry Account ────────────────────────────────────────────────────
+comet-irec:AccountShape
+    a sh:NodeShape ;
+    sh:targetClass comet-irec:Account ;
+    sh:property [
+        sh:path comet-irec:accountType ;
+        sh:in ( "Trade" "Redemption" ) ;
+        sh:maxCount 1 ;
+        sh:message "accountType must be 'Trade' or 'Redemption'."
+    ] ;
+    sh:property [
+        sh:path comet-irec:accountHolder ;
+        sh:minCount 1 ;
+        sh:message "An Account must be attributed to a single holding Entity (comet:Organization)."
+    ] .
+
+# ─── Redemption Statement (Code s.10) ────────────────────────────────────
+comet-irec:RedemptionStatementShape
+    a sh:NodeShape ;
+    sh:targetClass comet-irec:RedemptionStatement ;
+    sh:property [
+        sh:path comet-irec:qrCode ;
+        sh:datatype xsd:anyURI ;
+        sh:minCount 1 ;
+        sh:message "A Redemption Statement must carry a QR code for account-less verification."
+    ] ;
+    sh:property [
+        sh:path comet-irec:verificationKey ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "A Redemption Statement must carry a verification key."
+    ] .
+
+# ─── Production Facility (SF-02) ─────────────────────────────────────────
+comet-irec:ProductionFacilityShape
+    a sh:NodeShape ;
+    sh:targetClass comet-irec:ProductionFacility ;
+    sh:property [
+        sh:path comet-irec:installedCapacityMW ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "installedCapacityMW must be a non-negative decimal (SF-02)."
+    ] ;
+    sh:property [
+        sh:path comet-irec:publicFundingType ;
+        sh:in ( "None" "Investment" "Production" ) ;
+        sh:maxCount 1 ;
+        sh:message "publicFundingType must be None, Investment, or Production (SF-02)."
+    ] ;
+    sh:property [
+        sh:path comet-irec:technologyCode ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "A Production Facility must declare a technology code (SD-02)."
+    ] .

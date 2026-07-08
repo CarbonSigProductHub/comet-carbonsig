@@ -1,0 +1,46 @@
+@prefix comet:      <https://comet.carbon/v1/core#> .
+@prefix comet-irec: <https://comet.carbon/ext/irec-e#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex:         <https://example.org/irec/> .
+
+# Deliberately invalid instance — exercises the SF-04C arithmetic and SF-04
+# volume constraints. Expected pyshacl result: Conforms = False.
+
+ex:BadPeriod a comet:TimePeriod ;
+    comet:TimePeriod.startDate "2025-06-01"^^xsd:date ;
+    comet:TimePeriod.endDate   "2025-06-30"^^xsd:date .
+
+# VIOLATION 1: fuelConsumedKg != b + c - d  (claims 9,000,000; correct is 8,000,000)
+# VIOLATION 2: energyFromSourceMJ != GCV * fuelConsumed
+ex:BadFuel a comet-irec:FuelInputRecord ;
+    comet-irec:fuelCode "ES200" ;
+    comet-irec:isRenewableSource true ;
+    comet-irec:grossCalorificValueMJkg "15.0"^^xsd:decimal ;
+    comet-irec:stockBalanceStartKg "500000.0"^^xsd:decimal ;
+    comet-irec:stockAddedKg "8200000.0"^^xsd:decimal ;
+    comet-irec:stockBalanceEndKg "700000.0"^^xsd:decimal ;
+    comet-irec:fuelConsumedKg "9000000.0"^^xsd:decimal ;
+    comet-irec:energyFromSourceMJ "999999999.0"^^xsd:decimal .
+
+# VIOLATION 3: amountAppliedForMWh (6000) > totalProductionMWh (5000)
+# VIOLATION 4: requestType not in enum
+# VIOLATION 5: missing hasProductionPeriod is present here, but evidenceType invalid
+ex:BadIR a comet-irec:IssueRequest ;
+    comet-irec:requestType "Bogus" ;
+    comet-irec:hasProductionPeriod ex:BadPeriod ;
+    comet-irec:totalProductionMWh "5000.0"^^xsd:decimal ;
+    comet-irec:amountAppliedForMWh "6000.0"^^xsd:decimal ;
+    comet-irec:evidenceType "Guessed" .
+
+# VIOLATION 6: accountType not in enum; VIOLATION 7: no accountHolder
+ex:BadAcct a comet-irec:Account ;
+    comet-irec:accountId "TH-ACC-BAD" ;
+    comet-irec:accountType "Savings" .
+
+# VIOLATION 8: certificate missing generatedByFacility + chainOfCustodyReference
+ex:BadCert a comet-irec:IRECCertificate ;
+    comet-irec:carbonOffsetRightsExcluded false .
+
+# VIOLATION 9: redemption statement missing qrCode + verificationKey
+ex:BadRedemption a comet-irec:RedemptionStatement ;
+    comet-irec:redemptionPurpose "unverifiable" .
