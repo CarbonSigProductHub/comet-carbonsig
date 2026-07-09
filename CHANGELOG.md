@@ -23,8 +23,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - New converter `tools/converters/tfs_to_comet.py` (+ `tools/examples/tfs-v3-input.json`) turning a TfS PCF Data Model v3.1 JSON payload into a COMET JSON-LD `comet-tfs:TfSProductFootprint`
 - Registered in `registry/namespaces.json`, `registry/comet-curies.json` (88 `comet_tfs_pending` CURIEs), `comet-context.jsonld`, and the ontology map (`tools/scripts/build-ontology-map.py` → `docs/ontology-data.{json,js}`, `docs/comet-ontology-values.xlsx`); surfaced in `docs/index.html`, `docs/ontology.html`, `docs/data-exchange.html`, and the dedicated per-standard page `docs/tfs-pcf.html`
 
+**PCR method-requirement classes** (`extensions/comet-pcr.ttl`)
+- 13 new `comet-pcr:` classes (+3 `DataQualityRequirement` representativeness properties) promoted from PCRs harvested by `pcrbase` and referenced by the PCR Rule Builder: `EPDLayoutRequirement`, `DigitalFormatRequirement`, `ComparabilityStatement`, `AdditionalEnvironmentalInfo`, `DataQualityRequirement`, `BackgroundDatabase`, `InventoryFlowRequirement`, `EN15804ImpactSet`, `UseStageScenario`, `EndOfLifeScenario`, `TransportScenario`, `BiogenicCarbonStatement`, `ReviewPanel` — grounded in EN 15804+A2 / ISO 14025 / EU PEF, with SKOS links to `comet-pcf:BiogenicCarbon`, `comet-sc:DataQualityIndicator`, `comet-sc:TransportEvent`, `comet-rs:AssurancePanelReview`
+- `comet_pcr_pending` rises 20 → 36; registry total 451 → 467 CURIEs. These resolve the `comet_status: extended` PCR-clause targets that were previously unpublished (see the pcrbase prefix-bug cases already covered by `test/test_registry.py`)
+
 ### Changed
-- Ontology term count rises to 1113 total (from 946) with the addition of 167 `comet-tfs` terms
+- Ontology term count rises to 1213 total (from 946) with the addition of 84 `comet-irec`, 167 `comet-tfs`, and 16 `comet-pcr` terms
 
 ## [0.3.0] - 2026-06-17
 

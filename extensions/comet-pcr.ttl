@@ -2,6 +2,8 @@
 @prefix comet:      <https://comet.carbon/v1/core#> .
 @prefix comet-pcf:  <https://comet.carbon/v1/pcf#> .
 @prefix comet-ef:   <https://comet.carbon/v1/emfactor#> .
+@prefix comet-sc:   <https://comet.carbon/v1/supplychain#> .
+@prefix comet-rs:   <https://comet.carbon/ext/responsiblesteel#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
@@ -178,3 +180,132 @@ comet-pcr:EFImpactCategory
     skos:definition "One of the 16 EU Environmental Footprint impact categories required by a PEFCR LCIA."@en ;
     skos:relatedMatch comet-pcf:LCIAResult ;
     dcterms:source "EU PEF method (16 EF impact categories)" .
+
+#################################################################
+# EPD reporting requirements — how the resulting declaration is
+# formatted, compared, and what extra information it must carry.
+# Proposed from harvested PCRs (pcrbase); pending evidence-gated upstream.
+#################################################################
+
+comet-pcr:EPDLayoutRequirement
+    a owl:Class ;
+    rdfs:label "EPD Layout Requirement"@en ;
+    skos:definition "A normative requirement on the content, structure and layout of the Environmental Product Declaration produced under the PCR."@en ;
+    dcterms:source "EN 15804+A2 §5; ISO 14025 §7" .
+
+comet-pcr:DigitalFormatRequirement
+    a owl:Class ;
+    rdfs:label "Digital Format Requirement"@en ;
+    skos:definition "A requirement that the EPD be provided in a machine-readable digital format (e.g. ILCD+EPD, ECO Platform digital EPD)."@en ;
+    dcterms:source "EN 15804+A2 §5.2; ECO Platform digital EPD" .
+
+comet-pcr:ComparabilityStatement
+    a owl:Class ;
+    rdfs:label "Comparability Statement"@en ;
+    skos:definition "A statement of the conditions under which EPDs of products may (or may not) be compared, as required by the PCR."@en ;
+    dcterms:source "ISO 14025 §5.3; EN 15804+A2 §5.3" .
+
+comet-pcr:AdditionalEnvironmentalInfo
+    a owl:Class ;
+    rdfs:label "Additional Environmental Information"@en ;
+    skos:definition "Additional environmental information the PCR requires or permits beyond the core declared indicators (e.g. hazardous-substance content, VOC emissions)."@en ;
+    dcterms:source "EN 15804+A2 §5.4; ISO 14025 §7.2.4" .
+
+#################################################################
+# Data quality, background data, and inventory requirements
+#################################################################
+
+comet-pcr:DataQualityRequirement
+    a owl:Class ;
+    rdfs:label "Data Quality Requirement"@en ;
+    skos:definition "A requirement on the quality of the underlying life-cycle inventory data, typically expressed as temporal, geographical and technological representativeness."@en ;
+    skos:relatedMatch comet-sc:DataQualityIndicator ;
+    dcterms:source "EN 15804+A2 §6.3.7; ISO 14044 §4.2.3.6" .
+
+comet-pcr:DataQualityRequirement.temporalRepresentativeness
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pcr:DataQualityRequirement ;
+    rdfs:range xsd:string ;
+    rdfs:label "temporal representativeness"@en ;
+    skos:definition "The required temporal representativeness (reference period / maximum age) of the inventory data."@en ;
+    dcterms:source "EN 15804+A2 §6.3.7" .
+
+comet-pcr:DataQualityRequirement.geographicalRepresentativeness
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pcr:DataQualityRequirement ;
+    rdfs:range xsd:string ;
+    rdfs:label "geographical representativeness"@en ;
+    skos:definition "The required geographical representativeness of the inventory data."@en ;
+    dcterms:source "EN 15804+A2 §6.3.7" .
+
+comet-pcr:DataQualityRequirement.technologicalRepresentativeness
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pcr:DataQualityRequirement ;
+    rdfs:range xsd:string ;
+    rdfs:label "technological representativeness"@en ;
+    skos:definition "The required technological representativeness of the inventory data."@en ;
+    dcterms:source "EN 15804+A2 §6.3.7" .
+
+comet-pcr:BackgroundDatabase
+    a owl:Class ;
+    rdfs:label "Background Database Requirement"@en ;
+    skos:definition "The background life-cycle inventory database(s) the PCR requires or permits for secondary data (e.g. ecoinvent, EF reference package)."@en ;
+    dcterms:source "EN 15804+A2 §6.3.6" .
+
+comet-pcr:InventoryFlowRequirement
+    a owl:Class ;
+    rdfs:label "Inventory Flow Requirement"@en ;
+    skos:definition "A requirement to declare resource-use and waste/output-flow inventory indicators (LCI-based parameters) under the PCR."@en ;
+    skos:relatedMatch comet-pcr:referenceFlow ;
+    dcterms:source "EN 15804+A2 §5.5 (resource use, waste and output flows)" .
+
+comet-pcr:EN15804ImpactSet
+    a owl:Class ;
+    rdfs:label "EN 15804 Impact Indicator Set"@en ;
+    skos:definition "The set of environmental impact indicators required to be declared under EN 15804+A2 (core LCIA indicators)."@en ;
+    skos:relatedMatch comet-pcr:EFImpactCategory ;
+    dcterms:source "EN 15804+A2 §5.1 (core environmental impact indicators)" .
+
+#################################################################
+# Life-cycle scenarios (EN 15804 modules B, C, and transport)
+#################################################################
+
+comet-pcr:UseStageScenario
+    a owl:Class ;
+    rdfs:label "Use-Stage Scenario"@en ;
+    skos:definition "Scenario assumptions for the use stage (EN 15804 modules B1–B7) prescribed by the PCR."@en ;
+    skos:relatedMatch comet-pcr:DeclaredModule ;
+    dcterms:source "EN 15804+A2 §6.4 (modules B1–B7)" .
+
+comet-pcr:EndOfLifeScenario
+    a owl:Class ;
+    rdfs:label "End-of-Life Scenario"@en ;
+    skos:definition "Scenario assumptions for the end-of-life stage (EN 15804 modules C1–C4) prescribed by the PCR."@en ;
+    skos:relatedMatch comet-pcr:DeclaredModule ;
+    dcterms:source "EN 15804+A2 §6.4 (modules C1–C4)" .
+
+comet-pcr:TransportScenario
+    a owl:Class ;
+    rdfs:label "Transport Scenario"@en ;
+    skos:definition "Transport scenario assumptions (e.g. modules A4 and C2) prescribed by the PCR."@en ;
+    skos:relatedMatch comet-sc:TransportEvent ;
+    dcterms:source "EN 15804+A2 §6.4 (modules A4, C2)" .
+
+comet-pcr:BiogenicCarbonStatement
+    a owl:Class ;
+    rdfs:label "Biogenic Carbon Statement"@en ;
+    skos:definition "A required declaration of biogenic carbon content and its accounting treatment in the footprint."@en ;
+    skos:broadMatch comet-pcf:BiogenicCarbon ;
+    dcterms:source "EN 15804+A2 §6.3.4.3 (biogenic carbon)" .
+
+#################################################################
+# Independent verification
+#################################################################
+
+comet-pcr:ReviewPanel
+    a owl:Class ;
+    rdfs:label "Review Panel Requirement"@en ;
+    skos:definition "A requirement for independent verification / review-panel assurance of the EPD or PCR, as prescribed by the programme."@en ;
+    skos:relatedMatch comet-rs:AssurancePanelReview ;
+    rdfs:comment "Placed in comet-pcr as a PCR method requirement; the generic verification concept may later live in comet-ver."@en ;
+    dcterms:source "ISO 14025 §8 (independent verification)" .
