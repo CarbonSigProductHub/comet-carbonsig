@@ -13,6 +13,9 @@ Assessment Report, and the values move materially:
 |---|---|---|---|---|
 | CH₄ (GWP-100) | 21 | 25 | 28 | 29.8 fossil / 27.0 non-fossil |
 | N₂O (GWP-100) | 310 | 298 | 265 | 273 |
+| HFC-134a (GWP-100) | — | 1430 | 1300 | 1530 |
+
+(GHG Protocol Aug-2024 basis. AR5's *with-climate-carbon-feedback* variant raises each value further — CH₄ 34, N₂O 298 — a distinct value set from the no-feedback set above. HFC-134a is a cautionary case: "AR5 = 1430" is a common error — 1430 is the *AR4* value; AR5 is 1300.)
 
 A CO₂e figure is only interpretable if you know which set produced it. And the
 moment gas-level data is multiplied by a GWP and summed, the basis becomes

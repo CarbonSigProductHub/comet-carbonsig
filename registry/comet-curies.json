@@ -23,11 +23,11 @@
     "comet_published": 288,
     "comet_asi_pending": 32,
     "comet_irec_pending": 72,
-    "comet_pcr_pending": 51,
+    "comet_pcr_pending": 52,
     "comet_pj_pending": 23,
     "comet_tfs_pending": 88,
-    "ipcc_pending": 22,
-    "total": 576
+    "ipcc_pending": 24,
+    "total": 579
   },
   "comet_published": [
     "comet-cn:Additional",
@@ -469,6 +469,7 @@
     "comet-pcr:gwpHorizon",
     "comet-pcr:gwpHorizonScheme",
     "comet-pcr:gwpValueSet",
+    "comet-pcr:impliedConfidence",
     "comet-pcr:informedByRule",
     "comet-pcr:moduleScheme",
     "comet-pcr:pcrNumber",
@@ -610,11 +611,13 @@
     "ipcc:forGas",
     "ipcc:gwp100",
     "ipcc:hasGWP",
+    "ipcc:inForceFor",
     "ipcc:isFloor",
     "ipcc:onGas",
     "ipcc:pactEnumValue",
     "ipcc:pactExportable",
     "ipcc:publicationYear",
+    "ipcc:regulatoryStatus",
     "ipcc:supersedes",
     "ipcc:valueSetScheme",
     "ipcc:variant"

@@ -390,15 +390,24 @@ comet-pcr:arBasisScheme
     rdfs:label "AR basis scheme"@en ;
     skos:definition "The enumeration of ways a factor's value set can be established, in decreasing order of determinacy: declared, back-solved, inferred, indeterminate."@en .
 
+comet-pcr:impliedConfidence
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-pcr:ARBasis ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "implied confidence"@en ;
+    skos:definition "The confidence a basis category implies on its own, in [0,1]. Declared and back-solved are determinate (1.0); inferred carries a per-factor comet-pcr:arConfidence instead; indeterminate has none."@en .
+
 comet-pcr:Declared a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
     skos:prefLabel "declared"@en ;
+    comet-pcr:impliedConfidence 1.0 ;
     skos:definition "The value set is stated by the source (e.g. a machine-readable tag). Determinate."@en .
 comet-pcr:BackSolved a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
     skos:prefLabel "back-solved"@en ;
-    skos:definition "The value set is arithmetically recovered from the gas split and the CO2e total — the cheapest determinate test, run before any model. Determinate, effectively Type-A."@en .
+    comet-pcr:impliedConfidence 1.0 ;
+    skos:definition "The value set is arithmetically recovered from the gas split and the CO2e total — the cheapest determinate test, run before any model. Determinate, effectively Type-A. Where a unique solution exists this is evidentially equivalent to a declaration and export gates should treat it as such."@en .
 comet-pcr:Inferred a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
     skos:prefLabel "inferred"@en ;
-    skos:definition "The value set is assigned by a model from metadata; carries comet-pcr:arConfidence and propagates its own uncertainty."@en .
+    skos:definition "The value set is assigned by a model from metadata; carries comet-pcr:arConfidence (below 1) and propagates its own uncertainty. Should link the assigning rule via comet-pcr:informedByRule."@en .
 comet-pcr:Indeterminate a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
     skos:prefLabel "indeterminate"@en ;
     skos:definition "The value set cannot be established. gwpValueSet is absent; the factor is non-declarable into a regulated or PACT channel until resolved."@en .
