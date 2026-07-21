@@ -1,0 +1,254 @@
+@prefix ipcc:     <https://comet.carbon/vocab/ipcc-gwp#> .
+@prefix comet-pcr:<https://comet.carbon/ext/pcr#> .
+@prefix comet-ef: <https://comet.carbon/v1/emfactor#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+#################################################################
+# IPCC GWP value-set vocabulary (ipcc)
+#
+# A COMET-maintained controlled vocabulary of IPCC-derived GWP value SETS.
+#
+# WHY A REGISTRY AND NOT AN ENUM.
+# A characterisation factor (a GWP) is only interpretable if you know which
+# value set produced it. Naming the IPCC Assessment Report EDITION alone is
+# under-determined: a single edition label can hide several distinct, published
+# value sets that differ gas-by-gas. AR5 shipped GWP-100 both WITHOUT and WITH
+# climate-carbon feedbacks; UNFCCC Decision 7/CP.27 adopted AR5 Table 8.A.1
+# *excluding the fossil-methane value*; AR6 split methane into fossil and
+# non-fossil (biogenic) values that earlier editions lack. So there are at
+# least five value sets behind three edition labels — and the floor is not AR4
+# but SAR, still embedded in transitioned Kyoto-era credit stock.
+#
+# An enum keyed on edition is therefore wrong for a structural reason, not a
+# coverage reason: it conflates value sets an edition label cannot separate,
+# and it must be amended at every new Assessment Report (AR7 lands around the
+# UNFCCC's 2028 metric review). Keying on the value SET fixes both: new value
+# sets are registry entries, never schema amendments, and the differences
+# between value sets become machine-checkable relations (see ipcc:differsFrom).
+#
+# This vocabulary is a pending COMET extension (harvested into the registry as
+# ipcc_pending). The four provenance properties that CARRY an ipcc value set on
+# a factor — gwpValueSet, arBasis, arConfidence, gwpHorizon — live in the
+# comet-pcr namespace (see extensions/comet-pcr.ttl).
+#
+# GWP-100 witness values below are the canonical figures for each value set,
+# each carrying its own dcterms:source. They are a WITNESS set — the two gases
+# (CH4, N2O) the arithmetic back-solve keys on, plus the CBAM-statutory
+# fluorinated gases — not the full Annex table. Extend gas-by-gas as needed;
+# every added value MUST cite its primary source.
+#################################################################
+
+<https://comet.carbon/vocab/ipcc-gwp>
+    a owl:Ontology ;
+    dcterms:title "IPCC GWP Value-Set Vocabulary"@en ;
+    dcterms:description "A controlled vocabulary of IPCC-derived global-warming-potential value sets, identified by Assessment-Report edition AND variant (feedback treatment, methane fossil/biogenic split), with witness GWP-100 values and machine-checkable inter-set relations. Consumed via comet-pcr:gwpValueSet on comet-ef:GWP100Value."@en ;
+    owl:versionInfo "0.1.0" ;
+    dcterms:source "IPCC SAR (1995)", "IPCC AR4 (2007)", "IPCC AR5 WG1 Ch.8 (2013)",
+                   "IPCC AR6 WG1 Ch.7 (2021)", "UNFCCC Decision 7/CP.27",
+                   "GHG Protocol GWP update (Aug 2024)", "EU CBAM Implementing Regulation" .
+
+#################################################################
+# Scheme and top class
+#################################################################
+
+ipcc:valueSetScheme
+    a skos:ConceptScheme ;
+    rdfs:label "IPCC GWP value-set scheme"@en ;
+    skos:definition "The enumeration of recognised IPCC GWP value sets. Members are identified by edition plus variant, not by edition alone."@en .
+
+ipcc:GWPValueSet
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "GWP Value Set"@en ;
+    skos:definition "A single, internally consistent set of global-warming-potential characterisation factors as published by one IPCC Assessment Report under one variant convention (feedback treatment and methane fossil/biogenic split)."@en .
+
+#################################################################
+# Structural properties on a value set
+#################################################################
+
+ipcc:edition
+    a owl:DatatypeProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range xsd:string ;
+    rdfs:label "IPCC edition"@en ;
+    skos:definition "The IPCC Assessment Report edition label this value set belongs to (SAR, AR4, AR5, AR6). Not sufficient on its own to identify the value set."@en .
+
+ipcc:variant
+    a owl:DatatypeProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range xsd:string ;
+    rdfs:label "variant"@en ;
+    skos:definition "The convention that, together with the edition, pins the numeric values: e.g. 'no-feedback', 'with-feedback', 'UNFCCC-7CP27', 'fossil-CH4', 'biogenic-CH4'."@en .
+
+ipcc:publicationYear
+    a owl:DatatypeProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range xsd:gYear ;
+    rdfs:label "publication year"@en ;
+    skos:definition "The year the underlying Assessment Report (or the adopting decision) published this value set. Vintage is the single most predictive feature when inferring a value set from metadata."@en .
+
+ipcc:defaultHorizon
+    a owl:ObjectProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range comet-pcr:GWPHorizon ;
+    rdfs:label "default time horizon"@en ;
+    skos:definition "The GWP time horizon these witness values are stated on (GWP100 unless noted). A value set is horizon-specific: GWP20 and GWP100 are different numbers from the same report."@en .
+
+ipcc:pactExportable
+    a owl:DatatypeProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range xsd:boolean ;
+    rdfs:label "PACT-exportable"@en ;
+    skos:definition "True iff this value set can be represented, without asserting anything false, in PACT's ipccCharacterizationFactors edition enum. SAR, AR4 and the indeterminate case are NOT PACT-exportable: PACT's enum cannot name them, so a COMET-faithful factor on one of these value sets is legitimately non-declarable into a PACT channel."@en .
+
+ipcc:pactEnumValue
+    a owl:DatatypeProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range xsd:string ;
+    rdfs:label "PACT enum value"@en ;
+    skos:definition "The (lossy) edition string PACT's ipccCharacterizationFactors would receive on export, when pactExportable is true. The variant distinction is discarded in the collapse — which is exactly why the value set, not this string, is the COMET source of truth."@en .
+
+#################################################################
+# Witness GWP-100 values (per-gas, sourced)
+#################################################################
+
+ipcc:hasGWP
+    a owl:ObjectProperty ;
+    rdfs:domain ipcc:GWPValueSet ;
+    rdfs:label "has GWP"@en ;
+    skos:definition "Links a value set to one witness gas/factor pair used by the arithmetic back-solve."@en .
+
+ipcc:forGas
+    a owl:DatatypeProperty ; rdfs:range xsd:string ;
+    rdfs:label "for gas"@en ;
+    skos:definition "The gas the witness GWP applies to (e.g. CH4, N2O, CF4). 'CH4-fossil' / 'CH4-nonfossil' where the value set distinguishes them."@en .
+
+ipcc:gwp100
+    a owl:DatatypeProperty ; rdfs:range xsd:decimal ;
+    rdfs:label "GWP-100"@en ;
+    skos:definition "The 100-year global warming potential of the gas under this value set."@en .
+
+#################################################################
+# Inter-set relations (machine-checkable differences)
+#################################################################
+
+ipcc:differsFrom
+    a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range ipcc:GWPValueSet ;
+    rdfs:label "differs from"@en ;
+    skos:definition "Asserts that two value sets differ, with the specific gas(es) of difference given by ipcc:onGas on the same subject. Lets a consumer prove that two edition-sharing value sets are not interchangeable without recomputing."@en .
+
+ipcc:onGas
+    a owl:DatatypeProperty ; rdfs:range xsd:string ;
+    rdfs:label "on gas"@en ;
+    skos:definition "Names the gas(es) on which an ipcc:differsFrom relation holds."@en .
+
+ipcc:supersedes
+    a owl:ObjectProperty ;
+    rdfs:domain ipcc:GWPValueSet ; rdfs:range ipcc:GWPValueSet ;
+    rdfs:label "supersedes"@en ;
+    skos:definition "The earlier value set this one is the successor edition of (chronological lineage, not equivalence)."@en .
+
+ipcc:isFloor
+    a owl:DatatypeProperty ; rdfs:domain ipcc:GWPValueSet ; rdfs:range xsd:boolean ;
+    rdfs:label "is registry floor"@en ;
+    skos:definition "True for the earliest value set the registry admits (SAR). The floor exists because transitioned Kyoto-era units carry SAR-basis values that trade indefinitely."@en .
+
+#################################################################
+# The value sets
+#################################################################
+
+# --- SAR (1995): the floor ---
+ipcc:SAR a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC SAR GWP-100 (1995)"@en ;
+    skos:definition "Second Assessment Report GWP-100 value set. The registry floor: transitioned CERs and Kyoto-era inventory data carry SAR-basis values and do not expire, so SAR is a live requirement, not merely archival."@en ;
+    ipcc:edition "SAR" ; ipcc:variant "as-published" ; ipcc:publicationYear "1995"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:isFloor true ;
+    ipcc:pactExportable false ;
+    ipcc:hasGWP [ ipcc:forGas "CH4" ; ipcc:gwp100 21 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 310 ] ;
+    dcterms:source "IPCC Second Assessment Report (1995), GWP-100; UNFCCC first-commitment-period reporting basis" .
+
+# --- AR4 (2007) ---
+ipcc:AR4 a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC AR4 GWP-100 (2007)"@en ;
+    skos:definition "Fourth Assessment Report GWP-100 value set. Still live: California ARB runs its emissions inventory on AR4, US EPA GHGRP reporting years RY2010–RY2023 are an AR4 archive, and Verra VCS permits AR4 conversion for pre-2021 vintages — so AR4 is permanently embedded in tradeable credit stock."@en ;
+    ipcc:edition "AR4" ; ipcc:variant "as-published" ; ipcc:publicationYear "2007"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:supersedes ipcc:SAR ;
+    ipcc:pactExportable false ;
+    ipcc:hasGWP [ ipcc:forGas "CH4" ; ipcc:gwp100 25 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 298 ] ,
+                [ ipcc:forGas "CF4" ; ipcc:gwp100 7390 ] ,
+                [ ipcc:forGas "C2F6" ; ipcc:gwp100 12200 ] ;
+    dcterms:source "IPCC Fourth Assessment Report WG1 (2007), Table 2.14, GWP-100; CARB inventory basis; US EPA GHGRP Table A-1 (RY2010–RY2023)" .
+
+# --- AR5 no-feedback (GHG Protocol convention) ---
+ipcc:AR5-noFeedback a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC AR5 GWP-100, without climate–carbon feedbacks"@en ;
+    skos:definition "AR5 WG1 Table 8.A.1 GWP-100 values WITHOUT climate–carbon feedbacks. This is the GHG Protocol convention and the de-facto meaning of a bare 'AR5' tag in corporate accounting."@en ;
+    ipcc:edition "AR5" ; ipcc:variant "no-feedback" ; ipcc:publicationYear "2013"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:supersedes ipcc:AR4 ;
+    ipcc:pactExportable true ; ipcc:pactEnumValue "AR5" ;
+    ipcc:hasGWP [ ipcc:forGas "CH4" ; ipcc:gwp100 28 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 265 ] ,
+                [ ipcc:forGas "CF4" ; ipcc:gwp100 6630 ] ,
+                [ ipcc:forGas "C2F6" ; ipcc:gwp100 11100 ] ;
+    dcterms:source "IPCC AR5 WG1 Ch.8 Table 8.A.1 (GWP-100, no climate-carbon feedback); GHG Protocol GWP update (Aug 2024)" .
+
+# --- AR5 with-feedback ---
+ipcc:AR5-withFeedback a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC AR5 GWP-100, with climate–carbon feedbacks"@en ;
+    skos:definition "AR5 WG1 Table 8.A.1 GWP-100 values WITH climate–carbon feedbacks. A distinct, published value set that a bare 'AR5' tag does not disambiguate from the no-feedback set."@en ;
+    ipcc:edition "AR5" ; ipcc:variant "with-feedback" ; ipcc:publicationYear "2013"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:pactExportable true ; ipcc:pactEnumValue "AR5" ;
+    ipcc:differsFrom ipcc:AR5-noFeedback ; ipcc:onGas "CH4" , "N2O" ;
+    ipcc:hasGWP [ ipcc:forGas "CH4" ; ipcc:gwp100 34 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 298 ] ;
+    dcterms:source "IPCC AR5 WG1 Ch.8 Table 8.A.1 (GWP-100, incl. climate-carbon feedback)" .
+
+# --- AR5 UNFCCC variant (Decision 7/CP.27) ---
+ipcc:AR5-UNFCCC a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC AR5 GWP-100, UNFCCC 7/CP.27 variant"@en ;
+    skos:definition "AR5 Table 8.A.1 GWP-100 as adopted by UNFCCC Decision 7/CP.27 for the Paris Enhanced Transparency Framework — EXCLUDING the AR5 fossil-methane value. Required for national reporting from no later than 31 Dec 2024."@en ;
+    ipcc:edition "AR5" ; ipcc:variant "UNFCCC-7CP27" ; ipcc:publicationYear "2022"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:pactExportable true ; ipcc:pactEnumValue "AR5" ;
+    ipcc:differsFrom ipcc:AR5-noFeedback ; ipcc:onGas "CH4-fossil" ;
+    ipcc:hasGWP [ ipcc:forGas "CH4" ; ipcc:gwp100 28 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 265 ] ;
+    dcterms:source "UNFCCC Decision 7/CP.27 (adopts AR5 Table 8.A.1 excluding the fossil-methane value)" .
+
+# --- AR6 fossil methane ---
+ipcc:AR6-fossilCH4 a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC AR6 GWP-100, fossil methane"@en ;
+    skos:definition "AR6 WG1 Ch.7 Table 7.15 GWP-100 using the FOSSIL methane value. Per the GHG Protocol Aug-2024 table, the fossil-methane value applies to fugitive emissions from oil, gas and coal and to industrial processes where the carbon is of fossil origin."@en ;
+    ipcc:edition "AR6" ; ipcc:variant "fossil-CH4" ; ipcc:publicationYear "2021"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:supersedes ipcc:AR5-noFeedback ;
+    ipcc:pactExportable true ; ipcc:pactEnumValue "AR6" ;
+    ipcc:hasGWP [ ipcc:forGas "CH4-fossil" ; ipcc:gwp100 29.8 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 273 ] ,
+                [ ipcc:forGas "CF4" ; ipcc:gwp100 7380 ] ,
+                [ ipcc:forGas "C2F6" ; ipcc:gwp100 12400 ] ;
+    dcterms:source "IPCC AR6 WG1 Ch.7 Table 7.15 (GWP-100, fossil CH4 = 29.8); GHG Protocol GWP update (Aug 2024)" .
+
+# --- AR6 non-fossil / biogenic methane ---
+ipcc:AR6-biogenicCH4 a ipcc:GWPValueSet, skos:Concept ;
+    skos:inScheme ipcc:valueSetScheme ;
+    skos:prefLabel "IPCC AR6 GWP-100, non-fossil (biogenic) methane"@en ;
+    skos:definition "AR6 WG1 Ch.7 Table 7.15 GWP-100 using the NON-FOSSIL (biogenic) methane value — applies where methane's carbon is of biogenic origin (e.g. agriculture, landfill, biomass)."@en ;
+    ipcc:edition "AR6" ; ipcc:variant "biogenic-CH4" ; ipcc:publicationYear "2021"^^xsd:gYear ;
+    ipcc:defaultHorizon comet-pcr:GWP100 ;
+    ipcc:pactExportable true ; ipcc:pactEnumValue "AR6" ;
+    ipcc:differsFrom ipcc:AR6-fossilCH4 ; ipcc:onGas "CH4" ;
+    ipcc:hasGWP [ ipcc:forGas "CH4-nonfossil" ; ipcc:gwp100 27.0 ] ,
+                [ ipcc:forGas "N2O" ; ipcc:gwp100 273 ] ;
+    dcterms:source "IPCC AR6 WG1 Ch.7 Table 7.15 (GWP-100, non-fossil CH4 = 27.0)" .

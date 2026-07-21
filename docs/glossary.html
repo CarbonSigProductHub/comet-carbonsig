@@ -979,9 +979,23 @@
             <tr>
               <td>comet-ef:GWP100Value.ipccAR</td>
               <td class="td-type">Property</td>
-              <td>IPCC Assessment Report version</td>
+              <td>IPCC Assessment Report edition <em>(deprecated &mdash; edition alone is under-determined; retained for PACT export only)</em></td>
               <td class="td-align">PACT: characterizationFactors</td>
               <td class="td-datatype">Enum (AR5 / AR6)</td>
+            </tr>
+            <tr>
+              <td>comet-pcr:gwpValueSet</td>
+              <td class="td-type">Property</td>
+              <td>GWP value set (edition + variant) &mdash; supersedes ipccAR; CURIE into the ipcc: vocabulary (SAR, AR4, AR5-noFeedback/withFeedback/UNFCCC, AR6-fossilCH4/biogenicCH4)</td>
+              <td class="td-align">PACT: characterizationFactors (lossy)</td>
+              <td class="td-datatype">CURIE &rarr; ipcc:GWPValueSet</td>
+            </tr>
+            <tr>
+              <td>comet-pcr:arBasis</td>
+              <td class="td-type">Property</td>
+              <td>How the value set was established (declared / back-solved / inferred / indeterminate)</td>
+              <td class="td-align em-dash">&mdash;</td>
+              <td class="td-datatype">Enum</td>
             </tr>
             <tr>
               <td>comet-ef:GWP100Value.gasSpecies</td>

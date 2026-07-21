@@ -1,0 +1,23 @@
+@prefix comet-pcr:<https://comet.carbon/ext/pcr#> .
+@prefix comet-ef: <https://comet.carbon/v1/emfactor#> .
+@prefix ipcc:     <https://comet.carbon/vocab/ipcc-gwp#> .
+@prefix ex:       <https://example.org/factors#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+# Three factors, each violating exactly one shape constraint.
+
+# VIOLATION: inferred basis with no confidence.
+ex:bad-inferred-no-confidence a comet-ef:GWP100Value ;
+    comet-pcr:gwpValueSet ipcc:AR6-fossilCH4 ;
+    comet-pcr:arBasis comet-pcr:Inferred .
+
+# VIOLATION: indeterminate basis that still asserts a value set.
+ex:bad-indeterminate-with-set a comet-ef:GWP100Value ;
+    comet-pcr:gwpValueSet ipcc:AR5-noFeedback ;
+    comet-pcr:arBasis comet-pcr:Indeterminate .
+
+# VIOLATION: confidence out of [0,1].
+ex:bad-confidence-range a comet-ef:GWP100Value ;
+    comet-pcr:gwpValueSet ipcc:AR4 ;
+    comet-pcr:arBasis comet-pcr:Inferred ;
+    comet-pcr:arConfidence 1.5 .

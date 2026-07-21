@@ -74,6 +74,21 @@ IRA 45V, ICAO CORSIA, SBTi, Verra VCS, Gold Standard, Article 6, CAD Trust,
 ResponsibleSteel, ASI — 293 term-level crosswalks (see the
 [alignments view](https://nickgogerty.github.io/comet-ontology/schema-map.html)).
 
+### GWP value sets (which AR produced a number)
+
+A CO₂e figure is only interpretable if you know which set of IPCC GWP factors
+produced it — and the edition label alone is under-determined (AR5 shipped
+no-feedback *and* with-feedback sets; AR6 split fossil vs biogenic methane; AR4
+and SAR are still live in regulation and in tradeable credit stock). COMET
+therefore replaces the old `ipccAR` enum with the **`ipcc:` value-set registry**
+(edition + variant), plus `arBasis` / `arConfidence` / `gwpHorizon` provenance on
+`comet-ef:GWP100Value`. COMET's vocabulary is deliberately wider than PACT's
+edition enum: the ontology describes the world faithfully while the export layer
+enforces what each destination accepts (SAR / AR4 / indeterminate factors are
+**non-exportable** to PACT rather than mislabelled). Full rationale, the
+back-solve method, and worked examples in
+**[docs/gwp-value-sets.md](docs/gwp-value-sets.md)**.
+
 ## License
 
 CC BY 4.0 (content) | Apache 2.0 (code)

@@ -52,6 +52,37 @@ def main() -> int:
                  "comet-pcr:CutOffRule", "comet-pcr:DeclaredModule"]:
         check(f"registry contains {must}", must in allow)
 
+    # GWP value-set vocabulary: the 7 value sets + 4 provenance properties.
+    for must in ["ipcc:SAR", "ipcc:AR4", "ipcc:AR5-noFeedback",
+                 "ipcc:AR5-withFeedback", "ipcc:AR5-UNFCCC",
+                 "ipcc:AR6-fossilCH4", "ipcc:AR6-biogenicCH4",
+                 "comet-pcr:gwpValueSet", "comet-pcr:arBasis",
+                 "comet-pcr:arConfidence", "comet-pcr:gwpHorizon"]:
+        check(f"registry contains {must}", must in allow)
+
+    # Every pending ipcc CURIE must actually be defined in the TTL.
+    ipcc_ttl = (ROOT / "extensions" / "ipcc-gwp.ttl").read_text()
+    for curie in reg.get("ipcc_pending", []):
+        check(f"ipcc term defined in TTL: {curie}",
+              f"{curie} " in ipcc_ttl or f"{curie}\n" in ipcc_ttl)
+
+    # The export layer must refuse to assert a false PACT edition for a value
+    # set PACT cannot express (SAR, AR4) — the BLOCK condition.
+    sys.path.insert(0, str(ROOT / "tools" / "converters"))
+    from comet_to_pact import _pact_characterization_factors  # noqa: E402
+    check("AR6 value set exports to PACT AR6",
+          _pact_characterization_factors({"gwpValueSet": "ipcc:AR6-fossilCH4"}) == "AR6")
+    check("AR5 variant exports to PACT AR5",
+          _pact_characterization_factors({"gwpValueSet": "ipcc:AR5-UNFCCC"}) == "AR5")
+    check("AR4 is non-exportable to PACT (BLOCK)",
+          _pact_characterization_factors({"gwpValueSet": "ipcc:AR4"}) is None)
+    check("SAR is non-exportable to PACT (BLOCK)",
+          _pact_characterization_factors({"gwpValueSet": "ipcc:SAR"}) is None)
+    check("indeterminate basis is non-exportable to PACT (BLOCK)",
+          _pact_characterization_factors({"arBasis": "indeterminate"}) is None)
+    check("legacy ipccAR still exports when no value set present",
+          _pact_characterization_factors({"ipccAR": "AR5"}) == "AR5")
+
     # Validator: good terms pass.
     good = validate_curies(["comet:Process", "comet-pcf:FunctionalUnit",
                             "comet-pcr:PCRDocument", "comet-ef:EmissionFactor.efValue"], allow)

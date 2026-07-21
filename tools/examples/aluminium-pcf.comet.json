@@ -30,6 +30,9 @@
   "packagingEmissions": 0,
   "exemptedPercent": 1.2,
   "ipccAR": "AR6",
+  "gwpValueSet": "ipcc:AR6-fossilCH4",
+  "arBasis": "declared",
+  "gwpHorizon": "GWP100",
   "boundaryDescription": "Cradle-to-gate: bauxite mining, alumina refining, Hall-Heroult electrolysis, and casting",
   "referencePeriod": {
     "@type": "comet:TimePeriod",

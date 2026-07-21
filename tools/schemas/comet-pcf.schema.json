@@ -96,8 +96,40 @@
     },
     "ipccAR": {
       "type": "string",
-      "description": "IPCC Assessment Report version used for GWP characterization factors.",
-      "enum": ["AR5", "AR6"]
+      "description": "DEPRECATED (retained for PACT interoperability only): IPCC Assessment Report edition of the GWP characterization factors. Edition alone is under-determined — it cannot separate AR5 no-feedback vs with-feedback vs the UNFCCC variant, nor AR6 fossil vs biogenic methane — and cannot express AR4 or SAR. Use gwpValueSet instead; this field carries only the lossy edition string PACT's characterizationFactors enum accepts.",
+      "enum": ["AR5", "AR6"],
+      "deprecated": true
+    },
+    "gwpValueSet": {
+      "type": ["string", "null"],
+      "description": "The IPCC GWP value SET that produced the characterization factors, as a CURIE into the ipcc: controlled vocabulary (extensions/ipcc-gwp.ttl). Keys on edition + variant, not edition alone. Null means the basis is indeterminate — in which case arBasis must be 'indeterminate'. New value sets are added to the ipcc registry and appended here; adding one is a data change, not a structural one.",
+      "enum": [
+        "ipcc:SAR",
+        "ipcc:AR4",
+        "ipcc:AR5-noFeedback",
+        "ipcc:AR5-withFeedback",
+        "ipcc:AR5-UNFCCC",
+        "ipcc:AR6-fossilCH4",
+        "ipcc:AR6-biogenicCH4",
+        null
+      ]
+    },
+    "arBasis": {
+      "type": "string",
+      "description": "How the value set was established: 'declared' by the source, 'back-solved' arithmetically from the gas split and CO2e total, 'inferred' by a model (requires arConfidence), or 'indeterminate' (gwpValueSet absent).",
+      "enum": ["declared", "back-solved", "inferred", "indeterminate"]
+    },
+    "arConfidence": {
+      "type": "number",
+      "description": "For the inferred case only: model confidence in the assigned value set, in [0,1]. Required when arBasis is 'inferred'; omit otherwise.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "gwpHorizon": {
+      "type": "string",
+      "description": "The GWP integration time horizon the factors are stated on. Defaults to GWP100.",
+      "enum": ["GWP100", "GWP20"],
+      "default": "GWP100"
     },
     "standardRef": {
       "type": "array",
@@ -197,6 +229,18 @@
     "boundaryDescription",
     "referencePeriod",
     "standardRef"
+  ],
+  "allOf": [
+    {
+      "$comment": "An inferred value set must carry a confidence.",
+      "if": { "properties": { "arBasis": { "const": "inferred" } }, "required": ["arBasis"] },
+      "then": { "required": ["arConfidence"] }
+    },
+    {
+      "$comment": "An indeterminate factor must not assert a value set.",
+      "if": { "properties": { "arBasis": { "const": "indeterminate" } }, "required": ["arBasis"] },
+      "then": { "properties": { "gwpValueSet": { "type": "null" } } }
+    }
   ],
   "additionalProperties": true
 }

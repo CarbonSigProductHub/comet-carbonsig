@@ -1,0 +1,77 @@
+@prefix comet-pcr:<https://comet.carbon/ext/pcr#> .
+@prefix comet-ef: <https://comet.carbon/v1/emfactor#> .
+@prefix ipcc:     <https://comet.carbon/vocab/ipcc-gwp#> .
+@prefix sh:       <http://www.w3.org/ns/shacl#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# SHACL shapes for GWP provenance on comet-ef:GWP100Value.
+# Makes the enum-replacement machine-checkable, per the COMET convention
+# that every proposed extension ships with shapes.
+#################################################################
+
+comet-pcr:GWP100ValueProvenanceShape
+    a sh:NodeShape ;
+    sh:targetClass comet-ef:GWP100Value ;
+    rdfs:label "GWP100Value provenance shape"@en ;
+
+    # The value set, when present, must be a member of the ipcc vocabulary.
+    sh:property [
+        sh:path comet-pcr:gwpValueSet ;
+        sh:class ipcc:GWPValueSet ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "gwpValueSet must be a single ipcc:GWPValueSet member (e.g. ipcc:AR6-fossilCH4)." ;
+    ] ;
+
+    # The basis, when present, must be a member of the arBasis scheme.
+    sh:property [
+        sh:path comet-pcr:arBasis ;
+        sh:class comet-pcr:ARBasis ;
+        sh:maxCount 1 ;
+        sh:message "arBasis must be one of comet-pcr:{Declared,BackSolved,Inferred,Indeterminate}." ;
+    ] ;
+
+    # Confidence, when present, is a decimal in [0,1].
+    sh:property [
+        sh:path comet-pcr:arConfidence ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1 ;
+        sh:maxCount 1 ;
+        sh:message "arConfidence must be a decimal in [0,1]." ;
+    ] ;
+
+    sh:property [
+        sh:path comet-pcr:gwpHorizon ;
+        sh:class comet-pcr:GWPHorizon ;
+        sh:maxCount 1 ;
+        sh:message "gwpHorizon must be comet-pcr:GWP100 or comet-pcr:GWP20." ;
+    ] ;
+
+    # An inferred basis MUST carry a confidence.
+    sh:sparql [
+        sh:message "arBasis = Inferred requires arConfidence." ;
+        sh:prefixes comet-pcr: ;
+        sh:select """
+            PREFIX comet-pcr: <https://comet.carbon/ext/pcr#>
+            SELECT $this WHERE {
+                $this comet-pcr:arBasis comet-pcr:Inferred .
+                FILTER NOT EXISTS { $this comet-pcr:arConfidence ?c }
+            }
+        """ ;
+    ] ;
+
+    # An indeterminate basis MUST NOT assert a value set.
+    sh:sparql [
+        sh:message "arBasis = Indeterminate must not carry a gwpValueSet." ;
+        sh:prefixes comet-pcr: ;
+        sh:select """
+            PREFIX comet-pcr: <https://comet.carbon/ext/pcr#>
+            SELECT $this WHERE {
+                $this comet-pcr:arBasis comet-pcr:Indeterminate .
+                $this comet-pcr:gwpValueSet ?vs .
+            }
+        """ ;
+    ] .

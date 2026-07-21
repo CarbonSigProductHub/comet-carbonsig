@@ -4,6 +4,8 @@
 @prefix comet-ef:   <https://comet.carbon/v1/emfactor#> .
 @prefix comet-sc:   <https://comet.carbon/v1/supplychain#> .
 @prefix comet-rs:   <https://comet.carbon/ext/responsiblesteel#> .
+@prefix comet-ver:  <https://comet.carbon/v1/ver#> .
+@prefix ipcc:       <https://comet.carbon/vocab/ipcc-gwp#> .
 @prefix owl:    <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
@@ -29,8 +31,9 @@
     a owl:Ontology ;
     dcterms:title "COMET Product Category Rules (PCR) Extension"@en ;
     dcterms:description "Method-requirement vocabulary for Product Category Rules: the PCR document, its programme operator, declared life-cycle modules, cut-off and allocation rules, and the link from a footprint to its governing PCR. Extends COMET L4 (PCF)."@en ;
-    owl:versionInfo "0.1.0" ;
-    dcterms:source "ISO 14025", "EN 15804+A2", "EU PEF method", "ISO 14067" .
+    owl:versionInfo "0.2.0" ;
+    dcterms:source "ISO 14025", "EN 15804+A2", "EU PEF method", "ISO 14067",
+                   "GHG Protocol", "PACT v3", "UNFCCC 7/CP.27" .
 
 #################################################################
 # Programme operator
@@ -309,3 +312,113 @@ comet-pcr:ReviewPanel
     skos:relatedMatch comet-rs:AssurancePanelReview ;
     rdfs:comment "Placed in comet-pcr as a PCR method requirement; the generic verification concept may later live in comet-ver."@en ;
     dcterms:source "ISO 14025 §8 (independent verification)" .
+
+#################################################################
+# GWP provenance — value set, basis, confidence, horizon
+#
+# Four provenance properties on comet-ef:GWP100Value that make a
+# characterisation factor's assessment-report basis explicit and recoverable.
+# The value SET itself is a member of the ipcc: controlled vocabulary
+# (extensions/ipcc-gwp.ttl); these properties CARRY it on a factor.
+#
+# WHY THIS EXISTS. The prior model — an Enum(AR5, AR6) — could not represent
+# AR4 or SAR (both live in regulation and in tradeable credit stock), could not
+# distinguish a DECLARED assessment-report basis from an INFERRED one (the
+# provenance was lost the moment the number was read), and had no null-safe
+# value meaning "indeterminate", so a factor of unknown basis had to assert
+# something false or drop out of the graph. These four properties close exactly
+# those three gaps, and gwpValueSet keys on the value set (edition + variant)
+# rather than the edition label, so it never needs re-widening at AR7.
+#
+# Placed in comet-pcr as an evidence-gated pending extension; candidate to
+# upstream onto comet-ef:GWP100Value in COMET core.
+#################################################################
+
+comet-pcr:gwpValueSet
+    a owl:ObjectProperty ;
+    rdfs:domain comet-ef:GWP100Value ;
+    rdfs:range ipcc:GWPValueSet ;
+    rdfs:label "GWP value set"@en ;
+    skos:definition "The IPCC GWP value set (edition + variant) that produced this factor — a CURIE into the ipcc: controlled vocabulary, e.g. ipcc:AR6-fossilCH4, ipcc:AR5-noFeedback, ipcc:SAR. Supersedes the edition-only enum: absent (null) is legitimate and means the basis is indeterminate, in which case comet-pcr:arBasis MUST be comet-pcr:Indeterminate."@en ;
+    rdfs:comment "Replaces the closed Enum(AR5, AR6). Keying on the value set, not the edition, lets COMET describe factors PACT's enum cannot express (SAR, AR4, variant sets); the export layer, not the ontology, decides what each destination accepts."@en ;
+    skos:closeMatch comet-ef:GWP100Value.ipccAR ;
+    dcterms:source "PACT v3 ipccCharacterizationFactors (extended); GHG Protocol; UNFCCC 7/CP.27" .
+
+comet-pcr:arBasis
+    a owl:ObjectProperty ;
+    rdfs:domain comet-ef:GWP100Value ;
+    rdfs:range comet-pcr:ARBasis ;
+    rdfs:label "assessment-report basis"@en ;
+    skos:definition "How the value set on this factor was established: declared by the source, arithmetically back-solved from a gas split and CO2e total, inferred by a model, or indeterminate."@en ;
+    rdfs:comment "The provenance the enum could not carry. 'Declared' and 'back-solved' are effectively Type-A (determinate); 'inferred' carries comet-pcr:arConfidence; 'indeterminate' is the null-safe case."@en .
+
+comet-pcr:arConfidence
+    a owl:DatatypeProperty ;
+    rdfs:domain comet-ef:GWP100Value ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "assessment-report confidence"@en ;
+    skos:definition "For the inferred case only: the model's confidence in the assigned value set, in [0,1] (e.g. P(value set | source, vintage, unit, sector, gas hints)). Absent when arBasis is declared or back-solved (both determinate)."@en ;
+    dcterms:source "ISO 14067 uncertainty analysis; ecoinvent pedigree matrix" .
+
+comet-pcr:gwpHorizon
+    a owl:ObjectProperty ;
+    rdfs:domain comet-ef:GWP100Value ;
+    rdfs:range comet-pcr:GWPHorizon ;
+    rdfs:label "GWP time horizon"@en ;
+    skos:definition "The GWP time horizon the factor is stated on (GWP100 or GWP20). Defaults to GWP100. A methane factor near 80 tagged 'GWP-100 AR6' is almost certainly a GWP-20 mislabel — this property makes that anomaly detectable."@en .
+
+comet-pcr:informedByRule
+    a owl:ObjectProperty ;
+    rdfs:domain comet-ef:GWP100Value ;
+    rdfs:range comet-ver:DataSubstitutionRule ;
+    rdfs:label "informed by rule"@en ;
+    skos:definition "The documented substitution/inference rule (back-solve or model) that assigned the value set, so a verifier receiving the graph sees not just that a basis was assumed but which rule assumed it and with what confidence."@en ;
+    rdfs:comment "Links the back-solve/inference method to the factor as a comet-ver:DataSubstitutionRule instance; keeps AR inference inside the existing verification findings workflow."@en .
+
+#################################################################
+# arBasis controlled vocabulary
+#################################################################
+
+comet-pcr:ARBasis
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "Assessment-Report Basis"@en ;
+    skos:definition "How a factor's GWP value set was established."@en .
+
+comet-pcr:arBasisScheme
+    a skos:ConceptScheme ;
+    rdfs:label "AR basis scheme"@en ;
+    skos:definition "The enumeration of ways a factor's value set can be established, in decreasing order of determinacy: declared, back-solved, inferred, indeterminate."@en .
+
+comet-pcr:Declared a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
+    skos:prefLabel "declared"@en ;
+    skos:definition "The value set is stated by the source (e.g. a machine-readable tag). Determinate."@en .
+comet-pcr:BackSolved a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
+    skos:prefLabel "back-solved"@en ;
+    skos:definition "The value set is arithmetically recovered from the gas split and the CO2e total — the cheapest determinate test, run before any model. Determinate, effectively Type-A."@en .
+comet-pcr:Inferred a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
+    skos:prefLabel "inferred"@en ;
+    skos:definition "The value set is assigned by a model from metadata; carries comet-pcr:arConfidence and propagates its own uncertainty."@en .
+comet-pcr:Indeterminate a comet-pcr:ARBasis, skos:Concept ; skos:inScheme comet-pcr:arBasisScheme ;
+    skos:prefLabel "indeterminate"@en ;
+    skos:definition "The value set cannot be established. gwpValueSet is absent; the factor is non-declarable into a regulated or PACT channel until resolved."@en .
+
+#################################################################
+# GWP time-horizon controlled vocabulary
+#################################################################
+
+comet-pcr:GWPHorizon
+    a owl:Class ;
+    rdfs:subClassOf skos:Concept ;
+    rdfs:label "GWP Time Horizon"@en ;
+    skos:definition "The integration time horizon of a global warming potential."@en .
+
+comet-pcr:gwpHorizonScheme
+    a skos:ConceptScheme ;
+    rdfs:label "GWP horizon scheme"@en ;
+    skos:definition "The enumeration of GWP time horizons COMET recognises."@en .
+
+comet-pcr:GWP100 a comet-pcr:GWPHorizon, skos:Concept ; skos:inScheme comet-pcr:gwpHorizonScheme ;
+    skos:prefLabel "GWP-100 (100-year)"@en ; skos:notation "default" .
+comet-pcr:GWP20 a comet-pcr:GWPHorizon, skos:Concept ; skos:inScheme comet-pcr:gwpHorizonScheme ;
+    skos:prefLabel "GWP-20 (20-year)"@en .
