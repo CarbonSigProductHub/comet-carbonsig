@@ -1,0 +1,31 @@
+@prefix comet-pcr:<https://comet.carbon/ext/pcr#> .
+@prefix comet-ef: <https://comet.carbon/v1/emfactor#> .
+@prefix ipcc:     <https://comet.carbon/vocab/ipcc-gwp#> .
+@prefix ex:       <https://example.org/factors#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+# Four factors exercising each arBasis, all SHACL-valid.
+
+# Declared AR6 fossil-methane factor (e.g. a tagged PACT sub-component).
+ex:factor-declared a comet-ef:GWP100Value ;
+    comet-pcr:gwpValueSet ipcc:AR6-fossilCH4 ;
+    comet-pcr:arBasis comet-pcr:Declared ;
+    comet-pcr:gwpHorizon comet-pcr:GWP100 .
+
+# Back-solved AR5 factor (recovered arithmetically from the gas split + CO2e).
+ex:factor-backsolved a comet-ef:GWP100Value ;
+    comet-pcr:gwpValueSet ipcc:AR5-noFeedback ;
+    comet-pcr:arBasis comet-pcr:BackSolved ;
+    comet-pcr:gwpHorizon comet-pcr:GWP100 .
+
+# Inferred AR4 factor (2022 DEFRA vintage) — carries confidence.
+ex:factor-inferred a comet-ef:GWP100Value ;
+    comet-pcr:gwpValueSet ipcc:AR4 ;
+    comet-pcr:arBasis comet-pcr:Inferred ;
+    comet-pcr:arConfidence 0.78 ;
+    comet-pcr:gwpHorizon comet-pcr:GWP100 .
+
+# Indeterminate factor — no value set asserted, non-declarable into PACT/CBAM.
+ex:factor-indeterminate a comet-ef:GWP100Value ;
+    comet-pcr:arBasis comet-pcr:Indeterminate ;
+    comet-pcr:gwpHorizon comet-pcr:GWP100 .

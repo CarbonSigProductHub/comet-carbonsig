@@ -76,6 +76,53 @@ _UNIT_TO_PACT: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
+# GWP value set -> PACT edition collapse.
+# PACT's characterizationFactors enum names only an edition. A COMET value set
+# that no edition label can represent (SAR, AR4) is non-exportable to PACT.
+# Mirrors ipcc:pactExportable / ipcc:pactEnumValue in extensions/ipcc-gwp.ttl.
+# ---------------------------------------------------------------------------
+
+_VALUE_SET_TO_PACT_EDITION: dict[str, Optional[str]] = {
+    "ipcc:AR6-fossilCH4": "AR6",
+    "ipcc:AR6-biogenicCH4": "AR6",
+    "ipcc:AR5-noFeedback": "AR5",
+    "ipcc:AR5-withFeedback": "AR5",
+    "ipcc:AR5-UNFCCC": "AR5",
+    "ipcc:AR4": None,   # not expressible in PACT's enum
+    "ipcc:SAR": None,   # not expressible in PACT's enum
+}
+
+
+def _pact_characterization_factors(comet: dict[str, Any]) -> Optional[str]:
+    """Return the PACT characterizationFactors edition, or None if the factor
+    is non-exportable to PACT (SAR, AR4, or indeterminate basis)."""
+    value_set = _get(comet, "gwpValueSet")
+    ar_basis = _get(comet, "arBasis")
+
+    if ar_basis == "indeterminate" or (value_set is None and ar_basis == "indeterminate"):
+        print("WARNING: factor has an indeterminate GWP basis — non-declarable "
+              "into PACT; omitting characterizationFactors.", file=sys.stderr)
+        return None
+
+    if value_set is not None:
+        if value_set not in _VALUE_SET_TO_PACT_EDITION:
+            print(f"WARNING: unknown gwpValueSet {value_set!r}; omitting "
+                  "characterizationFactors.", file=sys.stderr)
+            return None
+        edition = _VALUE_SET_TO_PACT_EDITION[value_set]
+        if edition is None:
+            print(f"WARNING: gwpValueSet {value_set} is not expressible in PACT's "
+                  "characterizationFactors enum — factor is non-conformant to PACT "
+                  "v3; omitting the field rather than asserting a false edition.",
+                  file=sys.stderr)
+            return None
+        return edition
+
+    # No value set: fall back to the legacy edition-only field.
+    return _get(comet, "ipccAR", "characterizationFactors", default="AR6")
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -228,10 +275,15 @@ def comet_to_pact(
     pcf["aircraftGhgEmissions"] = _get(comet, "aircraftEmissions", default=0)
     pcf["packagingGhgEmissions"] = _get(comet, "packagingEmissions", default=0)
 
-    # IPCC AR
-    pcf["characterizationFactors"] = _get(
-        comet, "ipccAR", "characterizationFactors", default="AR6"
-    )
+    # IPCC AR / GWP value set.
+    # COMET's gwpValueSet (edition + variant) is the source of truth; PACT's
+    # characterizationFactors enum accepts only an edition label. Collapse the
+    # value set to its PACT edition where one exists; where it does not (SAR,
+    # AR4, or an indeterminate factor) the factor is legitimately NON-EXPORTABLE
+    # to PACT — we omit the field and warn rather than assert a false edition.
+    cf = _pact_characterization_factors(comet)
+    if cf is not None:
+        pcf["characterizationFactors"] = cf
 
     # Standards
     std_ref = _get(comet, "standardRef", "standardName")

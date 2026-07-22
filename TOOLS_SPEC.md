@@ -43,7 +43,11 @@ Today, zero tools exist for any of these operations. Every user must read the on
 - `aircraftEmissions` (number, default: 0)
 - `packagingEmissions` (number, default: 0)
 - `exemptedPercent` (number, minimum: 0, maximum: 100)
-- `ipccAR` (string, enum: AR5, AR6)
+- `ipccAR` (string, enum: AR5, AR6) — **DEPRECATED**, retained for PACT interoperability only; edition alone is under-determined
+- `gwpValueSet` (string CURIE into the `ipcc:` vocabulary, nullable) — the GWP value set (edition + variant), e.g. `ipcc:AR6-fossilCH4`; null ⇒ indeterminate. Supersedes `ipccAR`. See `docs/gwp-value-sets.md`
+- `arBasis` (string, enum: declared, back-solved, inferred, indeterminate)
+- `arConfidence` (number, 0–1; required when `arBasis` = inferred)
+- `gwpHorizon` (string, enum: GWP100, GWP20; default GWP100)
 - `standardRef` (array of strings, minItems: 1) — e.g., ["ISO14067", "GHGProtocol"]
 - `pcrName` (string, nullable)
 - `allocationDescription` (string, nullable)

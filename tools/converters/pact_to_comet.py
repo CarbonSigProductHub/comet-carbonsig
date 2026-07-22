@@ -173,6 +173,19 @@ def _convert_one(pact: dict[str, Any], *, strip_pact: bool = False) -> dict[str,
 
         _set_nested(comet, comet_target, val)
 
+    # Upgrade PACT's lossy edition tag to a specific COMET value set.
+    # PACT's characterizationFactors names only an edition; map it to that
+    # edition's conventional value set and record that the basis was DECLARED
+    # by the source. The variant is the PACT/GHG-Protocol default for the
+    # edition (AR6 -> fossil methane; AR5 -> no climate-carbon feedback);
+    # ipccAR is kept verbatim for round-trip fidelity.
+    edition = comet.get("ipccAR")
+    _EDITION_TO_VALUE_SET = {"AR6": "ipcc:AR6-fossilCH4", "AR5": "ipcc:AR5-noFeedback"}
+    if edition in _EDITION_TO_VALUE_SET:
+        comet.setdefault("gwpValueSet", _EDITION_TO_VALUE_SET[edition])
+        comet.setdefault("arBasis", "declared")
+        comet.setdefault("gwpHorizon", "GWP100")
+
     # Report unmapped fields
     all_pact_keys = _collect_all_pact_keys(pact)
     # Mapped paths and their parents

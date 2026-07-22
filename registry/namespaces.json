@@ -16,7 +16,8 @@
     "comet-pj": "https://comet.carbon/ext/pcr-japan#",
     "comet-asi": "https://comet.carbon/ext/aluminium-asi#",
     "comet-tfs": "https://comet.carbon/ext/tfs-pcf#",
-    "comet-irec": "https://comet.carbon/ext/irec-e#"
+    "comet-irec": "https://comet.carbon/ext/irec-e#",
+    "ipcc": "https://comet.carbon/vocab/ipcc-gwp#"
   },
   "carbonsig": {
     "csig": "https://api.carbonsig.com/schemas/verifier-export/v4#"
